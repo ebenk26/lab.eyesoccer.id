@@ -132,12 +132,13 @@
 			
 			if($c > 0)
 			{
-			    if(isset($uri[6]))
+			    /*if(isset($uri[6]))
 			    {
 				$newuri = $uri[5].'/'.$uri[6];
 			    } else {
 				$newuri = $uri[5];
-			    }
+			    }*/
+			    $newuri = '';
 			} else {
 			    $domain = 1;
 			}
