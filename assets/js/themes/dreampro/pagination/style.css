@@ -1,0 +1,21 @@
+#shownav {
+    float: right;
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+#nav_tab {
+    background: #2f4050;
+    padding: 8px 10px 8px 10px;
+    margin-left: 2px;
+    color: #fff;
+    font-size: 12px;
+    text-decoration: none;
+    border: 1px solid #2f4050;
+    cursor: pointer;
+}
+
+#nav_tab .actnet {
+    background: #ffa726;
+}

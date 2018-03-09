@@ -1,0 +1,7 @@
+RewriteEngine off
+Options All -Indexes
+
+AuthType Basic
+AuthName "restricted area"
+AuthUserFile /project/aplikasi/express/upload/temp/.htpasswd
+require valid-user

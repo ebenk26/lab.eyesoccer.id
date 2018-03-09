@@ -1,0 +1,71 @@
+<IfModule mod_php4.c>
+  php_value engine on
+</IfModule>
+<IfModule mod_php5.c>
+  php_value engine on
+</IfModule>
+
+RewriteEngine on
+
+# Unless directory, remove trailing slash
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/$ /$1 [R=301,L]
+
+# Redirect external .php requests to extensionless url
+RewriteCond %{THE_REQUEST} ^(.+)\.php
+RewriteRule ^(.+)\.php$ /$1 [R=301,L]
+
+RewriteCond %{THE_REQUEST} ^(.+)\.php([0-9]+)
+RewriteRule ^(.+)\.php([0-9]+)$ /$1 [R=301,L]
+    
+RewriteCond %{THE_REQUEST} ^(.+)\.pHP
+RewriteRule ^(.+)\.pHP$ /$1 [R=301,L]
+
+RewriteCond %{THE_REQUEST} ^(.+)\.pHP([0-9]+)
+RewriteRule ^(.+)\.pHP([0-9]+)$ /$1 [R=301,L]
+    
+RewriteCond %{THE_REQUEST} ^(.+)\.phP
+RewriteRule ^(.+)\.phP$ /$1 [R=301,L]
+
+RewriteCond %{THE_REQUEST} ^(.+)\.phP([0-9]+)
+RewriteRule ^(.+)\.phP([0-9]+)$ /$1 [R=301,L]
+
+RewriteCond %{THE_REQUEST} ^(.+)\.Php
+RewriteRule ^(.+)\.Php$ /$1 [R=301,L]
+
+RewriteCond %{THE_REQUEST} ^(.+)\.Php([0-9]+)
+RewriteRule ^(.+)\.Php([0-9]+)$ /$1 [R=301,L]
+    
+RewriteCond %{THE_REQUEST} ^(.+)\.PHp
+RewriteRule ^(.+)\.PHp$ /$1 [R=301,L]
+
+RewriteCond %{THE_REQUEST} ^(.+)\.PHp([0-9]+)
+RewriteRule ^(.+)\.PHp([0-9]+)$ /$1 [R=301,L]
+    
+RewriteCond %{THE_REQUEST} ^(.+)\.PhP
+RewriteRule ^(.+)\.PhP$ /$1 [R=301,L]
+
+RewriteCond %{THE_REQUEST} ^(.+)\.PhP([0-9]+)
+RewriteRule ^(.+)\.PhP([0-9]+)$ /$1 [R=301,L]
+    
+RewriteCond %{THE_REQUEST} ^(.+)\.pHp
+RewriteRule ^(.+)\.pHp$ /$1 [R=301,L]
+
+RewriteCond %{THE_REQUEST} ^(.+)\.pHp([0-9]+)
+RewriteRule ^(.+)\.pHp([0-9]+)$ /$1 [R=301,L]
+    
+RewriteCond %{THE_REQUEST} ^(.+)\.PHP
+RewriteRule ^(.+)\.PHP$ /$1 [R=301,L]
+
+RewriteCond %{THE_REQUEST} ^(.+)\.PHP([0-9]+)
+RewriteRule ^(.+)\.PHP([0-9]+)$ /$1 [R=301,L]
+
+RewriteCond %{THE_REQUEST} ^(.+)\.html
+RewriteRule ^(.+)\.html$ /$1 [R=301,L]
+
+RewriteCond %{THE_REQUEST} ^(.+)\.html([0-9]+)
+RewriteRule ^(.+)\.html([0-9]+)$ /$1 [R=301,L]
+
+Options All -Indexes
+
+`
