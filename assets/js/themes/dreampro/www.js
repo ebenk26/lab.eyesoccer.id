@@ -762,7 +762,7 @@ function rmdata(val) {
     }
 }
 
-function tabmenu(id, tagClick, tagShow, beforeClick, afterClick) {
+/*function tabmenu(id, tagClick, tagShow, beforeClick, afterClick) {
     $('#boxtab ' + tagClick).each(function () {
         if ($(this).attr('active') === 'true') {
             var idx = $(this).attr('id');
@@ -780,7 +780,7 @@ function tabmenu(id, tagClick, tagShow, beforeClick, afterClick) {
     $(tagClick + '#' + id).addClass(afterClick);
 
     $(tagShow + '#' + id).fadeIn('fast');
-}
+}*/
 
 function tabflag(id) {
     $('#boxbutton ul li a').each(function () {
