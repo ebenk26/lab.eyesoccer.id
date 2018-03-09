@@ -64,18 +64,18 @@
 //$db['default']['autoinit'] = TRUE;
 //$db['default']['stricton'] = FALSE;
 
-//$config = main_config();
-//extract($config);
+$config = main_config();
+extract($config);
 
 $active_group = 'default';
 $active_record = TRUE;
 
 $db[$active_group]['hostname'] = isset($hostname) ? $hostname : '';
-$db[$active_group]['username'] = ($_SERVER['SERVER_NAME'] == 'localhost') ? 'root' : 'dev_eyesoccer';
-$db[$active_group]['password'] = ($_SERVER['SERVER_NAME'] == 'localhost') ? '' : 'kaca-muka-siapakah-ini-2018';
-$db[$active_group]['database'] = ($_SERVER['SERVER_NAME'] == 'localhost') ? 'admin_eyesoback' : 'dev_eyesoccer';
-$db[$active_group]['dbprefix'] = 'es_';
-$db[$active_group]['dbdriver'] = 'mysqli';
+$db[$active_group]['username'] = isset($username) ? $username : '';
+$db[$active_group]['password'] = isset($password) ? $password : '';
+$db[$active_group]['database'] = isset($database) ? $database : '';
+$db[$active_group]['dbprefix'] = isset($dbprefix) ? $dbprefix : '';
+$db[$active_group]['dbdriver'] = isset($dbdriver) ? $dbdriver : '';
 $db[$active_group]['pconnect'] = TRUE;
 $db[$active_group]['db_debug'] = TRUE;
 $db[$active_group]['cache_on'] = FALSE;
