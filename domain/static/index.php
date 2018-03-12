@@ -229,7 +229,7 @@ if($link[0] != 'www')
 	{
 		define('APPFOLDER', '');
 	} else {
-		define('APPFOLDER', '/project/aplikasi/eyesoccer/liveeye/lab.eyesoccer.id/domain/static/');
+		define('APPFOLDER', '/lab.eyesoccer.id/domain/static/');
 	}
 } else {
 	define('APPFOLDER', '');
