@@ -39,7 +39,6 @@ $cache = $path.'/domain/static/v1/cache';
 
 $config['base_cdn'] = $http.'://'.$www.$linkhost.$lines;
 $config['base_static'] = $http.'://'.$www.$linkhost.$cache;
-$config['base_action'] = $http.'://localhost:8081'.$path;
 
 $config['aes_encrypt'] = 'eyesocrypt0001**';
 $config['aes_vlink'] = 'admin_eyesoback';
@@ -290,7 +289,7 @@ $config['encryption_key'] = 'p1o2i3u4y5q0w9e8r7t6';
 |
 */
 $config['sess_cookie_name']	= 'eyesoccer';
-$config['sess_expiration']	= 7200;
+$config['sess_expiration']	= 1000000;
 $config['sess_expire_on_close']	= FALSE;
 $config['sess_encrypt_cookie']	= FALSE;
 $config['sess_use_database']	= TRUE;
@@ -339,8 +338,8 @@ $config['global_xss_filtering'] = FALSE;
 | 'csrf_expire' = The number in seconds the token should expire.
 */
 $config['csrf_protection'] = FALSE;
-$config['csrf_token_name'] = 'csrf_test_name';
-$config['csrf_cookie_name'] = 'csrf_cookie_name';
+$config['csrf_token_name'] = 'csrf_sc_exp';
+$config['csrf_cookie_name'] = 'csrf_cookie_exp';
 $config['csrf_expire'] = 7200;
 
 /*
