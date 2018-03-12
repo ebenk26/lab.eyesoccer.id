@@ -312,12 +312,26 @@ class Category extends MX_Controller
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
 
+            $text_title = $this->input->post('title');
+
+            $new_link = $this->library->seo_title($text_title);
+            $key = substr(md5($this->library->app_key()), 0, 7);
+
+            // Category
             if (isset($_GET['id'])) {
-                $option = $this->excurl->reqAction('news/category/save/?id='.$_GET['id'], $_POST);
+                $dt1 = array('news_type_id' => $_GET['id'], 'sub_category_name' => addslashes($text_title));
             } else {
-                $option = $this->excurl->reqAction('news/category/save', $_POST);
+                $dt1 = array('news_type' => addslashes($text_title));
             }
-            $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
+
+            $table = (isset($_GET['id'])) ? $this->xtable : $this->dtable;
+            $option = $this->action->insert(array('table' => $table, 'insert' => $dt1));
+            if ($option['state'] == 0) {
+                $this->validation->error_message($option);
+                return false;
+            }
+
+            $this->view(array('xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
         } else {
             redirect('news/category');
         }
@@ -360,12 +374,27 @@ class Category extends MX_Controller
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_updated == 1) {
 
+            $text_title = $this->input->post('title');
+
+            $new_link = $this->library->seo_title($text_title);
+            $key = substr(md5($this->library->app_key()), 0, 7);
+
+            // Category
             if (isset($_GET['id'])) {
-                $option = $this->excurl->reqAction('news/category/update/?id='.$_GET['id'], $_POST);
+                $dt1 = array('news_type_id' => $_GET['id'], 'sub_category_name' => addslashes($text_title));
             } else {
-                $option = $this->excurl->reqAction('news/category/update', $_POST);
+                $dt1 = array('news_type' => addslashes($text_title));
             }
-            $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
+
+            $table = (isset($_GET['id'])) ? $this->xtable : $this->dtable;
+            $where = (isset($_GET['id'])) ? ['sub_news_id' => $this->input->post('idx')] : ['news_type_id' => $this->input->post('idx')];
+            $option = $this->action->update(array('table' => $table, 'update' => $dt1, 'where' => $where));
+            if ($option['state'] == 0) {
+                $this->validation->error_message($option);
+                return false;
+            }
+
+            $this->view(array('xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
         } else {
             redirect('news/category');
         }
@@ -379,7 +408,7 @@ class Category extends MX_Controller
             } else {
                 if ($this->input->post('val') == true) {
                     $option = $this->category_model->__delete($id);
-                    $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
+                    $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
                 } else {
                     redirect('news/category');
                 }
@@ -431,7 +460,7 @@ class Category extends MX_Controller
                     break;
             }
 
-            $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
+            $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
         } else {
             redirect('news/category');
         }

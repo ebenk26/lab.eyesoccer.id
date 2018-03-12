@@ -18,9 +18,15 @@ class Excurl {
         $this->ci = &get_instance();
     }
 
-    function reqCurl($url, $query = array())
+    function reqCurl($url, $query = array(), $upload = '')
     {
-        return json_decode($this->remoteCall($this->__xurl().$url, $this->__xkey(), $query));
+        return json_decode($this->remoteCall($this->__xurl().$url, $this->__xkey(), $query, $upload));
+    }
+
+    function reqAction($url, $query = array(), $upload = '')
+    {
+        $apps = $this->ci->config->item('base_action');
+        return json_decode($this->remoteCall($apps.'/api/'.$url, $this->__xkey(), $query, $upload));
     }
 
     function reqDataInfo($url, $cred = '', $data = array())
@@ -122,8 +128,10 @@ class Excurl {
         if (is_array($file)) {
             $files = [];
             foreach ($file as $f) {
-                $files[] = array('name' => $f, 'filename' => $_FILES[$f]['name'], 'filetype' => $_FILES[$f]['type'],
-                                 'content' => file_get_contents($_FILES[$f]['tmp_name']));
+                if ($_FILES[$f]['tmp_name'] != '') {
+                    $files[] = array('name' => $f, 'filename' => $_FILES[$f]['name'], 'filetype' => $_FILES[$f]['type'],
+                        'content' => file_get_contents($_FILES[$f]['tmp_name']));
+                }
             }
             
             $url_data = http_build_query($data);
