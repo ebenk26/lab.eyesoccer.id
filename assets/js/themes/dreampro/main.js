@@ -214,6 +214,58 @@ $(document).ready(function () {
         });
     });
 
+    $(document).on('keypress', '.hashtag', function (e) {
+        var html = $(this);
+        $(':input[type="submit"]').prop('disabled', true);
+
+        var keyCode = e.keyCode || e.which;
+        if (keyCode === 13) {
+            e.preventDefault();
+
+            var val = html.val();
+            var tag = html.attr('id');
+            var show = html.attr('show');
+
+            $('label.error').remove();
+            $('#' + tag).val('').focus();
+
+            var itag = 1;
+
+            // Check Already Count
+            var valID = [];
+            $('.box' + tag).each(function (i) {
+                var id = $(this).attr('id');
+                if (id !== undefined) {
+                    valID[i] = $('#' + id + '_in').val();
+                    itag = parseInt($(this).attr('val')) + 1;
+                }
+            });
+
+            var x = 0;
+            $.each(valID, function (i, value) {
+                if (value == val) {
+                    x = 1;
+                }
+            });
+
+            if (x == 0) {
+                $('.' + show).append(
+                    '<div class="ibox box' + tag + '" id="' + tag + '_' + itag + '" val="' + itag + '">'
+                    + '<span>'
+                    + val +
+                    '<a href="javascript:void(0)" onclick="remove_item(\'#' + tag + ',' + itag + '\')" class="cl-red"><i class="fa fa-times fa-fw"></i></a>'
+                    + '</span>'
+                    + '<input type="hidden" id="' + tag + '_' + itag + '_in" name="' + tag + '[]" value="' + val + '">'
+                    + '</div>'
+                );
+            }
+
+            $('label.error').remove();
+            $(':input[type="submit"]').prop('disabled', false);
+            return false;
+        }
+    });
+
     $(document).on('mouseover', 'body', function () {
         var wait = $(this).data("wait");
         if (wait) {
