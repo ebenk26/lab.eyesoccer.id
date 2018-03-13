@@ -170,7 +170,7 @@ class Event extends MX_Controller
                 echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable), 'query' => $query));
             }
         } else {
-            redirect('Event');
+            redirect('event');
         }
     }
 
@@ -227,7 +227,7 @@ class Event extends MX_Controller
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('Event');
+            redirect('event');
         }
     }
 
@@ -258,7 +258,7 @@ class Event extends MX_Controller
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('Event');
+            redirect('event');
         }
     }
 
@@ -280,49 +280,19 @@ class Event extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('Event');
+                redirect('event');
             }
         }
     }
 
     function save()
     {
+
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $text_title = $this->input->post('title');
-            $text_desc = $this->input->post('description');
-
-            $new_link = $this->library->seo_title($text_title);
-
-            $upload = $this->Event_model->__upload($new_link);
-            $key = substr(md5($this->library->app_key()), 0, 7);
-
-            // $cat = $this->excurl->reqCurl('Event-category', ['Event_type_id' => $this->input->post('category')])->data[0];
-            // $catsub = $this->excurl->reqCurl('Event-category-sub', ['sub_Event_id' => $this->input->post('subcategory')])->data[0];
-
-            // Event
-            $dt1 = array(// General
-                'title' => addslashes($text_title),
-                'description' => addslashes($text_desc),
-                'url' => $new_link.'-'.$key,
-                'pic' => $upload['data'],
-                'category' => $this->input->post('category'),
-                // Data
-                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
-                'upload_date' => date('Y-m-d h:i:s'),
-                'admin_id' => $this->session->userdata('user_id')
-            );
-
-            $option = $this->action->insert(array('table' => $this->dtable, 'insert' => $dt1));
-            if ($option['state'] == 0) {
-                $this->Event_model->__unlink($upload['data']);
-
-                $this->validation->error_message($option);
-                return false;
-            }
-
-            $this->view(array('xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+            $option = $this->excurl->reqAction('event/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
+            $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('Event');
+            redirect('event');
         }
     }
 
@@ -330,7 +300,7 @@ class Event extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
             if ($id == '') {
-                redirect('Event');
+                redirect('event');
             } else {
                 $data['title'] = 'Event';
                 $data['parent'] = $this->mparent;
@@ -357,7 +327,7 @@ class Event extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('Event');
+                redirect('event');
             }
         }
     }
@@ -409,7 +379,7 @@ class Event extends MX_Controller
 
             $this->view(array('xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
         } else {
-            redirect('Event');
+            redirect('event');
         }
     }
 
@@ -417,20 +387,20 @@ class Event extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
             if ($id == '') {
-                redirect('Event');
+                redirect('event');
             } else {
                 if ($this->input->post('val') == true) {
                     $option = $this->Event_model->__delete($id);
                     $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
                 } else {
-                    redirect('Event');
+                    redirect('event');
                 }
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('Event');
+                redirect('event');
             }
         }
     }
@@ -475,7 +445,7 @@ class Event extends MX_Controller
 
             $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
         } else {
-            redirect('Event');
+            redirect('event');
         }
     }
 

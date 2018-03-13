@@ -50,7 +50,7 @@
                                     if($category)
                                     {
                                         foreach ($category->data as $cat) {
-                                            echo "<option value='$cat->category_name'>$cat->category_name</option>";
+                                            echo "<option value='$cat->id_event_category'>$cat->category_name</option>";
                                         }
                                     }
                                 ?>

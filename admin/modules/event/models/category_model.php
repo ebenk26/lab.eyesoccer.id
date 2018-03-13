@@ -5,8 +5,7 @@ class Category_model extends CI_Model
 
     var $query_string = '';
     var $command = '';
-    var $dtable = 'tbl_news_types';
-    var $xtable = 'tbl_sub_category_news';
+    var $dtable = 'tbl_event_category';
 
     function __construct()
     {
@@ -15,12 +14,7 @@ class Category_model extends CI_Model
 
     function __delete($id = '')
     {
-        if (isset($_GET['id'])) {
-            $option = $this->action->delete(array('table' => $this->xtable, 'where' => array('sub_news_id' => $id)));
-        } else {
-            $option = $this->action->delete(array('table' => $this->dtable, 'where' => array('news_type_id' => $id)));
-            $option = $this->action->delete(array('table' => $this->xtable, 'where' => array('news_type_id' => $id)));
-        }
+        $option = $this->action->delete(array('table' => $this->dtable, 'where' => array('id_event_category' => $id)));
 
         if ($option['state'] == 0) {
             $this->validation->error_message($option);
@@ -33,25 +27,25 @@ class Category_model extends CI_Model
     function __disable($id = '')
     {
         if ($id != NULL) {
-            $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('news_type_id' => $id));
+            $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('id_event_category' => $id));
             $option = $this->action->update($dt);
 
             return $option;
         } else {
-            redirect('news/category');
+            redirect('event/category');
         }
     }
 
     function __enable($id = '')
     {
         if ($id != NULL) {
-            $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('news_type_id' => $id));
+            $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('id_event_category' => $id));
 
             $option = $this->action->update($dt);
 
             return $option;
         } else {
-            redirect('news/category');
+            redirect('event/category');
         }
     }
 

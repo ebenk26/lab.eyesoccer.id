@@ -324,7 +324,7 @@ class Category extends MX_Controller
                 $dt1 = array('news_type' => addslashes($text_title));
             }
 
-            $table = (isset($_GET['id'])) ? $this->xtable : $this->dtable;
+            $table = $this->dtable;
             $option = $this->action->insert(array('table' => $table, 'insert' => $dt1));
             if ($option['state'] == 0) {
                 $this->validation->error_message($option);
@@ -386,7 +386,7 @@ class Category extends MX_Controller
                 $dt1 = array('news_type' => addslashes($text_title));
             }
 
-            $table = (isset($_GET['id'])) ? $this->xtable : $this->dtable;
+            $table = $this->dtable;
             $where = (isset($_GET['id'])) ? ['sub_news_id' => $this->input->post('idx')] : ['id_event_category' => $this->input->post('idx')];
             $option = $this->action->update(array('table' => $table, 'update' => $dt1, 'where' => $where));
             if ($option['state'] == 0) {
