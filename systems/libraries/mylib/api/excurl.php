@@ -20,13 +20,23 @@ class Excurl {
 
     function reqCurl($url, $query = array(), $upload = '')
     {
-        return json_decode($this->remoteCall($this->__xurl().$url, $this->__xkey(), $query, $upload));
+        $data = $this->remoteCall($this->__xurl().$url, $this->__xkey(), $query, $upload);
+        if (json_decode($data) == NULL) {
+            print_r($data);
+        } else {
+            return json_decode($data);
+        }
     }
 
     function reqAction($url, $query = array(), $upload = '')
     {
         $apps = $this->ci->config->item('base_action');
-        return json_decode($this->remoteCall($apps.'/api/'.$url, $this->__xkey(), $query, $upload));
+        $data = $this->remoteCall($apps.'/api/'.$url, $this->__xkey(), $query, $upload);
+        if (json_decode($data) == NULL) {
+            print_r($data);
+        } else {
+            return json_decode($data);
+        }
     }
 
     function reqDataInfo($url, $cred = '', $data = array())
