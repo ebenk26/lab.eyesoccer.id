@@ -67,9 +67,9 @@
                                     {
                                         foreach ($category->data as $cat) {
                                             if ($cat->news_type == $dt1->news_type) {
-                                                echo "<option value='$cat->news_type_id' selected>$cat->news_type</option>";
+                                                echo "<option value='$cat->news_type_id;$cat->news_type' selected>$cat->news_type</option>";
                                             } else {
-                                                echo "<option value='$cat->news_type_id'>$cat->news_type</option>";
+                                                echo "<option value='$cat->news_type_id;$cat->news_type'>$cat->news_type</option>";
                                             }
                                         }
                                     }
@@ -85,9 +85,9 @@
                                     {
                                         foreach ($subcategory->data as $cat) {
                                             if ($cat->sub_category_name == $dt1->sub_news_type) {
-                                                echo "<option value='$cat->sub_news_id' selected>$cat->sub_category_name</option>";
+                                                echo "<option value='$cat->sub_news_id;$cat->sub_category_name' selected>$cat->sub_category_name</option>";
                                             } else {
-                                                echo "<option value='$cat->sub_news_id'>$cat->sub_category_name</option>";
+                                                echo "<option value='$cat->sub_news_id;$cat->sub_category_name'>$cat->sub_category_name</option>";
                                             }
                                         }
                                     }

@@ -409,13 +409,13 @@ class News extends MX_Controller
 
     function subcategory()
     {
-        $search = $this->input->post('val');
-        $category = $this->excurl->reqCurl('news-category-sub', ['news_type_id' => $search]);
+        $search = explode(';', $this->input->post('val'));
+        $category = $this->excurl->reqCurl('news-category-sub', ['news_type_id' => $search[0]]);
 
         if ($category) {
             if ($category->data) {
                 foreach ($category->data as $cat) {
-                    echo "<option value='$cat->sub_news_id'>$cat->sub_category_name</option>";
+                    echo "<option value='$cat->sub_news_id;$cat->sub_category_name'>$cat->sub_category_name</option>";
                 }
             } else {
                 echo "<option value=''>- Select -</option>";

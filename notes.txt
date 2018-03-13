@@ -9,3 +9,14 @@ tbl_news_types
 
 tbl_sub_category_news
 - slug
+
+/-----EYEADS-----/
+
+tbl_ads
+- category_ads_id
+
+/-----EYEEVENT-----/
+
+tbl_event
+- is_event
+- is_match

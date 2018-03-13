@@ -37,8 +37,8 @@ class News extends MX_Controller
             $upload = $this->news_model->__upload($new_link);
             $key = substr(md5($this->library->app_key()), 0, 7);
 
-            $cat = $this->excurl->reqCurl('news-category', ['news_type_id' => $this->input->post('category')])->data[0];
-            $catsub = $this->excurl->reqCurl('news-category-sub', ['sub_news_id' => $this->input->post('subcategory')])->data[0];
+            $cat = explode(';', $this->input->post('category'));
+            $catsub = explode(';', $this->input->post('subcategory'));
 
             // News
             $dt1 = array(// General
@@ -51,10 +51,10 @@ class News extends MX_Controller
                 'url' => $new_link.'-'.$key,
                 'pic' => $upload['data'],
                 // Data
-                'newstype_id' => $this->input->post('category'),
-                'newstype_sub_id' => $this->input->post('subcategory'),
-                'news_type' => $cat->news_type,
-                'sub_category_name' => $catsub->sub_category_name,
+                'newstype_id' => $cat[0],
+                'newstype_sub_id' => $catsub[0],
+                'news_type' => $cat[1],
+                'sub_category_name' => $catsub[1],
                 'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
                 'createon' => date('Y-m-d h:i:s'),
                 'admin_id' => $this->input->post('ses_user_id')
@@ -89,8 +89,8 @@ class News extends MX_Controller
             $upload = $this->news_model->__upload($new_link);
             $key = substr(md5($this->library->app_key()), 0, 7);
 
-            $cat = $this->excurl->reqCurl('news-category', ['news_type_id' => $this->input->post('category')])->data[0];
-            $catsub = $this->excurl->reqCurl('news-category-sub', ['sub_news_id' => $this->input->post('subcategory')])->data[0];
+            $cat = explode(';', $this->input->post('category'));
+            $catsub = explode(';', $this->input->post('subcategory'));
 
             // News
             $dt1 = array(// General
@@ -103,10 +103,10 @@ class News extends MX_Controller
                 'url' => $new_link.'-'.$key,
                 'pic' => $upload['data'],
                 // Data
-                'newstype_id' => $this->input->post('category'),
-                'newstype_sub_id' => $this->input->post('subcategory'),
-                'news_type' => $cat->news_type,
-                'sub_category_name' => $catsub->sub_category_name,
+                'newstype_id' => $cat[0],
+                'newstype_sub_id' => $catsub[0],
+                'news_type' => $cat[1],
+                'sub_category_name' => $catsub[1],
                 'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
                 'updateon' => date('Y-m-d h:i:s')
             );

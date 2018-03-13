@@ -62,7 +62,7 @@
                                     if($category)
                                     {
                                         foreach ($category->data as $cat) {
-                                            echo "<option value='$cat->news_type_id'>$cat->news_type</option>";
+                                            echo "<option value='$cat->news_type_id;$cat->news_type'>$cat->news_type</option>";
                                         }
                                     }
                                 ?>
