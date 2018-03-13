@@ -83,30 +83,20 @@ class Event extends MX_Controller
             $upload = $this->event_model->__upload($new_link);
             $key = substr(md5($this->library->app_key()), 0, 7);
 
-            $cat = $this->excurl->reqCurl('news-category', ['news_type_id' => $this->input->post('category')])->data[0];
-            $catsub = $this->excurl->reqCurl('news-category-sub', ['sub_news_id' => $this->input->post('subcategory')])->data[0];
-
             // News
             $dt1 = array(// General
                 'title' => addslashes($text_title),
                 'description' => addslashes($text_desc),
-                'meta_description' => $this->input->post('meta_desc'),
-                'tag' => $this->input->post('meta_keyword'),
-                'credit' => $this->input->post('credit'),
-                'category_news' => $this->input->post('recommended'),
                 'url' => $new_link.'-'.$key,
                 'pic' => $upload['data'],
+                'category' => $this->input->post('category'),
                 // Data
-                'newstype_id' => $this->input->post('category'),
-                'newstype_sub_id' => $this->input->post('subcategory'),
-                'news_type' => $cat->news_type,
-                'sub_category_name' => $catsub->sub_category_name,
                 'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
                 'updateon' => date('Y-m-d h:i:s')
             );
 
             $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,
-                                                  'where' => array('eyenews_id' => $this->input->post('idx'))));
+                                                  'where' => array('id_event' => $this->input->post('idx'))));
             if ($option['state'] == 0) {
                 $this->event_model->__unlink($upload['data']);
 
@@ -115,8 +105,8 @@ class Event extends MX_Controller
             }
 
             // Remove Old Pic If There is Upload Files
-            if ($this->input->post('news_pic') != '') {
-                $this->event_model->__unlink($this->input->post('news_pic'));
+            if ($this->input->post('event_pic') != '') {
+                $this->event_model->__unlink($this->input->post('event_pic'));
             }
 
             $this->tools->__flashMessage($option);
