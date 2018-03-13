@@ -272,12 +272,12 @@ class Member extends MX_Controller
         if ($this->roles == 'admin' OR $this->roles->menu_created == 1) {
             $data['title'] = 'News';
             $data['parent'] = $this->mparent;
-            $data['content'] = $this->config->item('base_theme') . '/news/add_news';
+            $data['content'] = $this->config->item('base_theme') . '/member/add_member';
 
-            $data['category'] = $this->excurl->reqCurl('news-category');
+            // $data['category'] = $this->excurl->reqCurl('news-category');
 
             if ($this->input->post('val') == true) {
-                $this->load->view($this->config->item('base_theme') . '/news/add_news', $data);
+                $this->load->view($this->config->item('base_theme') . '/member/add_member', $data);
             } else {
                 $this->load->view($this->config->item('base_theme') . '/template', $data);
             }
@@ -285,7 +285,7 @@ class Member extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('news');
+                redirect('member');
             }
         }
     }
