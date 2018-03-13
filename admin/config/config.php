@@ -7,7 +7,7 @@
  */
 
 if($_SERVER['SERVER_NAME'] == 'localhost') {
-    $xurl = 'http://api-dev.eyesoccer.id:3000/v1/';
+    $xurl = 'http://localhost:3000/v1/';
 } else {
     $xurl = 'http://api.eyesoccer.id:8080/v1/';
 }
@@ -31,7 +31,7 @@ $linkhost = $_SERVER['HTTP_HOST'];
 $http = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http';
 $link = explode('.', $linkhost);
 
-$path = '/lab.eyesoccer.id';
+$path = '/project/aplikasi/eyesoccer/liveeye/lab.eyesoccer.id';
 $www = ($link[0] != 'www') ? '' : 'www.';
 
 $lines = $path.'/domain/cdn/v1/lines';
@@ -39,6 +39,7 @@ $cache = $path.'/domain/static/v1/cache';
 
 $config['base_cdn'] = $http.'://'.$www.$linkhost.$lines;
 $config['base_static'] = $http.'://'.$www.$linkhost.$cache;
+$config['base_action'] = $http.'://localhost:8081'.$path;
 
 $config['aes_encrypt'] = 'eyesocrypt0001**';
 $config['aes_vlink'] = 'admin_eyesoback';

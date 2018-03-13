@@ -1464,6 +1464,7 @@ input.wd-30 {
 
 .error {
     color: red;
+    font-size: 12px;
 }
 
 input, select, textarea {
@@ -1717,7 +1718,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 .ibox {
-    margin: 2px 0;
+    display: inline-block;
+    margin: 2px 4px 2px 0;
     padding: 8px 5px;
     background: #fff;
     -webkit-border-radius: 4px 4px 4px 4px;

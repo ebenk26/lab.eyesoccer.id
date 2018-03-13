@@ -1,0 +1,11 @@
+/-----EYENEWS-----/
+
+tbl_eyenews
+- newstype_id
+- newstype_sub_id
+
+tbl_news_types
+- slug
+
+tbl_sub_category_news
+- slug
