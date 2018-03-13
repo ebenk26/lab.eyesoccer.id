@@ -18,41 +18,36 @@
     
     <?php echo form_open_multipart('news/save', array('name' => 'form_addmulti', 'id' => 'form_addmulti')); ?>
     <div id='boxtable' class='shadow'>
+    
         <div class='row'>
             <div class='col-lg-8 col-md-12 col-sm-8 col-xs-12'>
                 <div class='boxtab pad-all mg-b20'>
-                    <h1>Add New</h1>
+                    <h1>Add New User</h1>
                     <div class='pad-lr20'>
                         <input type='hidden' name='val' value='true'>
                         <div class='mg-b10'>
-                            <label>Title</label>
-                            <input type='text' name='title' id='title' class='cinput input_multi' required>
+                            <label>Username</label>
+                            <input type='text' name='username' id='title' class='cinput input_multi' required>
                         </div>
                         <div class='mg-b10'>
-                            <label>Meta Description</label>
-                            <textarea name="meta_desc" id="meta_desc" class='cinput input_multi' rows="4" cols="80" maxlength="255"></textarea>
-                            <div class="tx-right">
-                                <span class="cl-red ff-12">Note : Maximum Character 255</span>
-                            </div>
+                            <label>Nama Depan</label>
+                            <input type="text" name="fist_name" class="cinput input_multi" required>
                         </div>
                         <div class='mg-b10'>
-                            <label>Meta Keyword</label>
-                            <textarea name="meta_keyword" id="meta_keyword" class='cinput input_multi' rows="4" cols="80" maxlength="255"></textarea>
-                            <div class="tx-right">
-                                <span class="cl-red ff-12">Example : Liga,Turnament,Kompetisi</span>
-                            </div>
+                            <label>Nama Belakang</label>
+                            <input type="text" name="last_name" class="cinput input_multi" required>
                         </div>
                         <div class='pad-b20'>
-                            <label>Description</label>
-                            <textarea name='description' id='description' class='tiny-active' rows='15' cols='80' style='height: 300px;'></textarea>
-                        </div>
+                            <label>Email </label>
+                            <input type="text" name="email" class="cinput input_multi" required>
+                        </div>  
                     </div>
                 </div>
             </div>
             
             <div class='col-lg-4 col-md-12 col-sm-4 col-xs-12'>
                 <div class='boxtab pad-all mg-b20'>
-                    <h1>Category</h1>
+                    <h1>Active </h1>
                     <div class='pad-lr20'>
                         <div class='mg-b10'>
                             <label>Category</label>
