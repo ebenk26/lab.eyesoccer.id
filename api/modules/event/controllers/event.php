@@ -47,6 +47,8 @@ class Event extends MX_Controller
                 'url' => $new_link.'-'.$key,
                 'pic' => $upload['data'],
                 'category' => $this->input->post('category'),
+                'is_event' => $this->input->post('is_event'),
+                'is_match' => $this->input->post('is_match'),
                 // Data
                 'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
                 'upload_date' => date('Y-m-d h:i:s'),
@@ -90,6 +92,8 @@ class Event extends MX_Controller
                 'url' => $new_link.'-'.$key,
                 'pic' => $upload['data'],
                 'category' => $this->input->post('category'),
+                'is_event' => $this->input->post('is_event'),
+                'is_match' => $this->input->post('is_match'),
                 // Data
                 'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
                 'updateon' => date('Y-m-d h:i:s')

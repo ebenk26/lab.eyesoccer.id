@@ -14,8 +14,8 @@ class Event_model extends CI_Model
 
     function __delete($id = '')
     {
-        $dt = $this->excurl->reqCurl('news', ['eyenews_id' => $id])->data[0];
-        $option = $this->action->delete(array('table' => $this->dtable, 'where' => array('eyenews_id' => $id)));
+        $dt = $this->excurl->reqCurl('event', ['id_event' => $id])->data[0];
+        $option = $this->action->delete(array('table' => $this->dtable, 'where' => array('id_event' => $id)));
         if ($option['state'] == 0) {
             $this->validation->error_message($option);
             return false;

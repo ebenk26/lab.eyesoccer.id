@@ -349,7 +349,7 @@ class Event extends MX_Controller
             } else {
                 if ($this->input->post('val') == true) {
                     $option = $this->Event_model->__delete($id);
-                    $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+                    $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
                     redirect('event');
                 }
@@ -401,25 +401,9 @@ class Event extends MX_Controller
                     break;
             }
 
-            $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+            $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('event');
-        }
-    }
-
-    function subcategory()
-    {
-        $search = $this->input->post('val');
-        $category = $this->excurl->reqCurl('Event-category-sub', ['Event_type_id' => $search]);
-
-        if ($category) {
-            if ($category->data) {
-                foreach ($category->data as $cat) {
-                    echo "<option value='$cat->sub_Event_id'>$cat->sub_category_name</option>";
-                }
-            } else {
-                echo "<option value=''>- Select -</option>";
-            }
         }
     }
 

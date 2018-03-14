@@ -44,7 +44,7 @@
                     <div class='pad-lr20'>
                         <div class='pad-b20'>
                             <label>Category</label>
-                            <select name="category" id="category" class="cinput select_multi tx-cp" onchange="actchain('event/subcategory', 'category', 'subcategory')">
+                            <select name="category" id="category" class="cinput select_multi tx-cp">
                                 <option value="">- Select -</option>
                                 <?php
                                     if($category)
@@ -81,6 +81,42 @@
                 <div class='boxtab pad-all mg-b20'>
                     <h1>Action</h1>
                     <div class='pad-lr20'>
+                        <div class='mg-b10'>
+                            <div class='layout-row'>
+                                <label> 
+                                    Big Event
+                                </label>
+                                <span class='flex'></span>
+                                <select name="is_event" id="is_event" class="cinput select_router tx-cp">
+                                    <option>- Select -</option>
+                                    <?php
+                                        $is_ev = array('Yes' => 1, 'No' => 0);
+                                        foreach($is_ev as $nm1 => $v1)
+                                        {
+                                            echo "<option value='$v1'>$nm1</option>";
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class='mg-b10'>
+                            <div class='layout-row'>
+                                <label> 
+                                    Show Match
+                                </label>
+                                <span class='flex'></span>
+                                <select name="is_match" id="is_match" class="cinput select_router tx-cp">
+                                    <option>- Select -</option>
+                                    <?php
+                                        $is_mat = array('Yes' => 1, 'No' => 0);
+                                        foreach($is_mat as $nm1 => $v1)
+                                        {
+                                            echo "<option value='$v1'>$nm1</option>";
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
                         <div class='pad-b18'>
                             <label>Publish On Date</label>
                             <div class='layout-row'>

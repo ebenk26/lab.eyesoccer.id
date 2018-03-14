@@ -14,18 +14,7 @@ class Event_model extends CI_Model
 
     function __delete($id = '')
     {
-        $dt = $this->excurl->reqCurl('event', ['id_event' => $id])->data[0];
-        $option = $this->action->delete(array('table' => $this->dtable, 'where' => array('id_event' => $id)));
-        if ($option['state'] == 0) {
-            $this->validation->error_message($option);
-            return false;
-        }
-
-        if ($dt->pic) {
-            $path = $this->__path();
-            $this->uploader->__unlink($path, $dt->pic);
-        }
-
+        $option = $this->excurl->reqAction('event/delete', array('idx' => $id));
         return $option;
     }
 
