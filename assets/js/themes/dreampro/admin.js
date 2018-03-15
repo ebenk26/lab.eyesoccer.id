@@ -5,20 +5,10 @@ $(document).ready(function (e) {
         var value_id = $(this).attr('val');
         var value_name = $('.' + value_id).attr('val');
 
-        // Product
-        if ($('#product_name_' + idx).val() != undefined) {
-            $('#product_name_' + idx).val(value_name);
-            $('#product_id_' + idx).val(value_id);
-
-            if ($('#is_stock').val() == undefined) {
-                var isdiff = '';
-                if ($('#is_diff').val() != undefined) {
-                    isdiff = $('#is_diff').val();
-                    actchain('product/autocombine/' + isdiff, 'product_id_' + idx, 'variant_' + idx);
-                }
-            } else {
-                actchain('product/autostock', 'product_id_' + idx, 'stock_' + idx);
-            }
+        // Clubs
+        if ($('#team_'+idx).val() != undefined) {
+          $('#team_'+idx).val(value_name);
+          $('#team_id_'+idx).val(value_id);
         }
 
         // Category

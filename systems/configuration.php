@@ -1,10 +1,10 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 $config = [
-        'hostname' => '192.168.3.85',
+        'hostname' => 'localhost',
         'username' => ($_SERVER['SERVER_NAME'] == 'localhost') ? 'root' : 'dev_eyesoccer',
         'password' => ($_SERVER['SERVER_NAME'] == 'localhost') ? '' : 'kaca-muka-siapakah-ini-2018',
-        'database' => ($_SERVER['SERVER_NAME'] == 'localhost') ? 'admin_eyesoback' : 'dev_eyesoccer',
+        'database' => ($_SERVER['SERVER_NAME'] == 'localhost') ? 'dev_eyesoback' : 'dev_eyesoccer',
         'dbprefix' => 'es_',
         'dbdriver' => 'mysqli'
     ];
