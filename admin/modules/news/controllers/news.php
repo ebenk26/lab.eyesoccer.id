@@ -90,7 +90,7 @@ class News extends MX_Controller
                                      'sortBy_' . $this->dtable => $this->session->userdata('sortBy_' . $this->dtable), 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
                 } else {
                     $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                     'sortBy_' . $this->dtable => 'news_id', 'sortDir_' . $this->dtable => 'desc');
+                                     'sortBy_' . $this->dtable => 'eyenews_id', 'sortDir_' . $this->dtable => 'desc');
                 }
             }
             $this->session->set_userdata($session);
