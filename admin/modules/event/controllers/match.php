@@ -51,7 +51,7 @@ class Match extends MX_Controller
             $this->session->userdata('sortDir_' . $this->dtable) == 'desc'
         ) {
             $query = array(
-                'sortby' => 'newest',
+                'sortby' => $this->session->userdata('sortBy_' . $this->dtable),
                 'sortdir' => $this->session->userdata('sortDir_' . $this->dtable),
                 'page' => $this->offset,
                 'limit' => $limit
@@ -292,9 +292,9 @@ class Match extends MX_Controller
 
     function save()
     {
-print_r($this->input->post());exit();
+
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $option = $this->excurl->reqAction('match/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
+            $option = $this->excurl->reqAction('event/match/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('match');
@@ -419,6 +419,8 @@ print_r($this->input->post());exit();
         $query = array('page' => 1, 'limit' => '100', 'search' => $search);
         $clubs = $this->excurl->reqCurl('profile-club', $query)->data;
 
+        $tag = ($idx == 0) ? 'team_a' : 'team_b';
+
         if($clubs)
         {
             foreach($clubs as $t)
@@ -426,7 +428,7 @@ print_r($this->input->post());exit();
                 $bold_search = "<b>$search</b>";
                 $team_name = str_ireplace($search, $bold_search, $t->name);
 
-                echo "<div class='showauto' val='$t->club_id' idx='$idx' style='text-transform: capitalize;'>
+                echo "<div class='showauto' val='$t->club_id' idx='$idx' tag='$tag' style='text-transform: capitalize;'>
                         <span class='$t->club_id' val='$t->name'>$team_name</span>
                     </div>";
             }
@@ -451,7 +453,7 @@ print_r($this->input->post());exit();
                 $bold_search = "<b>$search</b>";
                 $title = str_ireplace($search, $bold_search, $t->title);
 
-                echo "<div class='showauto' val='$t->id_event' idx='$idx' style='text-transform: capitalize;'>
+                echo "<div class='showauto' val='$t->id_event' idx='$idx' tag='event' show='showevent' style='text-transform: capitalize;'>
                         <span class='$t->id_event' val='$t->title'>$title</span>
                     </div>";
             }

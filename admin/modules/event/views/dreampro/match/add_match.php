@@ -29,9 +29,12 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class='mg-b10'>
                                     <label>Event / Liga</label>
-                                    <input type="text" class="input_multi" id="event_2" name="event" value="" autocomplete="off" onkeyup="autocommulti('event/match/autoevent/event/2')" placeholder="Search team in here..." required="">
-                                    <input type="hidden" name="event_id" id="event_id_2">
-                                    <div id="boxresult" class="showhide_2" style="display: none;"><div class="result_2"></div></div>
+                                    <div class='mg-b10 pos-rel wd-100'>
+                                        <input type="text" class="input_multi" id="event_99" name="event" autocomplete="off"
+                                               onkeyup="autocommulti('event/match/autoevent/event/99')" placeholder="Search event in here...">
+                                        <div id="boxresult" class="showhide_99" style="display: none;"><div class="result_99"></div></div>
+                                        <div class="showevent"></div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
@@ -64,10 +67,10 @@
                     <h1>Team A</h1>
                     <div class='pad-lr20'>
                         <input type='hidden' name='val' value='true'>
-                        <div class='mg-b10'>    
+                        <div class='mg-b10 pos-rel wd-100'>    
                             <label>Pilih Team A</label>
-                            <input type="text" class="input_multi" id="team_0" name="team_a" value="" autocomplete="off" onkeyup="autocommulti('event/match/autoteam/team/0')" placeholder="Search team in here..." required="">
-                            <input type="hidden" name="team_a_id" id="team_id_0">
+                            <input type="text" class="input_multi" id="team_a_0" name="team_a" value="" autocomplete="off" onkeyup="autocommulti('event/match/autoteam/team_a/0')" placeholder="Search team in here..." required="">
+                            <input type="hidden" name="team_a_id" id="team_a_id_0">
                             <div id="boxresult" class="showhide_0" style="display: none;"><div class="result_0"></div></div>
                         </div>
                         <div class='pad-b20'>
@@ -83,10 +86,10 @@
                     <h1>Team B</h1>
                     <div class='pad-lr20'>
                         <input type='hidden' name='val' value='true'>
-                        <div class='mg-b10'>
+                        <div class='mg-b10 pos-rel wd-100'>
                             <label>Pilih Team B</label>
-                            <input type="text" class="input_multi" id="team_1" name="team_b" value="" autocomplete="off" onkeyup="autocommulti('event/match/autoteam/team/1')" placeholder="Search team in here..." required="">
-                            <input type="hidden" name="team_b_id" id="team_id_1">
+                            <input type="text" class="input_multi" id="team_b_1" name="team_b" value="" autocomplete="off" onkeyup="autocommulti('event/match/autoteam/team_b/1')" placeholder="Search team in here..." required="">
+                            <input type="hidden" name="team_b_id" id="team_b_id_1">
                             <div id="boxresult" class="showhide_1" style="display: none;"><div class="result_1"></div></div>
                         </div>
                         <div class='pad-b20'>
