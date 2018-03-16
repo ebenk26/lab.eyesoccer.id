@@ -11,6 +11,12 @@ $(document).ready(function (e) {
           $('#team_id_'+idx).val(value_id);
         }
 
+        // Events
+        if ($('#event_'+idx).val() != undefined) {
+          $('#event_'+idx).val(value_name);
+          $('#event_id_'+idx).val(value_id);
+        }
+
         // Category
         if ($('#category_name_' + idx).val() != undefined) {
             var icat = 1;

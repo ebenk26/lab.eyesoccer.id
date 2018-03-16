@@ -272,14 +272,9 @@ class Match extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_created == 1) {
 
-            // $query = array('page' => 1, 'limit' => '');
-            // $data['clubs'] = $this->excurl->reqCurl('profile-club', $query)->data;
-
             $data['title'] = 'Match';
             $data['parent'] = $this->mparent;
             $data['content'] = $this->config->item('base_theme') . '/Match/add_match';
-
-            $data['category'] = $this->excurl->reqCurl('match-category');
 
             if ($this->input->post('val') == true) {
                 $this->load->view($this->config->item('base_theme') . '/Match/add_match', $data);
@@ -297,7 +292,7 @@ class Match extends MX_Controller
 
     function save()
     {
-
+print_r($this->input->post());exit();
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
             $option = $this->excurl->reqAction('match/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
@@ -440,6 +435,31 @@ class Match extends MX_Controller
         {
             echo "<div class='showauto'><span>No Result</span></div>";
         }
-    }   
+    }
+
+    function autoevent($idx = '')
+    {
+        $search = $this->input->post('val');
+
+        $query = array('page' => 1, 'limit' => '100', 'search' => $search);
+        $events = $this->excurl->reqCurl('event', $query)->data;
+
+        if($events)
+        {
+            foreach($events as $t)
+            {
+                $bold_search = "<b>$search</b>";
+                $title = str_ireplace($search, $bold_search, $t->title);
+
+                echo "<div class='showauto' val='$t->id_event' idx='$idx' style='text-transform: capitalize;'>
+                        <span class='$t->id_event' val='$t->title'>$title</span>
+                    </div>";
+            }
+        }
+        else
+        {
+            echo "<div class='showauto'><span>No Result</span></div>";
+        }
+    }
 
 }
