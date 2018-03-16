@@ -9,3 +9,20 @@ tbl_news_types
 
 tbl_sub_category_news
 - slug
+
+/-----EYEADS-----/
+
+tbl_ads
+- category_ads_id
+
+/-----EYEEVENT-----/
+
+tbl_event
+- is_event
+- is_match
+
+eyevent_link -> New Table
+RUN THIS :
+DELETE FROM eyevent_link;
+INSERT INTO eyevent_link (id_event, id_match) SELECT id_event, id_jadwal_event FROM tbl_jadwal_event;
+SELECT COUNT(id_match) FROM eyevent_link;

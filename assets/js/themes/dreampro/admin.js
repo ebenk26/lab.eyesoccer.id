@@ -2,107 +2,49 @@ $(document).ready(function (e) {
     $(document).on("click", ".showauto", function () {
         var base_url = $('.base_url').attr('val');
         var idx = $(this).attr('idx');
+        var tag = $(this).attr('tag');
+        var show = $(this).attr('show');
         var value_id = $(this).attr('val');
         var value_name = $('.' + value_id).attr('val');
 
-        // Clubs
-        if ($('#team_'+idx).val() != undefined) {
-          $('#team_'+idx).val(value_name);
-          $('#team_id_'+idx).val(value_id);
-        }
+        // Hashtag
+        if ($('#' + tag + '_' + idx).val() !== undefined) {
+            if (show) {
+                var itag = 1;
 
-        // Events
-        if ($('#event_'+idx).val() != undefined) {
-          $('#event_'+idx).val(value_name);
-          $('#event_id_'+idx).val(value_id);
-        }
+                // Check Already Count
+                var valID = [];
+                $('.box' + tag + '_' + idx).each(function (i) {
+                    var id = $(this).attr('id');
+                    if (id !== undefined) {
+                        valID[i] = $('#' + id + '_in').val();
+                        itag = itag + 1;
+                    }
+                });
 
-        // Category
-        if ($('#category_name_' + idx).val() != undefined) {
-            var icat = 1;
+                var x = 0;
+                $.each(valID, function (i, value) {
+                    if (value === value_id) {
+                        x = 1;
+                    }
+                });
 
-            // Check Already Count
-            var valID = [];
-            $('.boxcategory').each(function (i) {
-                if ($('#category_' + icat).attr('val') == icat) {
-                    valID[i] = $('#category_id_' + icat).val();
-                    icat = icat + 1;
+                if (x === 0) {
+                    $('.' + show).append(
+                        '<span class="ibox box' + tag + '_' + idx + '" id="' + tag + '_' + idx + '_' + itag + '" val="' + itag + '">'
+                            + '<span>'
+                                + value_name +
+                                '<a href="javascript:void(0)" onclick="remove_item(\'#' + tag + '_' + idx + ',' + itag + '\')" class="cl-red"><i class="fa fa-times fa-fw"></i></a>'
+                            + '</span>'
+                            + '<input type="hidden" id="' + tag + '_' + idx + '_' + itag + '_in" name="' + tag + '_id[]" value="' + value_id + '">'
+                        + '</div>'
+                    );
                 }
-            });
 
-            var x = 0;
-            $.each(valID, function (i, value) {
-                if (value == value_id) {
-                    x = 1;
-                }
-            });
-
-            if (x == 0) {
-                $('.showcategory').append(
-                    '<div class="boxcategory" id="category_' + icat + '" val="' + icat + '">'
-                    + '<div class="ibox">'
-                    + value_name +
-                    '<a href="javascript:void(0)" onclick="remove_item(\'#category,' + icat + '\')" style="color: #dd0000;"><i class="fa fa-times fa-fw"></i></a>'
-                    + '</div>'
-                    + '<input type="hidden" id="category_id_' + icat + '" name="category_id[]" value="' + value_id + '">'
-                    + '</div>'
-                );
-            }
-
-            $('#category_name_' + idx).val('');
-        }
-
-        // Tag
-        if ($('#tag_name_' + idx).val() != undefined) {
-            var itag = 1;
-
-            // Check Already Count
-            var valID = [];
-            $('.boxtag').each(function (i) {
-                if ($('#tag_' + itag).attr('val') == itag) {
-                    valID[i] = $('#tag_id_' + itag).val();
-                    itag = itag + 1;
-                }
-            });
-
-            var x = 0;
-            $.each(valID, function (i, value) {
-                if (value == value_id) {
-                    x = 1;
-                }
-            });
-
-            if (x == 0) {
-                $('.showtag').append(
-                    '<div class="boxtag" id="tag_' + itag + '" val="' + itag + '">'
-                    + '<div class="ibox">'
-                    + value_name +
-                    '<a href="javascript:void(0)" onclick="remove_item(\'#tag,' + itag + '\')" style="color: #dd0000;"><i class="fa fa-times fa-fw"></i></a>'
-                    + '</div>'
-                    + '<input type="hidden" id="tag_id_' + itag + '" name="tag_id[]" value="' + value_id + '">'
-                    + '</div>'
-                )
-            }
-            ;
-
-            $('#tag_name_' + idx).val('');
-        }
-
-        // Post
-        if ($('#post_id_' + idx).val() == '') {
-            var x = 0;
-            $('.post_id').each(function (i) {
-                var showID = $(this).attr('id');
-                if ($('#' + showID).val() == value_id) {
-                    x = 1;
-                    $('#post_name_' + idx).val('');
-                    alert('Post name already exists');
-                }
-            });
-
-            if (x == 0) {
-                $('#post_id_' + idx).val(value_id);
-                $('#post_name_' + idx).val(value_name);
+                $('#' + tag + '_' + idx).val('');
+            } else {
+                $('#' + tag + '_' + idx).val(value_name);
+                $('#' + tag + '_id_' + idx).val(value_id);
             }
         }
 
@@ -134,44 +76,6 @@ $(document).ready(function (e) {
     $(document).on("click", function (e) {
         var clicked = $(e.target);
         if (!clicked.hasClass('input_multi')) {
-
-            // Category
-            $('#table_category #boxresult').each(function () {
-                if ($(this).attr('val') == 'auto-active') {
-                    var show = $(this).attr('class');
-                    $("." + show).hide();
-                    $("." + show).removeAttr('val');
-
-                    var split = show.split("_");
-                    $('#category_name_' + split[1]).val('');
-                    $('.result_' + split[1]).html('');
-                }
-            });
-
-            // Tag
-            $('#table_tag #boxresult').each(function () {
-                if ($(this).attr('val') == 'auto-active') {
-                    var show = $(this).attr('class');
-                    $("." + show).hide();
-                    $("." + show).removeAttr('val');
-
-                    var split = show.split("_");
-                    $('#tag_name_' + split[1]).val('');
-                    $('.result_' + split[1]).html('');
-                }
-            });
-
-            // Post
-            $('#table_post #boxresult').each(function () {
-                if ($(this).attr('val') == 'auto-active') {
-                    var show = $(this).attr('class');
-                    $("." + show).hide();
-                    $("." + show).removeAttr('val');
-
-                    var split = show.split("_");
-                    $('.result_' + split[1]).html('');
-                }
-            });
 
             // Language
             $('#table_language #boxresult').each(function () {

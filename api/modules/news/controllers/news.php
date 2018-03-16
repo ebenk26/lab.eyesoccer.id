@@ -33,12 +33,10 @@ class News extends MX_Controller
             $text_desc = $this->input->post('description');
 
             $new_link = $this->library->seo_title($text_title);
-
             $upload = $this->news_model->__upload($new_link);
-            $key = substr(md5($this->library->app_key()), 0, 7);
 
-            $cat = $this->excurl->reqCurl('news-category', ['news_type_id' => $this->input->post('category')])->data[0];
-            $catsub = $this->excurl->reqCurl('news-category-sub', ['sub_news_id' => $this->input->post('subcategory')])->data[0];
+            $cat = explode(';', $this->input->post('category'));
+            $catsub = explode(';', $this->input->post('subcategory'));
 
             // News
             $dt1 = array(// General
@@ -48,19 +46,29 @@ class News extends MX_Controller
                 'tag' => $this->input->post('meta_keyword'),
                 'credit' => $this->input->post('credit'),
                 'category_news' => $this->input->post('recommended'),
-                'url' => $new_link.'-'.$key,
                 'pic' => $upload['data'],
                 // Data
-                'newstype_id' => $this->input->post('category'),
-                'newstype_sub_id' => $this->input->post('subcategory'),
-                'news_type' => $cat->news_type,
-                'sub_category_name' => $catsub->sub_category_name,
+                'newstype_id' => isset($cat[0]) ? $cat[0] : 0,
+                'newstype_sub_id' => isset($catsub[0]) ? $catsub[0] : 0,
+                'news_type' => isset($cat[1]) ? $cat[1] : '',
+                'sub_category_name' => isset($catsub[1]) ? $catsub[1] : '',
                 'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
                 'createon' => date('Y-m-d h:i:s'),
                 'admin_id' => $this->input->post('ses_user_id')
             );
 
             $option = $this->action->insert(array('table' => $this->dtable, 'insert' => $dt1));
+            if ($option['state'] == 0) {
+                $this->news_model->__unlink($upload['data']);
+
+                $this->validation->error_message($option);
+                return false;
+            }
+
+            $id = $this->db->insert_id();
+            $key = substr(md5($id), 0, 7);
+            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('url' => $new_link.'-'.$key),
+                                                  'where' => array('eyenews_id' => $id)));
             if ($option['state'] == 0) {
                 $this->news_model->__unlink($upload['data']);
 
@@ -85,12 +93,10 @@ class News extends MX_Controller
             $text_desc = $this->input->post('description');
 
             $new_link = $this->library->seo_title($text_title);
-
             $upload = $this->news_model->__upload($new_link);
-            $key = substr(md5($this->library->app_key()), 0, 7);
 
-            $cat = $this->excurl->reqCurl('news-category', ['news_type_id' => $this->input->post('category')])->data[0];
-            $catsub = $this->excurl->reqCurl('news-category-sub', ['sub_news_id' => $this->input->post('subcategory')])->data[0];
+            $cat = explode(';', $this->input->post('category'));
+            $catsub = explode(';', $this->input->post('subcategory'));
 
             // News
             $dt1 = array(// General
@@ -100,19 +106,29 @@ class News extends MX_Controller
                 'tag' => $this->input->post('meta_keyword'),
                 'credit' => $this->input->post('credit'),
                 'category_news' => $this->input->post('recommended'),
-                'url' => $new_link.'-'.$key,
                 'pic' => $upload['data'],
                 // Data
-                'newstype_id' => $this->input->post('category'),
-                'newstype_sub_id' => $this->input->post('subcategory'),
-                'news_type' => $cat->news_type,
-                'sub_category_name' => $catsub->sub_category_name,
+                'newstype_id' => isset($cat[0]) ? $cat[0] : 0,
+                'newstype_sub_id' => isset($catsub[0]) ? $catsub[0] : 0,
+                'news_type' => isset($cat[1]) ? $cat[1] : '',
+                'sub_category_name' => isset($catsub[1]) ? $catsub[1] : '',
                 'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
                 'updateon' => date('Y-m-d h:i:s')
             );
 
             $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,
                                                   'where' => array('eyenews_id' => $this->input->post('idx'))));
+            if ($option['state'] == 0) {
+                $this->news_model->__unlink($upload['data']);
+
+                $this->validation->error_message($option);
+                return false;
+            }
+
+            $id = $this->input->post('idx');
+            $key = substr(md5($id), 0, 7);
+            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('url' => $new_link.'-'.$key),
+                                                  'where' => array('eyenews_id' => $id)));
             if ($option['state'] == 0) {
                 $this->news_model->__unlink($upload['data']);
 

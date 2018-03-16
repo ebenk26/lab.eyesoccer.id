@@ -31,9 +31,7 @@ class Category extends MX_Controller
         if($_POST)
         {
             $text_title = $this->input->post('title');
-
             $new_link = $this->library->seo_title($text_title);
-            $key = substr(md5($this->library->app_key()), 0, 7);
 
             // Category
             if (isset($_GET['id'])) {
@@ -44,6 +42,21 @@ class Category extends MX_Controller
 
             $table = (isset($_GET['id'])) ? $this->xtable : $this->dtable;
             $option = $this->action->insert(array('table' => $table, 'insert' => $dt1));
+            if ($option['state'] == 0) {
+                $this->validation->error_message($option);
+                return false;
+            }
+
+            $id = $this->db->insert_id();
+            $key = substr(md5($id), 0, 7);
+            $query = array('table' => $table, 'update' => array('slug' => $new_link.'-'.$key));
+            if (isset($_GET['id'])) {
+                $query = array_merge($query, array('where' => array('sub_news_id' => $id)));
+            } else {
+                $query = array_merge($query, array('where' => array('news_type_id' => $id)));
+            }
+
+            $option = $this->action->update($query);
             if ($option['state'] == 0) {
                 $this->validation->error_message($option);
                 return false;
@@ -63,9 +76,7 @@ class Category extends MX_Controller
         if($_POST)
         {
             $text_title = $this->input->post('title');
-
             $new_link = $this->library->seo_title($text_title);
-            $key = substr(md5($this->library->app_key()), 0, 7);
 
             // Category
             if (isset($_GET['id'])) {
@@ -77,6 +88,21 @@ class Category extends MX_Controller
             $table = (isset($_GET['id'])) ? $this->xtable : $this->dtable;
             $where = (isset($_GET['id'])) ? ['sub_news_id' => $this->input->post('idx')] : ['news_type_id' => $this->input->post('idx')];
             $option = $this->action->update(array('table' => $table, 'update' => $dt1, 'where' => $where));
+            if ($option['state'] == 0) {
+                $this->validation->error_message($option);
+                return false;
+            }
+
+            $id = $this->input->post('idx');
+            $key = substr(md5($id), 0, 7);
+            $query = array('table' => $table, 'update' => array('slug' => $new_link.'-'.$key));
+            if (isset($_GET['id'])) {
+                $query = array_merge($query, array('where' => array('sub_news_id' => $id)));
+            } else {
+                $query = array_merge($query, array('where' => array('news_type_id' => $id)));
+            }
+
+            $option = $this->action->update($query);
             if ($option['state'] == 0) {
                 $this->validation->error_message($option);
                 return false;

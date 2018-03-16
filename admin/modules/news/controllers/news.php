@@ -409,17 +409,40 @@ class News extends MX_Controller
 
     function subcategory()
     {
-        $search = $this->input->post('val');
-        $category = $this->excurl->reqCurl('news-category-sub', ['news_type_id' => $search]);
+        $search = explode(';', $this->input->post('val'));
+        $category = $this->excurl->reqCurl('news-category-sub', ['news_type_id' => $search[0]]);
 
         if ($category) {
             if ($category->data) {
                 foreach ($category->data as $cat) {
-                    echo "<option value='$cat->sub_news_id'>$cat->sub_category_name</option>";
+                    echo "<option value='$cat->sub_news_id;$cat->sub_category_name'>$cat->sub_category_name</option>";
                 }
             } else {
                 echo "<option value=''>- Select -</option>";
             }
+        }
+    }
+
+    function autonews($idx = '')
+    {
+        $search = $this->input->post('val');
+
+        $query = array('page' => 1, 'limit' => '100', 'search' => $search);
+        $clubs = $this->excurl->reqCurl('news', $query)->data;
+
+        if($clubs)
+        {
+            foreach($clubs as $t)
+            {
+                $bold_search = "<b>$search</b>";
+                $title = str_ireplace($search, $bold_search, $t->title);
+
+                echo "<div class='showauto' val='$t->eyenews_id' idx='$idx' tag='news' show='shownews' style='text-transform: capitalize;'>
+                        <span class='$t->eyenews_id' val='$t->title'>$title</span>
+                    </div>";
+            }
+        } else {
+            echo "<div class='showauto'><span>No Result</span></div>";
         }
     }
 

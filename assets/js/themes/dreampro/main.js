@@ -215,18 +215,15 @@ $(document).ready(function () {
     });
 
     $(document).on('keypress', '.hashtag', function (e) {
-        var html = $(this);
+        var val = $(this).val();
+        var tag = $(this).attr('id');
+        var show = $(this).attr('show');
         $(':input[type="submit"]').prop('disabled', true);
 
         var keyCode = e.keyCode || e.which;
         if (keyCode === 13) {
             e.preventDefault();
 
-            var val = html.val();
-            var tag = html.attr('id');
-            var show = html.attr('show');
-
-            $('label.error').remove();
             $('#' + tag).val('').focus();
 
             var itag = 1;
@@ -248,20 +245,30 @@ $(document).ready(function () {
                 }
             });
 
+            var split = tag.split('_');
+            var xtag = (split[1]) ? split[0] : tag;
+
             if (x == 0) {
                 $('.' + show).append(
                     '<div class="ibox box' + tag + '" id="' + tag + '_' + itag + '" val="' + itag + '">'
-                    + '<span>'
-                    + val +
-                    '<a href="javascript:void(0)" onclick="remove_item(\'#' + tag + ',' + itag + '\')" class="cl-red"><i class="fa fa-times fa-fw"></i></a>'
-                    + '</span>'
-                    + '<input type="hidden" id="' + tag + '_' + itag + '_in" name="' + tag + '[]" value="' + val + '">'
+                        + '<span>'
+                            + val +
+                            '<a href="javascript:void(0)" onclick="remove_item(\'#' + tag + ',' + itag + '\')" class="cl-red"><i class="fa fa-times fa-fw"></i></a>'
+                        + '</span>'
+                        + '<input type="hidden" id="' + tag + '_' + itag + '_in" name="' + xtag + '[]" value="' + val + '">'
                     + '</div>'
                 );
             }
 
-            $('label.error').remove();
             $(':input[type="submit"]').prop('disabled', false);
+
+            if(split[1])
+            {
+                $('.showhide_' + split[1]).hide();
+                $('.showhide_' + split[1]).removeAttr('val');
+                $('.result_' + split[1]).html('');
+            }
+
             return false;
         }
     });

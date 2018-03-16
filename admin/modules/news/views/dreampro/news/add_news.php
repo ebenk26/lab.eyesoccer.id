@@ -24,6 +24,13 @@
                     <h1>Add New</h1>
                     <div class='pad-lr20'>
                         <input type='hidden' name='val' value='true'>
+                        <!--<div class='mg-b10 pos-rel wd-100'>
+                            <input type="text" class="input_multi hashtag" id="news_99" name="news" show="shownews" autocomplete="off"
+                                   onkeyup="autocommulti('news/autonews/news/99')" placeholder="Search news in here..." required="">
+                            <input type="hidden" name="news_a_id" id="news_id_99">
+                            <div id="boxresult" class="showhide_99" style="display: none;"><div class="result_99"></div></div>
+                            <div class="shownews"></div>
+                        </div>-->
                         <div class='mg-b10'>
                             <label>Title</label>
                             <input type='text' name='title' id='title' class='cinput input_multi' required>
@@ -62,7 +69,7 @@
                                     if($category)
                                     {
                                         foreach ($category->data as $cat) {
-                                            echo "<option value='$cat->news_type_id'>$cat->news_type</option>";
+                                            echo "<option value='$cat->news_type_id;$cat->news_type'>$cat->news_type</option>";
                                         }
                                     }
                                 ?>
