@@ -1,23 +1,23 @@
 <?php
 
-class Match extends MX_Controller
+class Category extends MX_Controller
 {
     var $roles = 'admin';
-    var $mparent = 'Match';
+    var $mparent = 'Advert';
     var $offset = 1;
     var $limit = 10;
-    var $dtable = 'tbl_jadwal_event';
+    var $dtable = 'tbl_category_ads';
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('match_model');
+        $this->load->model('category_model');
 
         if ($this->session->userdata('login') != TRUE AND $this->session->userdata('user_uid') == '') {
             redirect('login');
         }
 
-        $raccess = $this->library->role_access('match');
+        $raccess = $this->library->role_access('advert/category');
         if (isset($raccess)) {
             $this->roles = $raccess;
         }
@@ -25,19 +25,14 @@ class Match extends MX_Controller
 
     public function index()
     {
-        $data['title'] = 'Match';
+        $data['title'] = 'Category';
         $data['parent'] = $this->mparent;
         $data['roles'] = $this->roles;
-        $data['content'] = $this->config->item('base_theme') . '/match/match';
+        $data['content'] = $this->config->item('base_theme') . '/category/category';
 
-        $session = array('xfield_' . $this->dtable => '',
-                            'xsearch_' . $this->dtable => '',
-                            'sortBy_' . $this->dtable => 'id_jadwal_event',
-                            'sortDir_' . $this->dtable => 'desc',
-                            'multi_search_' . $this->dtable => '',
-                            'multi_data_' . $this->dtable => '',
-                            'voffset_' . $this->dtable => '',
-                            'xoffset_' . $this->dtable => '');
+        $id = (isset($_GET['id'])) ? '' : 'category_ads_id';
+        $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => 'desc',
+                         'multi_search_' . $this->dtable => '', 'multi_data_' . $this->dtable => '', 'voffset_' . $this->dtable => '', 'xoffset_' . $this->dtable => '');
         $this->session->set_userdata($session);
 
         if ($this->session->userdata('limit_' . $this->dtable) > 0) {
@@ -63,14 +58,15 @@ class Match extends MX_Controller
             );
         }
 
-        $ulevel = $this->library->user_check();
-        if($ulevel->ff > 0)
-        {
-            $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
+        if (isset($_GET['id'])) {
+            $query = array_merge($query, array('category_ads_id' => $_GET['id']));
+            $data['sub'] = $this->excurl->reqCurl('ads-category', ['category_ads_id' => $_GET['id']])->data[0];
+
+        } else {
+            $data['dt'] = $this->excurl->reqCurl('ads-category', $query)->data;
+            $data['count'] = $this->excurl->reqCurl('ads-category', array_merge($query, array('count' => true)))->data[0];
         }
 
-        $data['dt'] = $this->excurl->reqCurl('event-match', $query)->data;
-        $data['count'] = $this->excurl->reqCurl('event-match', array_merge($query, array('count' => true)))->data[0];
         $data['limit'] = $limit;
         $data['offset'] = $this->offset;
         $data['prefix'] = $this->dtable;
@@ -82,7 +78,7 @@ class Match extends MX_Controller
     function view($option = array())
     {
         if ($this->input->post('val') == true) {
-            $data['title'] = 'Match';
+            $data['title'] = 'Category';
             $data['roles'] = $this->roles;
 
             // Limit Session
@@ -92,11 +88,18 @@ class Match extends MX_Controller
                 if ($this->session->userdata('sortDir_' . $this->dtable) == 'asc' OR
                     $this->session->userdata('sortDir_' . $this->dtable) == 'desc'
                 ) {
-                    $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                     'sortBy_' . $this->dtable => $this->session->userdata('sortBy_' . $this->dtable), 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
+                    if (isset($_GET['id'])) {
+                        $id = ($this->session->userdata('sortBy_' . $this->dtable) == 'category_ads_id') ? '' : $this->session->userdata('sortBy_' . $this->dtable);
+                        $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
+                                         'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
+                    } else {
+                        $id = ($this->session->userdata('sortBy_' . $this->dtable) == '') ? 'category_ads_id' : $this->session->userdata('sortBy_' . $this->dtable);
+                        $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
+                                         'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
+                    }
                 } else {
                     $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                     'sortBy_' . $this->dtable => 'id_jadwal_event', 'sortDir_' . $this->dtable => 'desc');
+                                     'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => 'desc');
                 }
             }
             $this->session->set_userdata($session);
@@ -147,24 +150,24 @@ class Match extends MX_Controller
                 $count = array_merge($count, $this->session->userdata('multi_data_' . $this->dtable));
             }
 
-            $ulevel = $this->library->user_check();
-            if($ulevel->ff > 0)
-            {
-                $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
-                $count = array_merge($count, array($ulevel->fu => $this->session->userdata('user_id')));
+            if (isset($_GET['id'])) {
+                $query = array_merge($query, array('category_ads_id' => $_GET['id']));
+                $count = array_merge($count, array('category_ads_id' => $_GET['id']));
+                $data['sub'] = $this->excurl->reqCurl('ads-category', ['category_ads_id' => $_GET['id']])->data[0];
+            } else {
+                $data['dt'] = $this->excurl->reqCurl('ads-category', $query)->data;
+                $data['count'] = $this->excurl->reqCurl('ads-category', $count)->data[0];
             }
 
-            $data['dt'] = $this->excurl->reqCurl('match', $query)->data;
-            $data['count'] = $this->excurl->reqCurl('match', $count)->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $offset;
             $data['prefix'] = $this->dtable;
             $data['showpage'] = ceil($data['count']->cc / $limit);
 
             if ($this->input->post('val') > 0 OR isset($option['is_check'])) {
-                $html = $this->load->view($this->config->item('base_theme') . '/match/Match_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/category/category_jquery', $data, true);
             } else {
-                $html = $this->load->view($this->config->item('base_theme') . '/match/match', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/category/category', $data, true);
             }
 
             header('Content-Type: application/json');
@@ -176,14 +179,14 @@ class Match extends MX_Controller
                 echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable), 'query' => $query));
             }
         } else {
-            redirect('match');
+            redirect('advert/category');
         }
     }
 
     function search()
     {
         if ($this->input->post('val') == true) {
-            $data['title'] = 'Match';
+            $data['title'] = 'Category';
 
             $split = explode(",", $this->input->post('val'));
 
@@ -210,30 +213,30 @@ class Match extends MX_Controller
                 $this->session->set_userdata($session);
             }
 
-            $ulevel = $this->library->user_check();
-            if($ulevel->ff > 0)
-            {
-                $query['query'] = array_merge($query['query'], array($ulevel->fu => $this->session->userdata('user_id')));
-                $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
+            if (isset($_GET['id'])) {
+                $query['query'] = array_merge($query['query'], array('category_ads_id' => $_GET['id']));
+                $query['count'] = array_merge($query['count'], array('category_ads_id' => $_GET['id']));
+                $data['sub'] = $this->excurl->reqCurl('ads-category', ['category_ads_id' => $_GET['id']])->data[0];
+            } else {
+                $data['dt'] = $this->excurl->reqCurl('ads-category', $query['query'])->data;
+                $data['count'] = $this->excurl->reqCurl('ads-category', $query['count'])->data[0];
             }
 
-            $data['dt'] = $this->excurl->reqCurl('match', $query['query'])->data;
-            $data['count'] = $this->excurl->reqCurl('match', $query['count'])->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $this->offset;
             $data['prefix'] = $this->dtable;
             $data['showpage'] = ceil($data['count']->cc / $query['query']['limit']);
 
             if (count($split) > 1) {
-                $html = $this->load->view($this->config->item('base_theme') . '/match/Match_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/category/category_jquery', $data, true);
             } else {
-                $html = $this->load->view($this->config->item('base_theme') . '/match/match', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/category/category', $data, true);
             }
 
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('match');
+            redirect('advert/category');
         }
     }
 
@@ -248,36 +251,39 @@ class Match extends MX_Controller
                 $query['count'] = array_merge($query['count'], $this->session->userdata('multi_data_' . $this->dtable));
             }
 
-            $ulevel = $this->library->user_check();
-            if($ulevel->ff > 0)
-            {
-                $query['query'] = array_merge($query['query'], array($ulevel->fu => $this->session->userdata('user_id')));
-                $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
+            if (isset($_GET['id'])) {
+                $query['query'] = array_merge($query['query'], array('category_ads_id' => $_GET['id']));
+                $query['count'] = array_merge($query['count'], array('category_ads_id' => $_GET['id']));
+                $data['sub'] = $this->excurl->reqCurl('ads-category', ['category_ads_id' => $_GET['id']])->data[0];
+            } else {
+                $data['dt'] = $this->excurl->reqCurl('ads-category', $query['query'])->data;
+                $data['count'] = $this->excurl->reqCurl('ads-category', $query['count'])->data[0];
             }
 
-            $data['dt'] = $this->excurl->reqCurl('match', $query['query'])->data;
-            $data['count'] = $this->excurl->reqCurl('match', $query['count'])->data[0];
             $data['offset'] = $query['offset']+1;
 
-            $html = $this->load->view($this->config->item('base_theme') . '/match/match_table', $data, true);
+            $html = $this->load->view($this->config->item('base_theme') . '/category/category_table', $data, true);
 
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('match');
+            redirect('advert/category');
         }
     }
 
     function add()
     {
         if ($this->roles == 'admin' OR $this->roles->menu_created == 1) {
-
-            $data['title'] = 'Match';
+            $data['title'] = 'Category';
             $data['parent'] = $this->mparent;
-            $data['content'] = $this->config->item('base_theme') . '/Match/add_match';
+            $data['content'] = $this->config->item('base_theme') . '/category/add_category';
+
+            if (isset($_GET['id'])) {
+                $data['sub'] = $this->excurl->reqCurl('ads-category', ['category_ads_id' => $_GET['id']])->data[0];
+            }
 
             if ($this->input->post('val') == true) {
-                $this->load->view($this->config->item('base_theme') . '/Match/add_match', $data);
+                $this->load->view($this->config->item('base_theme') . '/category/add_category', $data);
             } else {
                 $this->load->view($this->config->item('base_theme') . '/template', $data);
             }
@@ -285,19 +291,23 @@ class Match extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('match');
+                redirect('advert/category');
             }
         }
     }
 
     function save()
     {
-
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $option = $this->excurl->reqAction('event/match/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
+
+            if (isset($_GET['id'])) {
+                $option = $this->excurl->reqAction('advert/category/save/?id='.$_GET['id'], $_POST);
+            } else {
+                $option = $this->excurl->reqAction('advert/category/save', $_POST);
+            }
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('match');
+            redirect('advert/category');
         }
     }
 
@@ -305,24 +315,21 @@ class Match extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
             if ($id == '') {
-                redirect('match');
+                redirect('advert/category');
             } else {
-                $data['title'] = 'Match';
+                $data['title'] = 'Category';
                 $data['parent'] = $this->mparent;
-                $data['content'] = $this->config->item('base_theme') . '/match/edit_Match';
+                $data['content'] = $this->config->item('base_theme') . '/category/edit_category';
 
-                $query = array('id_jadwal_event' => $id, 'detail' => true);
-                $ulevel = $this->library->user_check();
-                if($ulevel->ff > 0)
-                {
-                    $query = array_merge($query, array('admin_id' => $this->session->userdata('user_id')));
+
+                if (isset($_GET['id'])) {
+                    $data['sub'] = $this->excurl->reqCurl('ads-category', ['category_ads_id' => $_GET['id']])->data[0];
+                } else {
+                    $data['dt1'] = $this->excurl->reqCurl('ads-category', ['category_ads_id' => $id])->data[0];
                 }
 
-                $data['dt1'] = $this->excurl->reqCurl('match', $query)->data[0];
-                $data['category'] = $this->excurl->reqCurl('match-category');
-
                 if ($this->input->post('val') == true) {
-                    $this->load->view($this->config->item('base_theme') . '/match/edit_Match', $data);
+                    $this->load->view($this->config->item('base_theme') . '/category/edit_category', $data);
                 } else {
                     $this->load->view($this->config->item('base_theme') . '/template', $data);
                 }
@@ -331,7 +338,7 @@ class Match extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('match');
+                redirect('advert/category');
             }
         }
     }
@@ -339,10 +346,15 @@ class Match extends MX_Controller
     function update()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-            $option = $this->excurl->reqAction('match/update', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
+
+            if (isset($_GET['id'])) {
+                $option = $this->excurl->reqAction('advert/category/update/?id='.$_GET['id'], $_POST);
+            } else {
+                $option = $this->excurl->reqAction('advert/category/update', $_POST);
+            }
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('match');
+            redirect('advert/category');
         }
     }
 
@@ -350,20 +362,20 @@ class Match extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
             if ($id == '') {
-                redirect('match');
+                redirect('advert/category');
             } else {
                 if ($this->input->post('val') == true) {
-                    $option = $this->match_model->__delete($id);
+                    $option = $this->category_model->__delete($id);
                     $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
-                    redirect('match');
+                    redirect('advert/category');
                 }
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('match');
+                redirect('advert/category');
             }
         }
     }
@@ -378,7 +390,7 @@ class Match extends MX_Controller
                 case 1:
                     if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->match_model->__delete($split[$i]);
+                            $option = $this->category_model->__delete($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -388,7 +400,7 @@ class Match extends MX_Controller
                 case 2:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->match_model->__enable($split[$i]);
+                            $option = $this->category_model->__enable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -398,7 +410,7 @@ class Match extends MX_Controller
                 case 3:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->match_model->__disable($split[$i]);
+                            $option = $this->category_model->__disable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -408,59 +420,7 @@ class Match extends MX_Controller
 
             $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('match');
-        }
-    }
-
-    function autoteam($idx = '')
-    {
-        $search = $this->input->post('val');
-
-        $query = array('page' => 1, 'limit' => '100', 'search' => $search);
-        $clubs = $this->excurl->reqCurl('profile-club', $query)->data;
-
-        $tag = ($idx == 0) ? 'team_a' : 'team_b';
-
-        if($clubs)
-        {
-            foreach($clubs as $t)
-            {
-                $bold_search = "<b>$search</b>";
-                $team_name = str_ireplace($search, $bold_search, $t->name);
-
-                echo "<div class='showauto' val='$t->club_id' idx='$idx' tag='$tag' style='text-transform: capitalize;'>
-                        <span class='$t->club_id' val='$t->name'>$team_name</span>
-                    </div>";
-            }
-        }
-        else
-        {
-            echo "<div class='showauto'><span>No Result</span></div>";
-        }
-    }
-
-    function autoevent($idx = '')
-    {
-        $search = $this->input->post('val');
-
-        $query = array('page' => 1, 'limit' => '100', 'search' => $search);
-        $events = $this->excurl->reqCurl('event', $query)->data;
-
-        if($events)
-        {
-            foreach($events as $t)
-            {
-                $bold_search = "<b>$search</b>";
-                $title = str_ireplace($search, $bold_search, $t->title);
-
-                echo "<div class='showauto' val='$t->id_event' idx='$idx' tag='event' show='showevent' style='text-transform: capitalize;'>
-                        <span class='$t->id_event' val='$t->title'>$title</span>
-                    </div>";
-            }
-        }
-        else
-        {
-            echo "<div class='showauto'><span>No Result</span></div>";
+            redirect('advert/category');
         }
     }
 
