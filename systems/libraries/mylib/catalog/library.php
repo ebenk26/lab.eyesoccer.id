@@ -722,10 +722,10 @@ class Library
             if (is_file(UPLOAD . "$path/ori_$pic")) {
                 return $pathurl . "/$path/$pic/$resize";
             } else {
-                return $url . "/$resize";
+                return str_replace(' ', '%20', $url . "/$resize");
             }
         } else {
-            return $url . "/$resize";
+            return str_replace(' ', '%20', $url . "/$resize");
         }
     }
 

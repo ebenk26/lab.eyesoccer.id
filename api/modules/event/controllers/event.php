@@ -65,7 +65,7 @@ class Event extends MX_Controller
 
             $this->tools->__flashMessage($option);
         } else {
-            echo 2;exit();
+            
             $data = $this->__rest()->__getstatus('Data must be type post', 400);
             $status = $data['error']['status_code'];
         }

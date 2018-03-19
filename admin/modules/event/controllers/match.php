@@ -154,8 +154,8 @@ class Match extends MX_Controller
                 $count = array_merge($count, array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
-            $data['dt'] = $this->excurl->reqCurl('match', $query)->data;
-            $data['count'] = $this->excurl->reqCurl('match', $count)->data[0];
+            $data['dt'] = $this->excurl->reqCurl('event-match', $query)->data;
+            $data['count'] = $this->excurl->reqCurl('event-match', $count)->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $offset;
             $data['prefix'] = $this->dtable;
@@ -292,9 +292,11 @@ class Match extends MX_Controller
 
     function save()
     {
+        if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1)
+        {
+            $option = $this->excurl->reqAction('event/match/save',
+                        array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
 
-        if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $option = $this->excurl->reqAction('event/match/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('match');
