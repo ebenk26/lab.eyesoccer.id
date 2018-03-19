@@ -27,13 +27,9 @@
                     <div class='pad-lr20'>
                         <input type='hidden' name='idx' id='idx' value='<?php echo $dt1->ads_id; ?>'>
                         <input type='hidden' name='val' value='true'>
-                        <div class='mg-b10'>
+                        <div class='pad-b20'>
                             <label>Name</label>
                             <input type='text' name='title' id='title' value='<?php echo $dt1->title; ?>' class='cinput input_multi' required>
-                        </div>
-                        <div class='pad-b20'>
-                            <label>Thumb</label>
-                            <input type='text' name='slug' id='slug' value='<?php echo $dt1->slug; ?>' class='cinput input_multi' required>
                         </div>
                     </div>
                 </div>

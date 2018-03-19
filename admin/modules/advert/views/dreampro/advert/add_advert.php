@@ -24,13 +24,9 @@
                     <h1>Add New</h1>
                     <div class='pad-lr20'>
                         <input type='hidden' name='val' value='true'>
-                        <div class='mg-b10'>
+                        <div class='pad-b20'>
                             <label>Title</label>
                             <input type='text' name='title' id='title' class='cinput input_multi' required>
-                        </div>
-                        <div class='pad-b20'>
-                            <label>Thumb</label>
-                            <input type='text' name='slug' id='slug' class='cinput input_multi' required>
                         </div>
                     </div>
                 </div>
