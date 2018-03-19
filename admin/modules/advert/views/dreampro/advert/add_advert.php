@@ -24,16 +24,9 @@
                     <h1>Add New</h1>
                     <div class='pad-lr20'>
                         <input type='hidden' name='val' value='true'>
-                        <div class='mg-b10'>
+                        <div class='pad-b20'>
                             <label>Title</label>
                             <input type='text' name='title' id='title' class='cinput input_multi' required>
-                        </div>
-                        <div class='mg-b10'>
-                            <label>Thumb</label>
-                            <textarea name="slug" id="slug" class='cinput input_multi' rows="4" cols="80" maxlength="255"></textarea>
-                            <div class="tx-right">
-                                <span class="cl-red ff-12"></span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -43,7 +36,7 @@
                 <div class='boxtab pad-all mg-b20'>
                     <h1>Category</h1>
                     <div class='pad-lr20'>
-                        <div class='mg-b10'>
+                        <div class='pad-b20'>
                             <label>Category</label>
                             <select name="note" id="note" class="cinput select_multi tx-cp" >
                                 <option value="">- Select -</option>
@@ -59,8 +52,14 @@
                         </div>
                     </div>
                 </div>
-                
-             
+                <div class='boxtab pad-all mg-b20'>
+                    <h1>Picture</h1>
+                    <div class='pad-lr20'>
+                        <div class='pad-b20'>
+                            <input type='file' name='uploadfile' id='uploadfile' class='cinput input_multi'>
+                        </div>
+                    </div>
+                </div>  
                 <div class='boxtab pad-all mg-b20'>
                     <h1>Action</h1>
                     <div class='pad-lr20'>

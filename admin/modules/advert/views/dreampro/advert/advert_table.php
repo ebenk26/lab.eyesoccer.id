@@ -4,14 +4,14 @@
         <th style='width: 5%;'>
             <input type='checkbox' name='checkall' id='checkall' onclick='actcheckall(this.id);'>
         </th>
-        <th style='width: 15%;'> 
+        <th style='width: 30%;'> 
             <a href="javascript:void(0)" class='csort' id="ads_id" val="desc" onclick="actsort(this.id)">No</a>
         </th>
         <th>
             <a href="javascript:void(0)" class='csort' id="title" val="desc" onclick="actsort(this.id)">Title</a>
         </th>
-        <th class='hd-mobile' style='width: 15%;'>
-            <a href="javascript:void(0)" class='csort' id="note" val="desc" onclick="actsort(this.id)">Note</a>
+        <th class='hd-mobile' style='width: 20%;'>
+            <a href="javascript:void(0)" class='csort' id="note" val="desc" onclick="actsort(this.id)">Category</a>
         </th>
         <th style='width: 10%;'>Action</th>
     </tr>

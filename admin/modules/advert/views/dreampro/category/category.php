@@ -15,7 +15,7 @@
         <label>Search By</label>
         <select name='cselect' class='cinput inselect'>
             <?php
-                $field = array('note' => 'Note','category_name_ads' => 'Name');
+                $field = array('category' => 'Name', 'note' => 'Category');
                 foreach($field as $n1 => $v1)
                 {
                     if($this->session->userdata('xfield_'.$prefix) == $n1)

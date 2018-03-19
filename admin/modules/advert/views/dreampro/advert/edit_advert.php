@@ -27,13 +27,9 @@
                     <div class='pad-lr20'>
                         <input type='hidden' name='idx' id='idx' value='<?php echo $dt1->ads_id; ?>'>
                         <input type='hidden' name='val' value='true'>
-                        <div class='mg-b10'>
+                        <div class='pad-b20'>
                             <label>Name</label>
                             <input type='text' name='title' id='title' value='<?php echo $dt1->title; ?>' class='cinput input_multi' required>
-                        </div>
-                        <div class='mg-b10'>
-                            <label>Thumb</label>
-                            <textarea name="slug" id="slug" class='cinput input_multi' rows="4" cols="80"  maxlength="255"><?php echo $dt1->slug; ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -43,7 +39,7 @@
                 <div class='boxtab pad-all mg-b20'>
                     <h1>Category</h1>
                     <div class='pad-lr20'>
-                        <div class='mg-b10'>
+                        <div class='pad-b20'>
                             <label>Category</label>
                             <select name="category" id="category" class="cinput select_multi tx-cp">
                                 <option value="">- Select -</option>
