@@ -316,7 +316,7 @@ class Event extends MX_Controller
                 }
 
                 $data['dt1'] = $this->excurl->reqCurl('Event', $query)->data[0];
-                $data['category'] = $this->excurl->reqCurl('Event-category');
+                // $data['category'] = $this->excurl->reqCurl('Event-category');
 
                 if ($this->input->post('val') == true) {
                     $this->load->view($this->config->item('base_theme') . '/Event/edit_event', $data);
