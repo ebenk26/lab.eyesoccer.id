@@ -106,10 +106,6 @@ class Advert extends MX_Controller
                 return false;
             }
 
-            $id = $this->input->post('idx');
-            $key = substr(md5($id), 0, 7);
-            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('url' => $new_link.'-'.$key),
-                                                  'where' => array('ads_id' => $id)));
             if ($option['state'] == 0) {
                 $this->advert_model->__unlink($upload['data']);
 

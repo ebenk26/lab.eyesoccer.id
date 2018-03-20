@@ -81,18 +81,7 @@ class Category extends MX_Controller
                 return false;
             }
 
-            $id = $this->input->post('idx');
-            $key = substr(md5($id), 0, 7);
-            $query = array('table' => $table, 'update' => array('slug' => $new_link.'-'.$key));
-            if (isset($_GET['id'])) {
-                $query = array_merge($query, array('where' => array('category_ads_id' => $id)));
-            }
 
-            $option = $this->action->update($query);
-            if ($option['state'] == 0) {
-                $this->validation->error_message($option);
-                return false;
-            }
 
             $this->tools->__flashMessage($option);
         } else {
