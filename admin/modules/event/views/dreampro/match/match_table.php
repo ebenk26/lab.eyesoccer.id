@@ -45,8 +45,8 @@
             echo "<td>" . $r->team_b . "</td>";
             echo "<td class='center'><div class='picproduct'><span style='background-image: url(" . $pic_b . ");'></span></div></td>";
             echo "<td class='center'>
-                    <a class='btn_action' href='javascript:void(0)' onclick=\"openform('match/edit/". $r->id_jadwal_event ."')\" title='Edit'><i class='fa fa-edit fa-fw'></i></a>
-                    <a class='btn_action' href='javascript:void(0)' onclick=\"deleteid('match/delete/". $r->id_jadwal_event ."')\" title='Remove'><i class='fa fa-minus-square fa-fw'></i></a>
+                    <a class='btn_action' href='javascript:void(0)' onclick=\"openform('event/match/edit/". $r->id_jadwal_event ."')\" title='Edit'><i class='fa fa-edit fa-fw'></i></a>
+                    <a class='btn_action' href='javascript:void(0)' onclick=\"deleteid('event/match/delete/". $r->id_jadwal_event ."')\" title='Remove'><i class='fa fa-minus-square fa-fw'></i></a>
                  </td>";
             echo "</tr>";
             

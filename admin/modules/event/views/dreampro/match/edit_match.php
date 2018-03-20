@@ -18,132 +18,124 @@
         <div style='clear: both;'></div>
     </div>
     
-    <?php echo form_open_multipart('event/update', array('name' => 'form_addmulti', 'id' => 'form_addmulti')); ?>
+    <?php echo form_open_multipart('event/match/update', array('name' => 'form_addmulti', 'id' => 'form_addmulti')); ?>
     <div id='boxtable' class='shadow'>
         <div class='row'>
-            <div class='col-lg-8 col-md-12 col-sm-8 col-xs-12'>
+            <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>
                 <div class='boxtab pad-all mg-b20'>
-                    <h1>Edit</h1>
+                    <h1>Event</h1>
                     <div class='pad-lr20'>
-                        <input type='hidden' name='idx' id='idx' value='<?php echo $dt1->id_event; ?>'>
-                        <input type='hidden' name='val' value='true'>
-                        <div class='mg-b10'>
-                            <label>Name</label>
-                            <input type='text' name='title' id='title' value='<?php echo $dt1->title; ?>' class='cinput input_multi' required>
-                        </div>
-                        <div class='pad-b20'>
-                            <label>Description</label>
-                            <textarea name='description' id='description' class='tiny-active' rows='15' cols='80' style='height: 300px;'><?php echo $dt1->description; ?></textarea>
-                            <div id='is_description' style='display: none;'><?php echo $dt1->description; ?></div>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class='mg-b10'>
+                                    <label>Event / Liga</label>
+                                    <div class='mg-b10 pos-rel wd-100'>
+                                        <input type="text" class="input_multi" id="event_99" name="event" autocomplete="off"
+                                               onkeyup="autocommulti('event/match/autoevent/event/99')" placeholder="Search event in here...">
+                                        <div id="boxresult" class="showhide_99" style="display: none;"><div class="result_99"></div></div>
+                                        <div class="showevent">
+                                            <?php 
+                                            if ($dt2) 
+                                            {
+                                                if (count($dt2) > 1)
+                                                {
+                                                    foreach ($dt2 as $value)
+                                                    {
+                                            ?>
+                                                        <span class="ibox boxevent_99" id="event_99_1" val="1"> 
+                                                            <span>
+                                                                <?= $value->event; ?> 
+                                                                <a href="javascript:void(0)" onclick="remove_item('#event_99,1')" class="cl-red"> 
+                                                                    <i class="fa fa-times fa-fw"></i> 
+                                                                </a> 
+                                                            </span> 
+                                                            <input type="hidden" id="event_99_1_in" name="event_id[]" value="<?= $value->id_event; ?>">
+                                                        </span> 
+                                            <?php           
+                                                    }       
+                                                }
+                                                else
+                                                {
+                                            ?>
+                                                    <span class="ibox boxevent_99" id="event_99_1" val="1"> 
+                                                        <span>
+                                                            <?= $dt2->event; ?> 
+                                                            <a href="javascript:void(0)" onclick="remove_item('#event_99,1')" class="cl-red"> 
+                                                                <i class="fa fa-times fa-fw"></i> 
+                                                            </a> 
+                                                        </span> 
+                                                        <input type="hidden" id="event_99_1_in" name="event_id[]" value="<?= $dt2->id_event; ?>">
+                                                    </span> 
+                                            <?php
+                                                }
+                                            ?>
+                                                
+                                            <?php 
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class='mg-b10'>
+                                    <label>Jadwal Pertandingan</label>
+                                    <div class='layout-row'>
+                                        <input type='text' name='jadwal_pertandingan' id='jadwal_pertandingan' value='<?php echo date('d-m-Y H:i'); ?>' class='cinput input_multi date_time mg-r10' required>
+                                        <span class='flex'></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class='mg-b10'>
+                                    <label>Stadion</label>
+                                    <input type="text" name="lokasi_pertandingan" id="lokasi_pertandingan" class="input_multi">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class='pad-b20'>
+                                    <label>Live TV</label>
+                                    <input type="text" name="live_pertandingan" id="live_pertandingan" class="input_multi">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class='col-lg-4 col-md-12 col-sm-4 col-xs-12'>
+            <div class='col-lg-6 col-md-6 col-sm-6 col-xs-12'>
                 <div class='boxtab pad-all mg-b20'>
-                    <h1>Category</h1>
+                    <h1>Team A</h1>
                     <div class='pad-lr20'>
+                        <input type='hidden' name='val' value='true'>
+                        <div class='mg-b10 pos-rel wd-100'>    
+                            <label>Pilih Team A</label>
+                            <input type="text" class="input_multi" id="team_a_0" name="team_a" value="" autocomplete="off" onkeyup="autocommulti('event/match/autoteam/team_a/0')" placeholder="Search team in here..." required="">
+                            <input type="hidden" name="team_a_id" id="team_a_id_0">
+                            <div id="boxresult" class="showhide_0" style="display: none;"><div class="result_0"></div></div>
+                        </div>
                         <div class='pad-b20'>
-                            <label>Category</label>
-                            <select name="category" id="category" class="cinput select_multi tx-cp">
-                                <option value="">- Select -</option>
-                                <?php
-                                    if($category)
-                                    {
-                                        foreach ($category->data as $cat) {
-                                            if ($cat->category_name == $dt1->category_name) {
-                                                echo "<option value='$cat->id_event_category' selected>$cat->category_name</option>";
-                                            } else {
-                                                echo "<option value='$cat->id_event_category'>$cat->category_name</option>";
-                                            }
-                                        }
-                                    }
-                                ?>
-                            </select>
+                            <label>Score Team A</label>
+                            <input type="number" name="score_a" id="score_a" class="input_multi" min="0">
                         </div>
                     </div>
                 </div>
-                
-                <div class='boxtab pad-all mg-b20'>
-                    <h1>Picture</h1>
-                    <div class='pad-lr20'>
-                        <div class='pad-b20'>
-                            <input type='file' name='uploadfile' id='uploadfile' class='cinput input_multi'>
-                            <?php
-                                if($dt1->pic)
-                                {
-                                    $pic = $this->library->picUrl($dt1->pic, $dt1->url_pic, 'eyevent', 'medium');
+            </div>
 
-                                    ?>
-                                            <img src='<?php echo $pic; ?>' class='max-wd event_pic'>
-                                            <input type='hidden' name='event_pic' class='event_pic' value='<?php echo $dt1->pic; ?>'>
-                                            <input type='hidden' name='temp_event_pic' value='<?php echo $dt1->pic; ?>'>
-                                            <a href="javascript:void(0)" class="btn_action event_pic disp-block mg-t10" style="font-size: 18px;" onclick="remove_value('.event_pic')">
-                                                <i class="fa fa-remove fa-fw"></i>Remove
-                                            </a>
-                                    <?php
-                                }
-                            ?>
-                        </div>
-                    </div>
-                </div>
-                
+            <div class='col-lg-6 col-md-6 col-sm-6 col-xs-12'>
                 <div class='boxtab pad-all mg-b20'>
-                    <h1>Action</h1>
+                    <h1>Team B</h1>
                     <div class='pad-lr20'>
-                        <div class='mg-b10'>
-                            <div class='layout-row'>
-                                <label> 
-                                    Big Event
-                                </label>
-                                <span class='flex'></span>
-                                <select name="is_event" id="is_event" class="cinput select_router tx-cp">
-                                    <option>- Select -</option>
-                                    <?php
-                                        $is_ev = array('Yes' => 1, 'No' => 0);
-                                        foreach($is_ev as $nm1 => $v1)
-                                        {
-                                            if ($v1 == $dt1->is_event) {
-                                                echo "<option value='$v1' selected>$nm1</option>";
-                                            } else {
-                                                echo "<option value='$v1'>$nm1</option>";
-                                            }
-                                        }
-                                    ?>
-                                </select>
-                            </div>
+                        <input type='hidden' name='val' value='true'>
+                        <div class='mg-b10 pos-rel wd-100'>
+                            <label>Pilih Team B</label>
+                            <input type="text" class="input_multi" id="team_b_1" name="team_b" value="" autocomplete="off" onkeyup="autocommulti('event/match/autoteam/team_b/1')" placeholder="Search team in here..." required="">
+                            <input type="hidden" name="team_b_id" id="team_b_id_1">
+                            <div id="boxresult" class="showhide_1" style="display: none;"><div class="result_1"></div></div>
                         </div>
-                        <div class='mg-b10'>
-                            <div class='layout-row'>
-                                <label> 
-                                    Show Match
-                                </label>
-                                <span class='flex'></span>
-                                <select name="is_match" id="is_match" class="cinput select_router tx-cp">
-                                    <option value="1">- Select -</option>
-                                    <?php
-                                        $is_mat = array('Yes' => 1, 'No' => 0);
-                                        foreach($is_mat as $nm1 => $v1)
-                                        {
-                                            if ($v1 == $dt1->is_match) {
-                                                echo "<option value='$v1' selected>$nm1</option>";
-                                            } else {
-                                                echo "<option value='$v1'>$nm1</option>";
-                                            }
-                                        }
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class='pad-b18'>
-                            <label>Publish On Date</label>
-                            <div class='layout-row'>
-                                <?php $publish = ($dt1->publish_on) ?  date('d-m-Y H:i', strtotime($dt1->publish_on)) : date('d-m-Y H:i'); ?>
-                                <input type='text' name='publish_date' id='publish_date' value='<?php echo $publish; ?>' class='cinput input_multi date_time mg-r10' required>
-                                <span class='flex'></span>
-                                <input type='submit' value='Update' id='btn_submit' onclick="saveaddmulti('event/update')">
-                            </div>
+                        <div class='pad-b20'>
+                            <label>Score Team B</label>
+                            <input type="number" name="score_b" id="score_b" class="input_multi" min="0">
                         </div>
                     </div>
                 </div>
