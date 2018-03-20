@@ -14,7 +14,7 @@
         </th>
         <th>
             <?php $note = (isset($_GET['id'])) ? '' : 'note'; ?>
-            <a href="javascript:void(0)" class='csort' id="<?php echo $note; ?>" val="desc" onclick="actsort(this.id)">Note</a>
+            <a href="javascript:void(0)" class='csort' id="<?php echo $note; ?>" val="desc" onclick="actsort(this.id)">Category</a>
         </th>
         <th style='width: 10%;'>Action</th>
     </tr>
@@ -26,17 +26,17 @@
         $sv = $this->library->sub_view();
 
         $i= $offset;
-        foreach($dt as $r)
+        foreach($dt as $r) 
         {
             echo "<tr>";
             echo "<td class='center'><input type='checkbox' name='selected[]' value='" . $r->category_ads_id . "' class='ctab'></td>";
             echo "<td class='center'>" . $i . "</td>";
             echo "<td class='center'>" . $r->category_name_ads . "</td>";
-            echo "<td>" . $r->note . "</td>";
+            echo "<td align='center'>" . $r->note . "</td>";
             echo "<td class='center'>";
                     if(empty($_GET['id']))
                     {
-                        echo "<a class='btn_action mg-r5' href='javascript:void(0)' onclick=\"actmenu('advert/category/view/?id=". $r->category_ads_id.$sv->idsub ."')\" title='Subview'><i class='fa fa-search fa-fw'></i></a>";
+                        echo "<a class='btn_action mg-r5' href='javascript:void(0)' onclick=\"actmenu('advert/category/view/?id=". $r->category_ads_id ."')\" title='Subview'><i class='fa fa-search fa-fw'></i></a>";
                     }
               echo "<a class='btn_action' href='javascript:void(0)' onclick=\"openform('advert/category/edit/". $r->$id ."$sv->idstay')\" title='Edit'><i class='fa fa-edit fa-fw'></i></a>
                     <a class='btn_action' href='javascript:void(0)' onclick=\"deleteid('advert/category/delete/". $r->$id ."$sv->idstay')\" title='Remove'><i class='fa fa-minus-square fa-fw'></i></a>
