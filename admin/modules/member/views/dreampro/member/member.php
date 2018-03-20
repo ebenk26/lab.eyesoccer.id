@@ -8,11 +8,12 @@
         <label>Search By</label>
         <select name='cselect' class='cinput inselect'>
             <?php
-                $field = array('search' => 'Title', 'news_type' => 'Category');
+                $field = array('search' => 'username');
                 foreach($field as $n1 => $v1)
                 {
                     if($this->session->userdata('xfield_'.$prefix) == $n1)
                     {
+
                         echo "<option value='$n1' selected>$v1</option>";
                     } else {
                         echo "<option value='$n1'>$v1</option>";
@@ -41,11 +42,11 @@
             ?>
         </select>
     </div>
-    <a href="javascript:void(0)" id='button' onclick="actcheck('news/checked')">Action</a>
+    <a href="javascript:void(0)" id='button' onclick="actcheck('member/checked')">Action</a>
     
     <div class='limit'>
         <label>Limit</label>
-        <select name='climit' class='climit inselect' onchange="actlimit('news/view')">
+        <select name='climit' class='climit inselect' onchange="actlimit('member/view')">
             <?php
                 $l1 = array('10','25','50','100','150','200');
                 foreach($l1 as $v3)

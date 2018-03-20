@@ -7,48 +7,66 @@
         $('.chosen-container').css({width: '100%'});
     });
 </script>
-
 <div class='boxtitle'><?php echo $title; ?></div>
 <div id='boxmessage'></div>
 
 <div id='boxjq'>
     <div id='boxbutton'>
-        <a href="javascript:void(0)" id='button' onclick="actmenu('news/view')">Back</a>
+        <a href="javascript:void(0)" id='button' onclick="actmenu('member/view')">Back</a>
         
         <div style='clear: both;'></div>
     </div>
-    
-    <?php echo form_open_multipart('news/update', array('name' => 'form_addmulti', 'id' => 'form_addmulti')); ?>
+    <?php echo form_open_multipart('member/update', array('name' => 'form_addmulti', 'id' => 'form_addmulti')); ?>
     <div id='boxtable' class='shadow'>
         <div class='row'>
             <div class='col-lg-8 col-md-12 col-sm-8 col-xs-12'>
                 <div class='boxtab pad-all mg-b20'>
                     <h1>Edit</h1>
                     <div class='pad-lr20'>
-                        <input type='hidden' name='idx' id='idx' value='<?php echo $dt1->eyenews_id; ?>'>
+                        <input type='hidden' name='idx' id='idx' value='<?php echo $dt1->id_member; ?>'>
                         <input type='hidden' name='val' value='true'>
                         <div class='mg-b10'>
+                            <label>Username</label>
+                            <input type='text' name='username' id='username' value='<?php echo $dt1->username ?>' class='cinput input_multi' required>
+                        </div>
+                        <div class='mg-b10'>
                             <label>Name</label>
-                            <input type='text' name='title' id='title' value='<?php echo $dt1->title; ?>' class='cinput input_multi' required>
+                            <input type='text' name='name' id='name' value='<?php echo $dt1->name ?>' class='cinput input_multi' required>
+                        </div>
+                          <div class='mg-b10'>
+                            <label>phone</label>
+                            <input type='text' name='name' id='name' value='<?php echo $dt1->phone ?>' class='cinput input_multi' required>
+                        </div>
+                       
+                       <div class='mg-b10'>
+                            <label>Email </label>
+                            <input type="text" name="email" class="cinput input_multi" value="<?php echo $dt1->email?>">
+                        </div>  
+                        <div class='mg-b10'>
+                            <label>City</label>
+
+                            <input type="text" name="city" class="cinput input_multi" value="<?php echo $dt1->city?>">
+
                         </div>
                         <div class='mg-b10'>
-                            <label>Meta Description</label>
-                            <textarea name="meta_desc" id="meta_desc" class='cinput input_multi' rows="4" cols="80"  maxlength="255"><?php echo $dt1->meta_description; ?></textarea>
-                            <div class="tx-right">
-                                <span class="cl-red ff-12">Note : Maximum Character 255</span>
-                            </div>
+                            <label>Zip </label>
+                            <input type="text" name="zip" class="cinput input_multi" value="<?php echo $dt1->zip?>" >
                         </div>
                         <div class='mg-b10'>
-                            <label>Meta Keyword</label>
-                            <textarea name="meta_keyword" id="meta_keyword" class='cinput input_multi' rows="4" cols="80"  maxlength="255"><?php echo $dt1->tag; ?></textarea>
-                            <div class="tx-right">
-                                <span class="cl-red ff-12">Example : Liga,Turnament,Kompetisi</span>
-                            </div>
+                            <label>Address</label>
+                            <textarea name="address" id="address" class="tiny-active">
+                                <?php echo $dt1->address?>
+                                
+                            </textarea>   
+
                         </div>
                         <div class='pad-b20'>
-                            <label>Description</label>
-                            <textarea name='description' id='description' class='tiny-active' rows='15' cols='80' style='height: 300px;'><?php echo $dt1->description; ?></textarea>
-                            <div id='is_description' style='display: none;'><?php echo $dt1->description; ?></div>
+                            <label>about</label>
+                            <textarea name="address" id="about" class="tiny-active">
+                                <?php echo $dt1->about?>
+                            </textarea>
+                            
+
                         </div>
                     </div>
                 </div>
@@ -56,110 +74,44 @@
             
             <div class='col-lg-4 col-md-12 col-sm-4 col-xs-12'>
                 <div class='boxtab pad-all mg-b20'>
-                    <h1>Category</h1>
+                    <h1>Gender</h1>
                     <div class='pad-lr20'>
-                        <div class='mg-b10'>
-                            <label>Category</label>
-                            <select name="category" id="category" class="cinput select_multi tx-cp" onchange="actchain('news/subcategory', 'category', 'subcategory')">
-                                <option value="">- Select -</option>
+                        <div class='pad-b20'>
+                            <label>Active</label>
+                            <select name="active" id="active" class="cinput select_multi tx-cp">
                                 <?php
-                                    if($category)
-                                    {
-                                        foreach ($category->data as $cat) {
-                                            if ($cat->news_type == $dt1->news_type) {
-                                                echo "<option value='$cat->news_type_id' selected>$cat->news_type</option>";
-                                            } else {
-                                                echo "<option value='$cat->news_type_id'>$cat->news_type</option>";
-                                            }
-                                        }
-                                    }
+                                 
+                                    for ($i = 1; $i >=  0;$i--){
+                                        echo '<option '.($i === $dt1->gender ? 'selected' : '').' value="'.($i == '1' ? 'Laki-Laki' : 'Perempuan').'">'.($i == '1' ? 'MALE' : 'FEMALE').'</option>';
+
+                                    } 
+                            
                                 ?>
                             </select>
                         </div>
+                        
+                    </div>
+                </div>
+                <div class='boxtab pad-all mg-b20'>
+                    <h1>Status</h1>
+                    <div class='pad-lr20'>
                         <div class='pad-b20'>
-                            <label>Sub Category</label>
-                            <select name="subcategory" id="subcategory" class="cinput select_multi tx-cp subcategory">
-                                <option value="">- Select -</option>
+                            <label>Active</label>
+                            <select name="active" id="active" class="cinput select_multi tx-cp">
                                 <?php
-                                    if($subcategory)
-                                    {
-                                        foreach ($subcategory->data as $cat) {
-                                            if ($cat->sub_category_name == $dt1->sub_news_type) {
-                                                echo "<option value='$cat->sub_news_id' selected>$cat->sub_category_name</option>";
-                                            } else {
-                                                echo "<option value='$cat->sub_news_id'>$cat->sub_category_name</option>";
-                                            }
-                                        }
-                                    }
+                                 
+                                    for ($i = 1; $i >=  0;$i--){
+                                        echo '<option '.($i == $dt1->active ? 'selected' : '').' value="'.$i.'">'.($i == '0' ? 'NO' : 'YES').'</option>';
+
+                                    }         
                                 ?>
                             </select>
                         </div>
+                       
                     </div>
                 </div>
-                
-                <div class='boxtab pad-all mg-b20'>
-                    <h1>Picture</h1>
-                    <div class='pad-lr20'>
-                        <div class='mg-b10'>
-                            <label>Credit</label>
-                            <input type='text' name='credit' id='credit' value='<?php echo $dt1->credit; ?>' class='cinput input_multi'>
-                        </div>
-                        <div class='pad-b20'>
-                            <input type='file' name='uploadfile' id='uploadfile' class='cinput input_multi'>
-                            <?php
-                                if($dt1->pic)
-                                {
-                                    $pic = $this->library->picUrl($dt1->pic, $dt1->url_pic, 'eyenews', 'medium');
-
-                                    ?>
-                                            <img src='<?php echo $pic; ?>' class='max-wd news_pic'>
-                                            <input type='hidden' name='news_pic' class='news_pic' value='<?php echo $dt1->pic; ?>'>
-                                            <input type='hidden' name='temp_news_pic' value='<?php echo $dt1->pic; ?>'>
-                                            <a href="javascript:void(0)" class="btn_action news_pic disp-block mg-t10" style="font-size: 18px;" onclick="remove_value('.news_pic')">
-                                                <i class="fa fa-remove fa-fw"></i>Remove
-                                            </a>
-                                    <?php
-                                }
-                            ?>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class='boxtab pad-all mg-b20'>
-                    <h1>Action</h1>
-                    <div class='pad-lr20'>
-                        <div class='mg-b10'>
-                            <div class='layout-row'>
-                                <label>Recommended</label>
-                                <span class='flex'></span>
-                                <select name="recommended" id="recommended" class="cinput select_router tx-cp">
-                                    <option value="1">- Select -</option>
-                                    <?php
-                                        $is_rec = array('Yes' => 2, 'No' => 1);
-                                        foreach($is_rec as $nm1 => $v1)
-                                        {
-                                            if ($v1 == $dt1->recommended) {
-                                                echo "<option value='$v1' selected>$nm1</option>";
-                                            } else {
-                                                echo "<option value='$v1'>$nm1</option>";
-                                            }
-
-                                        }
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class='pad-b18'>
-                            <label>Publish On Date</label>
-                            <div class='layout-row'>
-                                <?php $publish = ($dt1->publish_on) ?  date('d-m-Y H:i', strtotime($dt1->publish_on)) : date('d-m-Y H:i'); ?>
-                                <input type='text' name='publish_date' id='publish_date' value='<?php echo $publish; ?>' class='cinput input_multi date_time mg-r10' required>
-                                <span class='flex'></span>
-                                <input type='submit' value='Update' id='btn_submit' onclick="saveaddmulti('news/update')">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <input type='submit' value='update' id='btn_submit' onclick="saveaddmulti('member/update')">
+            
             </div>
             
             <div class='clean'></div>

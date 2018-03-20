@@ -13,36 +13,37 @@ class Member_model extends CI_Model
     }
 
     function __delete($id = '')
-    {
-        
-        $option = $this->excurl->reqAction('member/delete', array('idx' => $id));
+    {   
+
+        $dt = $this->excurl->reqCurl('me',array('id_member' => $id))->data[0];
+        $option = $this->action->delete(array('table' => $this->dtable, 'where' => array('id_member' => $id)));
+        if ($option['state'] == 0) {
+            $this->validation->error_message($option);
+            return false;
+        }
+
+        if ($dt->pic) {
+            $path = $this->__path();
+            $this->uploader->__unlink($path, $dt->pic);
+        }
+
         return $option;
-       
     }
 
     function __disable($id = '')
     {
-        if ($id != NULL) {
-            $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('eyenews_id' => $id));
-            $option = $this->action->update($dt);
+        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('eyenews_id' => $id));
+        $option = $this->action->update($dt);
 
-            return $option;
-        } else {
-            redirect('news');
-        }
+        return $option;
     }
 
     function __enable($id = '')
     {
-        if ($id != NULL) {
-            $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('eyenews_id' => $id));
+        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('eyenews_id' => $id));
+        $option = $this->action->update($dt);
 
-            $option = $this->action->update($dt);
-
-            return $option;
-        } else {
-            redirect('news');
-        }
+        return $option;
     }
 
     function __path()

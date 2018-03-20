@@ -11,12 +11,12 @@
 
 <div id='boxjq'>
     <div id='boxbutton'>
-        <a href="javascript:void(0)" id='button' onclick="actmenu('news/view')">Back</a>
+        <a href="javascript:void(0)" id='button' onclick="actmenu('member/view')">Back</a>
         
         <div style='clear: both;'></div>
     </div>
-    
-    <?php echo form_open_multipart('news/save', array('name' => 'form_addmulti', 'id' => 'form_addmulti')); ?>
+   
+    <?php echo form_open_multipart('member/save', array('name' => 'form_addmulti', 'id' => 'form_addmulti')); ?>
     <div id='boxtable' class='shadow'>
     
         <div class='row'>
@@ -27,96 +27,145 @@
                         <input type='hidden' name='val' value='true'>
                         <div class='mg-b10'>
                             <label>Username</label>
-                            <input type='text' name='username' id='title' class='cinput input_multi' required>
+                            <input type='text' name='username' id='title' class='cinput input_multi' >
                         </div>
                         <div class='mg-b10'>
-                            <label>Nama Depan</label>
-                            <input type="text" name="fist_name" class="cinput input_multi" required>
+                            <label>Nama</label>
+                            <input type="text" name="name" class="cinput input_multi" >
+                        </div>
+                        
+                        <div class='mg-b10'>
+                            <label>Password  <a href="javascript:void(0)" onclick="genpass()"> generate password</a> </label>
+                            <input type="password" name="password" class="cinput input_multi"  id="pass">
+                
                         </div>
                         <div class='mg-b10'>
-                            <label>Nama Belakang</label>
-                            <input type="text" name="last_name" class="cinput input_multi" required>
+                            <label>Confirm Password</label>
+
+                            <input type="password" name="password" class="cinput input_multi"  id="cpass">
+                           
+                            <span id="respass" style="color:#960000"></span>
+
+                        </div>
+                        <div class='mg-b10'>
+                            <label>Phone</label>
+
+                            <input type="number" name="phone" class="cinput input_multi" >
+
+                        </div>
+                        <div class='mg-b10'>
+                            <label>Email </label>
+                            <input type="text" name="email" class="cinput input_multi" >
+                        </div>  
+                        <div class='mg-b10'>
+                            <label>City</label>
+
+                            <input type="text" name="city" class="cinput input_multi" >
+
+                        </div>
+                        <div class='mg-b10'>
+                            <label>Zip </label>
+                            <input type="number" name="zip" class="cinput input_multi" >
+                        </div>
+                        <div class='mg-b10'>
+                            <label>Address</label>
+                            <textarea name="address" id="address" class="tiny-active">
+                                
+                            </textarea>   
+
                         </div>
                         <div class='pad-b20'>
-                            <label>Email </label>
-                            <input type="text" name="email" class="cinput input_multi" required>
-                        </div>  
+                            <label>About</label>
+                            <textarea name="about" id="about" class="tiny-active">
+                                
+                            </textarea>
+                            
+
+                        </div>
+                        
                     </div>
                 </div>
             </div>
             
             <div class='col-lg-4 col-md-12 col-sm-4 col-xs-12'>
                 <div class='boxtab pad-all mg-b20'>
-                    <h1>Active </h1>
+                    <h1>Additional</h1>
+                    <div class='pad-lr20'>
+                        <div class='pad-b20'>
+                            <label>Gender</label>
+                            <select name="gender" id="gender" class="cinput select_multi tx-cp">
+                                <?php
+                                 
+                                    for ($i = 1; $i >=  0;$i--){
+                                        echo $i;
+                                        echo '<option value="'.($i == '1' ? 'Laki-Laki' : 'Perempuan').'">'.($i == '1' ? 'MALE' : 'FEMALE').'</option>';
+
+                                    } 
+                            
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                   
+                </div>
+                <div class='boxtab pad-all mg-b20'>
+                    <h1>Status</h1>
                     <div class='pad-lr20'>
                         <div class='mg-b10'>
-                            <label>Category</label>
-                            <select name="category" id="category" class="cinput select_multi tx-cp" onchange="actchain('news/subcategory', 'category', 'subcategory')">
+                            <label>Active</label>
+                            <select name="active" id="active" class="cinput select_multi tx-cp">
                                 <option value="">- Select -</option>
                                 <?php
-                                    if($category)
-                                    {
-                                        foreach ($category->data as $cat) {
-                                            echo "<option value='$cat->news_type_id'>$cat->news_type</option>";
-                                        }
-                                    }
+                                 
+                                    for ($i = 1; $i >=  0;$i--){
+                                        echo '<option value="'.$i.'">'.($i == '0' ? 'NO' : 'YES').'</option>';
+
+                                    } 
+                            
                                 ?>
                             </select>
                         </div>
                         <div class='pad-b20'>
-                            <label>Sub Category</label>
-                            <select name="subcategory" id="subcategory" class="cinput select_multi tx-cp subcategory">
+                            <label>Verification</label>
+                            <select name="verification" id="verification" class="cinput select_multi tx-cp">
                                 <option value="">- Select -</option>
+                                <?php
+                                 
+                                    for ($i = 1; $i >=  0;$i--){
+                                        echo '<option value="'.$i.'">'.($i == '0' ? 'NO' : 'YES').'</option>';
+
+                                    } 
+                            
+                                ?>
                             </select>
                         </div>
                     </div>
                 </div>
                 
-                <div class='boxtab pad-all mg-b20'>
-                    <h1>Picture</h1>
-                    <div class='pad-lr20'>
-                        <div class='mg-b10'>
-                            <label>Credit</label>
-                            <input type='text' name='credit' id='credit' class='cinput input_multi'>
-                        </div>
-                        <div class='pad-b20'>
-                            <input type='file' name='uploadfile' id='uploadfile' class='cinput input_multi'>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class='boxtab pad-all mg-b20'>
-                    <h1>Action</h1>
-                    <div class='pad-lr20'>
-                        <div class='mg-b10'>
-                            <div class='layout-row'>
-                                <label>Recommended</label>
-                                <span class='flex'></span>
-                                <select name="recommended" id="recommended" class="cinput select_router tx-cp">
-                                    <option value="1">- Select -</option>
-                                    <?php
-                                        $is_rec = array('Yes' => 2, 'No' => 1);
-                                        foreach($is_rec as $nm1 => $v1)
-                                        {
-                                            echo "<option value='$v1'>$nm1</option>";
-                                        }
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class='pad-b18'>
-                            <label>Publish On Date</label>
-                            <div class='layout-row'>
-                                <input type='text' name='publish_date' id='publish_date' value='<?php echo date('d-m-Y H:i'); ?>' class='cinput input_multi date_time mg-r10' required>
-                                <span class='flex'></span>
-                                <input type='submit' value='Save' id='btn_submit' onclick="saveaddmulti('news/save')">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <input type='submit' value='Save' id='btn_submit' onclick="saveaddmulti('member/save')">
+            
             </div>
             
             <div class='clean'></div>
         </div>
     </div>
 </div>
+<script>
+
+    function generate(len = 10 ){
+        var pattern = 'abcdefghijklmnopqrstuvwxyxABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        var gen = '';
+        for(let i = 0 ; i < len ; i ++ ){
+            let n = pattern.length;
+            gen += pattern.charAt(Math.floor(Math.random() * n));
+        }
+        return gen;
+        //console.log(arr.random());
+    }
+    function genpass(){
+        let str = generate(8);
+        $('#pass').val(str);
+        $('#cpass').val(str);
+        $('#respass').html('Your Password : ' + str);
+    }
+</script>
