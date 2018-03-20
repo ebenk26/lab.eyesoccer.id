@@ -32,27 +32,18 @@ class Category_model extends CI_Model
 
     function __disable($id = '')
     {
-        if ($id != NULL) {
-            $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('news_type_id' => $id));
-            $option = $this->action->update($dt);
+        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('news_type_id' => $id));
+        $option = $this->action->update($dt);
 
-            return $option;
-        } else {
-            redirect('news/category');
-        }
+        return $option;
     }
 
     function __enable($id = '')
     {
-        if ($id != NULL) {
-            $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('news_type_id' => $id));
+        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('news_type_id' => $id));
+        $option = $this->action->update($dt);
 
-            $option = $this->action->update($dt);
-
-            return $option;
-        } else {
-            redirect('news/category');
-        }
+        return $option;
     }
 
 }

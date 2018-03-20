@@ -147,7 +147,8 @@ class Event extends MX_Controller
                 $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
                 $count = array_merge($count, array($ulevel->fu => $this->session->userdata('user_id')));
             }
-
+            p($query);
+            exit;
             $data['dt'] = $this->excurl->reqCurl('Event', $query)->data;
             $data['count'] = $this->excurl->reqCurl('Event', $count)->data[0];
             $data['limit'] = $limit;
@@ -290,6 +291,7 @@ class Event extends MX_Controller
 
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
             $option = $this->excurl->reqAction('event/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
+         
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('event');
@@ -314,7 +316,7 @@ class Event extends MX_Controller
                 }
 
                 $data['dt1'] = $this->excurl->reqCurl('Event', $query)->data[0];
-                $data['category'] = $this->excurl->reqCurl('Event-category');
+                // $data['category'] = $this->excurl->reqCurl('Event-category');
 
                 if ($this->input->post('val') == true) {
                     $this->load->view($this->config->item('base_theme') . '/Event/edit_event', $data);

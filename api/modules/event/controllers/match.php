@@ -27,36 +27,36 @@ class Match extends MX_Controller
     }
 
     function save()
-    { print_r($_POST);exit();
+    {
         if($_POST)
-        {
-            $text_title = $this->input->post('title');
-            $text_desc = $this->input->post('description');
-
-            $new_link = $this->library->seo_title($text_title);
-
-            $upload = $this->event_model->__upload($new_link);
-            $key = substr(md5($this->library->app_key()), 0, 7);
-
-            // $cat = $this->excurl->reqCurl('Event-category', ['Event_type_id' => $this->input->post('category')])->data[0];
-            // $catsub = $this->excurl->reqCurl('Event-category-sub', ['sub_Event_id' => $this->input->post('subcategory')])->data[0];
-
+        { 
             // Event
             $dt1 = array(// General
-                'title' => addslashes($text_title),
-                'description' => addslashes($text_desc),
-                'url' => $new_link.'-'.$key,
-                'pic' => $upload['data'],
-                'category' => $this->input->post('category'),
-                'is_event' => $this->input->post('is_event'),
-                'is_match' => $this->input->post('is_match'),
-                // Data
-                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
-                'upload_date' => date('Y-m-d h:i:s'),
+                'jadwal_pertandingan' => date('Y-m-d h:i:s', strtotime($this->input->post('jadwal_pertandingan'))),
+                'lokasi_pertandingan' => $this->input->post('lokasi_pertandingan'),
+                'live_pertandingan' => $this->input->post('live_pertandingan'),
+                'tim_a' => $this->input->post('team_a'),
+                'score_a' => $this->input->post('score_a'),
+                'score_b' => $this->input->post('score_b'),
+                'tim_b' => $this->input->post('team_b'),
                 'admin_id' => $this->input->post('ses_user_id')
             );
 
             $option = $this->action->insert(array('table' => $this->dtable, 'insert' => $dt1));
+            $id_match = $this->db->insert_id();
+
+            $event_id = $this->input->post('event_id');
+            
+
+            for ($i = 0; $i < count($event_id); $i++)
+            {
+                $dt_[$i] = array(
+                    'id_match' => $id_match,
+                    'id_event' => $event_id[$i],
+                );
+                $option99 = $this->action->insert(array('table' => $this->xtable, 'insert' => $dt_[$i]));
+            }
+
             if ($option['state'] == 0) {
                 $this->event_model->__unlink($upload['data']);
 
@@ -66,7 +66,7 @@ class Match extends MX_Controller
 
             $this->tools->__flashMessage($option);
         } else {
-            echo 2;exit();
+            
             $data = $this->__rest()->__getstatus('Data must be type post', 400);
             $status = $data['error']['status_code'];
         }

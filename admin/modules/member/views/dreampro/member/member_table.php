@@ -1,12 +1,12 @@
 <table id='routertable'>
     <tr>
-        <div id='showsort' value='news/search'></div>
+        <div id='showsort' value='member/search'></div>
         <th style='width: 5%;'>
             <input type='checkbox' name='checkall' id='checkall' onclick='actcheckall(this.id);'>
         </th>
 
-        <th style='width: 10%;'>
-            <a href="javascript:void(0)" class='csort' id="eyenews_id" val="desc" onclick="actsort(this.id)">id member</a>
+        <th style='width: 5%;'>
+            <a href="javascript:void(0)" class='csort' id="eyenews_id" val="desc" onclick="actsort(this.id)">id</a>
         </th>
         <th style='width: 15%;'>
             <a href="javascript:void(0)" class='csort' id="eyenews_id" val="desc" onclick="actsort(this.id)">Profile pic</a>

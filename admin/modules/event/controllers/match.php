@@ -154,8 +154,8 @@ class Match extends MX_Controller
                 $count = array_merge($count, array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
-            $data['dt'] = $this->excurl->reqCurl('match', $query)->data;
-            $data['count'] = $this->excurl->reqCurl('match', $count)->data[0];
+            $data['dt'] = $this->excurl->reqCurl('event-match', $query)->data;
+            $data['count'] = $this->excurl->reqCurl('event-match', $count)->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $offset;
             $data['prefix'] = $this->dtable;
@@ -292,9 +292,11 @@ class Match extends MX_Controller
 
     function save()
     {
+        if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1)
+        {
+            $option = $this->excurl->reqAction('event/match/save',
+                        array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
 
-        if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $option = $this->excurl->reqAction('event/match/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('match');
@@ -309,7 +311,7 @@ class Match extends MX_Controller
             } else {
                 $data['title'] = 'Match';
                 $data['parent'] = $this->mparent;
-                $data['content'] = $this->config->item('base_theme') . '/match/edit_Match';
+                $data['content'] = $this->config->item('base_theme') . '/match/edit_match';
 
                 $query = array('id_jadwal_event' => $id, 'detail' => true);
                 $ulevel = $this->library->user_check();
@@ -318,11 +320,16 @@ class Match extends MX_Controller
                     $query = array_merge($query, array('admin_id' => $this->session->userdata('user_id')));
                 }
 
-                $data['dt1'] = $this->excurl->reqCurl('match', $query)->data[0];
-                $data['category'] = $this->excurl->reqCurl('match-category');
+                $data['dt1'] = $this->excurl->reqCurl('event-match', $query)->data[0];
+                $idmatch = $data['dt1']->id_jadwal_event;
+
+                $query2 = array('id' => $idmatch);
+                $data['dt2'] = $this->excurl->reqCurl('event-link', $query2)->data[0];
+// var_dump($data['dt2'],count($data['dt2']));exit();
+//                 $id_event = array();
 
                 if ($this->input->post('val') == true) {
-                    $this->load->view($this->config->item('base_theme') . '/match/edit_Match', $data);
+                    $this->load->view($this->config->item('base_theme') . '/match/edit_match', $data);
                 } else {
                     $this->load->view($this->config->item('base_theme') . '/template', $data);
                 }
