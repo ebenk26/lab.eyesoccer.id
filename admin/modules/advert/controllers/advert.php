@@ -287,8 +287,10 @@ class Advert extends MX_Controller
 
     function save()
     {
+       
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
             $option = $this->excurl->reqAction('advert/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
+  
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('advert');
@@ -405,5 +407,8 @@ class Advert extends MX_Controller
             redirect('advert');
         }
     }
+
+
+
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-class Category extends MX_Controller 
+class Category extends MX_Controller
 {
     var $dtable = 'tbl_category_ads';
 
@@ -29,26 +29,20 @@ class Category extends MX_Controller
     {
         if($_POST)
         {
-            $text_title = $this->input->post('title');
-            $new_link = $this->library->seo_title($text_title);
-
             // Category
-            if (isset($_GET['id'])) {
-                $dt1 = array('category_name_ads' => addslashes($text_title));
-            }
+            $dt1 = array(
+                // General
+                    'category_name_ads' => $this->input->post('category_name_ads'),
+                    'note' => $this->input->post('note'),
+                    // Data
+                    'admin_id' => $this->input->post('ses_user_id')
+            );
 
-            $table = (isset($_GET['id'])) ? $this->xtable : $this->dtable;
+            $table = $this->dtable;
             $option = $this->action->insert(array('table' => $table, 'insert' => $dt1));
             if ($option['state'] == 0) {
                 $this->validation->error_message($option);
                 return false;
-            }
-
-            $id = $this->db->insert_id();
-            $key = substr(md5($id), 0, 7);
-            $query = array('table' => $table, 'update' => array('slug' => $new_link.'-'.$key));
-            if (isset($_GET['id'])) {
-                $query = array_merge($query, array('where' => array('id' => $id)));
             }
 
             $option = $this->action->update($query);
@@ -70,16 +64,17 @@ class Category extends MX_Controller
     {
         if($_POST)
         {
-            $text_title = $this->input->post('title');
-            $new_link = $this->library->seo_title($text_title);
+        // Category
+            $dt1 = array(
+                // General
+                    'note' => $this->input->post('note'),
+                    'category_name_ads' => $this->input->post('category_name_ads'),
+                    // Data
+                    'admin_id' => $this->input->post('ses_user_id')
+            );
 
-            // Category
-            if (isset($_GET['id'])) {
-                $dt1 = array('category_name_ads' => addslashes($text_title));
-            }
-
-            $table = (isset($_GET['id'])) ? $this->xtable : $this->dtable;
-            $where = (isset($_GET['id'])) ? ['id' => $this->input->post('idx')];
+            $table = $this->dtable;
+            $where = ['category_ads_id' => $this->input->post('idx')];
             $option = $this->action->update(array('table' => $table, 'update' => $dt1, 'where' => $where));
             if ($option['state'] == 0) {
                 $this->validation->error_message($option);
@@ -90,7 +85,7 @@ class Category extends MX_Controller
             $key = substr(md5($id), 0, 7);
             $query = array('table' => $table, 'update' => array('slug' => $new_link.'-'.$key));
             if (isset($_GET['id'])) {
-                $query = array_merge($query, array('where' => array('id' => $id)));
+                $query = array_merge($query, array('where' => array('category_ads_id' => $id)));
             }
 
             $option = $this->action->update($query);

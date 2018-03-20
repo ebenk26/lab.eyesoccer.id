@@ -57,7 +57,7 @@ class Advert extends MX_Controller
 
             $id = $this->db->insert_id();
             $key = substr(md5($id), 0, 7);
-            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('url' => $new_link.'-'.$key),
+            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('pic' => $new_link.'-'.$key),
                                                   'where' => array('ads_id' => $id)));
             if ($option['state'] == 0) {
                 $this->advert_model->__unlink($upload['data']);
