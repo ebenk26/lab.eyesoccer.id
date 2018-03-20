@@ -26,3 +26,38 @@ RUN THIS :
 DELETE FROM eyevent_link;
 INSERT INTO eyevent_link (id_event, id_match) SELECT id_event, id_jadwal_event FROM tbl_jadwal_event;
 SELECT COUNT(id_match) FROM eyevent_link;
+
+/-----EYEPROFILE-----/
+
+tbl_player -> eyeprofile_player
+- club_id -> id_club -> (int, length: 11)
+- description -> (text)
+- birth_place -> (length: 50)
+- birth_date -> (date, default: 0000-00-00)
+- no_hp -> mobile -> (length: 25)
+- height -> (int, length: 3)
+- weight -> (int, length: 3)
+- nationality -> national -> (length: 50)
+- position -> position_a -> (length: 50)
+- position_2 -> position_b -> (length: 50)
+- number -> back_number -> (int, length: 2)
+- status -> level
+- createon -> date_create -> datetime
+- updateon -> last_update -> datetime
+- call_name -> nickname
+- foot -> (length: 50)
+- telp -> phone -> (length: 25)
+- contract_range1 -> contract_start
+- contract_range2 -> contract_end
+- url -> slug
+- admin_id -> id_admin
+
+tbl_karir_player -> eyeprofile_career
+tbl_prestasi_player -> eyeprofile_achievement
+tbl_player_position -> eyeprofile_player_position
+tbl_player_status -> eyeprofile_player_level
+tbl_kemampuan_kaki ->
+
+tbl_online_karir_player -> eyeprofile_player_career_original
+tbl_online_player -> eyeprofile_player_original
+tbl_online_prestasi_player -> eyeprofile_player_achievement_original
