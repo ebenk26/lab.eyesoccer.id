@@ -3,7 +3,7 @@
 class Category extends MX_Controller
 {
     var $dtable = 'tbl_category_ads';
-
+ 
     function __construct()
     {
         // PHP Version 5.4

@@ -3,7 +3,7 @@
 class Advert extends MX_Controller
 {
     var $dtable = 'tbl_ads';
-
+ 
     function __construct()
     {
         // PHP Version 5.4

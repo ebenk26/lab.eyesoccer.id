@@ -1,5 +1,5 @@
 <?php
-
+ 
 class Advert extends MX_Controller
 {
     var $roles = 'admin';

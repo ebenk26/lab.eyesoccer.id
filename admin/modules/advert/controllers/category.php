@@ -1,5 +1,5 @@
 <?php
-
+ 
 class Category extends MX_Controller
 {
     var $roles = 'admin';
