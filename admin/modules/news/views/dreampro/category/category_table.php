@@ -12,7 +12,7 @@
             <?php $name = (isset($_GET['id'])) ? 'sub_category_name' : 'news_type'; ?>
             <a href="javascript:void(0)" class='csort' id="<?php echo $name; ?>" val="desc" onclick="actsort(this.id)">Name</a>
         </th>
-        <th style='width: 10%;'>Action</th>
+        <th style='width: 12%;'>Action</th>
     </tr>
     
     <?php

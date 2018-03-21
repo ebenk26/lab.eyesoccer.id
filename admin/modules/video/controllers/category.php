@@ -3,11 +3,10 @@
 class Category extends MX_Controller
 {
     var $roles = 'admin';
-    var $mparent = 'News';
+    var $mparent = 'Video';
     var $offset = 1;
     var $limit = 10;
-    var $dtable = 'tbl_news_types';
-    var $xtable = 'tbl_sub_category_news';
+    var $dtable = 'tbl_category_eyetube';
 
     function __construct()
     {
@@ -18,7 +17,7 @@ class Category extends MX_Controller
             redirect('login');
         }
 
-        $raccess = $this->library->role_access('news/category');
+        $raccess = $this->library->role_access('video/category');
         if (isset($raccess)) {
             $this->roles = $raccess;
         }
@@ -30,9 +29,8 @@ class Category extends MX_Controller
         $data['parent'] = $this->mparent;
         $data['roles'] = $this->roles;
         $data['content'] = $this->config->item('base_theme') . '/category/category';
-
-        $id = (isset($_GET['id'])) ? 'sub_news_id' : 'news_type_id';
-        $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => 'desc',
+        
+        $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => 'category_eyetube_id', 'sortDir_' . $this->dtable => 'desc',
                          'multi_search_' . $this->dtable => '', 'multi_data_' . $this->dtable => '', 'voffset_' . $this->dtable => '', 'xoffset_' . $this->dtable => '');
         $this->session->set_userdata($session);
 
@@ -59,17 +57,10 @@ class Category extends MX_Controller
             );
         }
 
-        if (isset($_GET['id'])) {
-            $query = array_merge($query, array('news_type_id' => $_GET['id']));
-            $data['sub'] = $this->excurl->reqCurl('news-category', ['news_type_id' => $_GET['id']])->data[0];
+        if (isset($_GET['id'])) $query = array_merge($query, array('parent_id' => $_GET['id']));
 
-            $data['dt'] = $this->excurl->reqCurl('news-category-sub', $query)->data;
-            $data['count'] = $this->excurl->reqCurl('news-category-sub', array_merge($query, array('count' => true)))->data[0];
-        } else {
-            $data['dt'] = $this->excurl->reqCurl('news-category', $query)->data;
-            $data['count'] = $this->excurl->reqCurl('news-category', array_merge($query, array('count' => true)))->data[0];
-        }
-
+        $data['dt'] = $this->excurl->reqCurl('video-category', $query)->data;
+        $data['count'] = $this->excurl->reqCurl('video-category', array_merge($query, array('count' => true)))->data[0];
         $data['limit'] = $limit;
         $data['offset'] = $this->offset;
         $data['prefix'] = $this->dtable;
@@ -91,18 +82,11 @@ class Category extends MX_Controller
                 if ($this->session->userdata('sortDir_' . $this->dtable) == 'asc' OR
                     $this->session->userdata('sortDir_' . $this->dtable) == 'desc'
                 ) {
-                    if (isset($_GET['id'])) {
-                        $id = ($this->session->userdata('sortBy_' . $this->dtable) == 'news_type_id') ? 'sub_news_id' : $this->session->userdata('sortBy_' . $this->dtable);
-                        $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                         'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
-                    } else {
-                        $id = ($this->session->userdata('sortBy_' . $this->dtable) == 'sub_news_id') ? 'news_type_id' : $this->session->userdata('sortBy_' . $this->dtable);
-                        $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                         'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
-                    }
+                    $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
+                                     'sortBy_' . $this->dtable => $this->session->userdata('sortBy_' . $this->dtable), 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
                 } else {
                     $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                     'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => 'desc');
+                                     'sortBy_' . $this->dtable => 'category_eyetube_id', 'sortDir_' . $this->dtable => 'desc');
                 }
             }
             $this->session->set_userdata($session);
@@ -154,17 +138,12 @@ class Category extends MX_Controller
             }
 
             if (isset($_GET['id'])) {
-                $query = array_merge($query, array('news_type_id' => $_GET['id']));
-                $count = array_merge($count, array('news_type_id' => $_GET['id']));
-                $data['sub'] = $this->excurl->reqCurl('news-category', ['news_type_id' => $_GET['id']])->data[0];
-
-                $data['dt'] = $this->excurl->reqCurl('news-category-sub', $query)->data;
-                $data['count'] = $this->excurl->reqCurl('news-category-sub', $count)->data[0];
-            } else {
-                $data['dt'] = $this->excurl->reqCurl('news-category', $query)->data;
-                $data['count'] = $this->excurl->reqCurl('news-category', $count)->data[0];
+                $query = array_merge($query, array('parent_id' => $_GET['id']));
+                $count = array_merge($count, array('parent_id' => $_GET['id']));
             }
 
+            $data['dt'] = $this->excurl->reqCurl('video-category', $query)->data;
+            $data['count'] = $this->excurl->reqCurl('video-category', $count)->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $offset;
             $data['prefix'] = $this->dtable;
@@ -185,7 +164,7 @@ class Category extends MX_Controller
                 echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable), 'query' => $query));
             }
         } else {
-            redirect('news/category');
+            redirect('video/category');
         }
     }
 
@@ -220,17 +199,12 @@ class Category extends MX_Controller
             }
 
             if (isset($_GET['id'])) {
-                $query['query'] = array_merge($query['query'], array('news_type_id' => $_GET['id']));
-                $query['count'] = array_merge($query['count'], array('news_type_id' => $_GET['id']));
-                $data['sub'] = $this->excurl->reqCurl('news-category', ['news_type_id' => $_GET['id']])->data[0];
-
-                $data['dt'] = $this->excurl->reqCurl('news-category-sub', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('news-category-sub', $query['count'])->data[0];
-            } else {
-                $data['dt'] = $this->excurl->reqCurl('news-category', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('news-category', $query['count'])->data[0];
+                $query['query'] = array_merge($query['query'], array('parent_id' => $_GET['id']));
+                $query['count'] = array_merge($query['count'], array('parent_id' => $_GET['id']));
             }
 
+            $data['dt'] = $this->excurl->reqCurl('video-category', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('video-category', $query['count'])->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $this->offset;
             $data['prefix'] = $this->dtable;
@@ -245,7 +219,7 @@ class Category extends MX_Controller
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('news/category');
+            redirect('video/category');
         }
     }
 
@@ -261,17 +235,12 @@ class Category extends MX_Controller
             }
 
             if (isset($_GET['id'])) {
-                $query['query'] = array_merge($query['query'], array('news_type_id' => $_GET['id']));
-                $query['count'] = array_merge($query['count'], array('news_type_id' => $_GET['id']));
-                $data['sub'] = $this->excurl->reqCurl('news-category', ['news_type_id' => $_GET['id']])->data[0];
-
-                $data['dt'] = $this->excurl->reqCurl('news-category-sub', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('news-category-sub', $query['count'])->data[0];
-            } else {
-                $data['dt'] = $this->excurl->reqCurl('news-category', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('news-category', $query['count'])->data[0];
+                $query['query'] = array_merge($query['query'], array('parent_id' => $_GET['id']));
+                $query['count'] = array_merge($query['count'], array('parent_id' => $_GET['id']));
             }
 
+            $data['dt'] = $this->excurl->reqCurl('video-category', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('video-category', $query['count'])->data[0];
             $data['offset'] = $query['offset']+1;
 
             $html = $this->load->view($this->config->item('base_theme') . '/category/category_table', $data, true);
@@ -279,7 +248,7 @@ class Category extends MX_Controller
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('news/category');
+            redirect('video/category');
         }
     }
 
@@ -291,7 +260,7 @@ class Category extends MX_Controller
             $data['content'] = $this->config->item('base_theme') . '/category/add_category';
 
             if (isset($_GET['id'])) {
-                $data['sub'] = $this->excurl->reqCurl('news-category', ['news_type_id' => $_GET['id']])->data[0];
+                $data['sub'] = $this->excurl->reqCurl('video-category', ['category_eyetube_id' => $_GET['id']])->data[0];
             }
 
             if ($this->input->post('val') == true) {
@@ -303,7 +272,7 @@ class Category extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('news/category');
+                redirect('video/category');
             }
         }
     }
@@ -313,13 +282,13 @@ class Category extends MX_Controller
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
 
             if (isset($_GET['id'])) {
-                $option = $this->excurl->reqAction('news/category/save/?id='.$_GET['id'], $_POST);
+                $option = $this->excurl->reqAction('video/category/save/?id='.$_GET['id'], $_POST);
             } else {
-                $option = $this->excurl->reqAction('news/category/save', $_POST);
+                $option = $this->excurl->reqAction('video/category/save', $_POST);
             }
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('news/category');
+            redirect('video/category');
         }
     }
 
@@ -327,19 +296,17 @@ class Category extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
             if ($id == '') {
-                redirect('news/category');
+                redirect('video/category');
             } else {
                 $data['title'] = 'Category';
                 $data['parent'] = $this->mparent;
                 $data['content'] = $this->config->item('base_theme') . '/category/edit_category';
 
-
                 if (isset($_GET['id'])) {
-                    $data['sub'] = $this->excurl->reqCurl('news-category', ['news_type_id' => $_GET['id']])->data[0];
-                    $data['dt1'] = $this->excurl->reqCurl('news-category-sub', ['sub_news_id' => $id])->data[0];
-                } else {
-                    $data['dt1'] = $this->excurl->reqCurl('news-category', ['news_type_id' => $id])->data[0];
+                    $data['sub'] = $this->excurl->reqCurl('video-category', ['category_eyetube_id' => $_GET['id']])->data[0];
                 }
+
+                $data['dt1'] = $this->excurl->reqCurl('video-category', ['category_eyetube_id' => $id])->data[0];
 
                 if ($this->input->post('val') == true) {
                     $this->load->view($this->config->item('base_theme') . '/category/edit_category', $data);
@@ -351,7 +318,7 @@ class Category extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('news/category');
+                redirect('video/category');
             }
         }
     }
@@ -361,13 +328,13 @@ class Category extends MX_Controller
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_updated == 1) {
 
             if (isset($_GET['id'])) {
-                $option = $this->excurl->reqAction('news/category/update/?id='.$_GET['id'], $_POST);
+                $option = $this->excurl->reqAction('video/category/update/?id='.$_GET['id'], $_POST);
             } else {
-                $option = $this->excurl->reqAction('news/category/update', $_POST);
+                $option = $this->excurl->reqAction('video/category/update', $_POST);
             }
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('news/category');
+            redirect('video/category');
         }
     }
 
@@ -375,20 +342,20 @@ class Category extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
             if ($id == '') {
-                redirect('news/category');
+                redirect('video/category');
             } else {
                 if ($this->input->post('val') == true) {
                     $option = $this->category_model->__delete($id);
                     $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
-                    redirect('news/category');
+                    redirect('video/category');
                 }
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('news/category');
+                redirect('video/category');
             }
         }
     }
@@ -433,7 +400,7 @@ class Category extends MX_Controller
 
             $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('news/category');
+            redirect('video/category');
         }
     }
 

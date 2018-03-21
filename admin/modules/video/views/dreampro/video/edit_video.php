@@ -25,7 +25,7 @@
                 <div class='boxtab pad-all mg-b20'>
                     <h1>Edit</h1>
                     <div class='pad-lr20'>
-                        <input type='hidden' name='idx' id='idx' value='<?php echo $dt1->eyevideo_id; ?>'>
+                        <input type='hidden' name='idx' id='idx' value='<?php echo $dt1->eyetube_id; ?>'>
                         <input type='hidden' name='val' value='true'>
                         <div class='mg-b10'>
                             <label>Name</label>
@@ -52,7 +52,7 @@
                                     if($category)
                                     {
                                         foreach ($category->data as $cat) {
-                                            if ($cat->category_eyetube_id == $dt1->id_eyetube_category) {
+                                            if ($cat->category_eyetube_id == $dt1->category_eyetube_id) {
                                                 echo "<option value='$cat->category_eyetube_id;$cat->category_name' selected>$cat->category_name</option>";
                                             } else {
                                                 echo "<option value='$cat->category_eyetube_id;$cat->category_name'>$cat->category_name</option>";
@@ -73,7 +73,7 @@
                             <?php
                                 if($dt1->thumb)
                                 {
-                                    $pic = $this->library->picUrl($dt1->thumb, $dt1->url_thumb, 'eyevideo', 'medium');
+                                    $pic = $this->library->picUrl($dt1->thumb, $dt1->url_thumb, 'eyetube', 'medium');
 
                                     ?>
                                             <img src='<?php echo $pic; ?>' class='max-wd video_pic'>
@@ -84,6 +84,33 @@
                                             </a>
                                     <?php
                                 }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class='boxtab pad-all mg-b20'>
+                    <h1>Video</h1>
+                    <div class='pad-lr20'>
+                        <div class='pad-b20'>
+                            <input type='file' name='uploadvideo' id='uploadvideo' class='cinput input_multi'>
+                            <?php
+                            if($dt1->video)
+                            {
+                                $pic = ($dt1->thumb) ? $this->library->picUrl($dt1->thumb, $dt1->url_thumb, 'eyetube', 'medium') : '';
+                                $video = $this->library->picUrl($dt1->video, $dt1->url_video, 'eyetube');
+
+                                ?>
+                                    <video controlslist="nodownload" controls="controls" width="100%" class="wd-100 mg-t10 video_vid" poster="<?php echo $pic; ?>" style="max-width: none;">
+                                        <source src="<?php echo $video; ?>" type="video/mp4">
+                                    </video>
+                                    <input type='hidden' name='video_vid' class='video_vid' value='<?php echo $dt1->video; ?>'>
+                                    <input type='hidden' name='temp_video_vid' value='<?php echo $dt1->video; ?>'>
+                                    <a href="javascript:void(0)" class="btn_action video_vid disp-block mg-t10" style="font-size: 18px;" onclick="remove_value('.video_vid')">
+                                        <i class="fa fa-remove fa-fw"></i>Remove
+                                    </a>
+                                <?php
+                            }
                             ?>
                         </div>
                     </div>
