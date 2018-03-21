@@ -21,7 +21,7 @@
     {
         $sv = $this->library->sub_view();
 
-        $i= $offset;
+        $i= ($offset == 2) ? 1 : $offset;
         foreach($dt as $r)
         {
             echo "<tr>";
