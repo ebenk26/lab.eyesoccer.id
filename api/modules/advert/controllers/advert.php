@@ -35,13 +35,14 @@ class Advert extends MX_Controller
             $new_link = $this->library->seo_title($text_title);
             $upload = $this->advert_model->__upload($new_link);
 
-            $cat = explode(';', $this->input->post('category'));
+            $cat = $_POST['note'];
+            $cat_explode = explode(';', $cat);
 
             // advert
             $dt1 = array(// General
-                'category_ads_id' => $this->input->post('category_ads_id'),
                 'title' => addslashes($text_title),
-                'note' => $this->input->post('note'),
+                'note' => $cat_explode[0],
+                'category_ads_id' => $cat_explode[1],
                 'pic' => $upload['data'],
                 // Data
                 'admin_id' => $this->input->post('ses_user_id')
@@ -85,13 +86,14 @@ class Advert extends MX_Controller
             $new_link = $this->library->seo_title($text_title);
             $upload = $this->advert_model->__upload($new_link);
 
-            $cat = explode(';', $this->input->post('category'));
+            $cat = $_POST['note'];
+            $cat_explode = explode(';', $cat);
 
             // advert
             $dt1 = array(// General
-                'category_ads_id' => $this->input->post('category_ads_id'),
                 'title' => addslashes($text_title),
-                'note' => $this->input->post('note'),
+                'note' => $cat_explode[0],
+                'category_ads_id' => $cat_explode[1],
                 'pic' => $upload['data'],
                 // Data
                 'admin_id' => $this->input->post('ses_user_id')
