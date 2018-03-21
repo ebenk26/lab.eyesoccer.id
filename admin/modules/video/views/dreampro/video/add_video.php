@@ -65,6 +65,15 @@
                         </div>
                     </div>
                 </div>
+
+                <div class='boxtab pad-all mg-b20'>
+                    <h1>Video</h1>
+                    <div class='pad-lr20'>
+                        <div class='pad-b20'>
+                            <input type='file' name='uploadvideo' id='uploadvideo' class='cinput input_multi'>
+                        </div>
+                    </div>
+                </div>
                 
                 <div class='boxtab pad-all mg-b20'>
                     <h1>Action</h1>

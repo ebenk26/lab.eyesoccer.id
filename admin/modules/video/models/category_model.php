@@ -16,9 +16,9 @@ class Category_model extends CI_Model
     function __delete($id = '')
     {
         if (isset($_GET['id'])) {
-            $option = $this->excurl->reqAction('news/category/delete/?id=' . $_GET['id'], array('idx' => $id));
+            $option = $this->excurl->reqAction('video/category/delete/?id=' . $_GET['id'], array('idx' => $id));
         } else {
-            $option = $this->excurl->reqAction('news/category/delete', array('idx' => $id));
+            $option = $this->excurl->reqAction('video/category/delete', array('idx' => $id));
         }
         return $option;
     }
@@ -26,7 +26,7 @@ class Category_model extends CI_Model
     function __disable($id = '')
     {
         if ($id != NULL) {
-            $option = $this->excurl->reqAction('news/category/disable', array('idx' => $id));
+            $option = $this->excurl->reqAction('video/category/disable', array('idx' => $id));
             return $option;
         } else {
             redirect('news/category');
@@ -36,7 +36,7 @@ class Category_model extends CI_Model
     function __enable($id = '')
     {
         if ($id != NULL) {
-            $option = $this->excurl->reqAction('news/category/enable', array('idx' => $id));
+            $option = $this->excurl->reqAction('video/category/enable', array('idx' => $id));
             return $option;
         } else {
             redirect('news/category');

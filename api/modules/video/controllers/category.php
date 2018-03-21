@@ -2,8 +2,7 @@
 
 class Category extends MX_Controller
 {
-    var $dtable = 'tbl_news_types';
-    var $xtable = 'tbl_sub_category_news';
+    var $dtable = 'tbl_category_eyetube';
 
     function __construct()
     {
@@ -33,15 +32,8 @@ class Category extends MX_Controller
             $text_title = $this->input->post('title');
             $new_link = $this->library->seo_title($text_title);
 
-            // Category
-            if (isset($_GET['id'])) {
-                $dt1 = array('news_type_id' => $_GET['id'], 'sub_category_name' => addslashes($text_title));
-            } else {
-                $dt1 = array('news_type' => addslashes($text_title));
-            }
-
-            $table = (isset($_GET['id'])) ? $this->xtable : $this->dtable;
-            $option = $this->action->insert(array('table' => $table, 'insert' => $dt1));
+            $dt1 = array('category_name' => addslashes($text_title));
+            $option = $this->action->insert(array('table' => $this->dtable, 'insert' => $dt1));
             if ($option['state'] == 0) {
                 $this->validation->error_message($option);
                 return false;
@@ -49,13 +41,7 @@ class Category extends MX_Controller
 
             $id = $this->db->insert_id();
             $key = substr(md5($id), 0, 7);
-            $query = array('table' => $table, 'update' => array('slug' => $new_link.'-'.$key));
-            if (isset($_GET['id'])) {
-                $query = array_merge($query, array('where' => array('sub_news_id' => $id)));
-            } else {
-                $query = array_merge($query, array('where' => array('news_type_id' => $id)));
-            }
-
+            $query = array('table' => $this->dtable, 'update' => array('slug' => $new_link.'-'.$key), 'where' => array('category_eyetube_id' => $id));
             $option = $this->action->update($query);
             if ($option['state'] == 0) {
                 $this->validation->error_message($option);
@@ -78,16 +64,9 @@ class Category extends MX_Controller
             $text_title = $this->input->post('title');
             $new_link = $this->library->seo_title($text_title);
 
-            // Category
-            if (isset($_GET['id'])) {
-                $dt1 = array('news_type_id' => $_GET['id'], 'sub_category_name' => addslashes($text_title));
-            } else {
-                $dt1 = array('news_type' => addslashes($text_title));
-            }
-
-            $table = (isset($_GET['id'])) ? $this->xtable : $this->dtable;
-            $where = (isset($_GET['id'])) ? ['sub_news_id' => $this->input->post('idx')] : ['news_type_id' => $this->input->post('idx')];
-            $option = $this->action->update(array('table' => $table, 'update' => $dt1, 'where' => $where));
+            $dt1 = array('category_name' => addslashes($text_title));
+            $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,
+                                                  'where' => array('category_eyetube_id' => $this->input->post('idx'))));
             if ($option['state'] == 0) {
                 $this->validation->error_message($option);
                 return false;
@@ -95,13 +74,7 @@ class Category extends MX_Controller
 
             $id = $this->input->post('idx');
             $key = substr(md5($id), 0, 7);
-            $query = array('table' => $table, 'update' => array('slug' => $new_link.'-'.$key));
-            if (isset($_GET['id'])) {
-                $query = array_merge($query, array('where' => array('sub_news_id' => $id)));
-            } else {
-                $query = array_merge($query, array('where' => array('news_type_id' => $id)));
-            }
-
+            $query = array('table' => $this->dtable, 'update' => array('slug' => $new_link.'-'.$key), 'where' => array('category_eyetube_id' => $id));
             $option = $this->action->update($query);
             if ($option['state'] == 0) {
                 $this->validation->error_message($option);

@@ -5,8 +5,7 @@ class Category_model extends CI_Model
 
     var $query_string = '';
     var $command = '';
-    var $dtable = 'tbl_news_types';
-    var $xtable = 'tbl_sub_category_news';
+    var $dtable = 'tbl_category_eyetube';
 
     function __construct()
     {
@@ -16,10 +15,10 @@ class Category_model extends CI_Model
     function __delete($id = '')
     {
         if (isset($_GET['id'])) {
-            $option = $this->action->delete(array('table' => $this->xtable, 'where' => array('sub_news_id' => $id)));
+            $option = $this->action->delete(array('table' => $this->dtable, 'where' => array('category_eyetube_id' => $id)));
         } else {
-            $option = $this->action->delete(array('table' => $this->dtable, 'where' => array('news_type_id' => $id)));
-            $option = $this->action->delete(array('table' => $this->xtable, 'where' => array('news_type_id' => $id)));
+            //$option = $this->action->delete(array('table' => $this->dtable, 'where' => array('parent_id' => $id)));
+            $option = $this->action->delete(array('table' => $this->dtable, 'where' => array('category_eyetube_id' => $id)));
         }
 
         if ($option['state'] == 0) {
