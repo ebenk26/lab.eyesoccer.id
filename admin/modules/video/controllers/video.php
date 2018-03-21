@@ -288,44 +288,8 @@ class Video extends MX_Controller
     function save()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $text_title = $this->input->post('title');
-            $text_desc = $this->input->post('description');
-
-            $new_link = $this->library->seo_title($text_title);
-
-            $upload = $this->video_model->__upload($new_link);
-            $key = substr(md5($this->library->app_key()), 0, 7);
-
-            $cat = $this->excurl->reqCurl('video-category', ['video_type_id' => $this->input->post('category')])->data[0];
-            $catsub = $this->excurl->reqCurl('video-category-sub', ['sub_video_id' => $this->input->post('subcategory')])->data[0];
-
-            // Video
-            $dt1 = array(// General
-                'title' => addslashes($text_title),
-                'description' => addslashes($text_desc),
-                'meta_description' => $this->input->post('meta_desc'),
-                'tag' => $this->input->post('meta_keyword'),
-                'credit' => $this->input->post('credit'),
-                'category_video' => $this->input->post('recommended'),
-                'url' => $new_link.'-'.$key,
-                'pic' => $upload['data'],
-                // Data
-                'video_type' => $cat->video_type,
-                'sub_category_name' => $catsub->sub_category_name,
-                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
-                'createon' => date('Y-m-d h:i:s'),
-                'admin_id' => $this->session->userdata('user_id')
-            );
-
-            $option = $this->action->insert(array('table' => $this->dtable, 'insert' => $dt1));
-            if ($option['state'] == 0) {
-                $this->video_model->__unlink($upload['data']);
-
-                $this->validation->error_message($option);
-                return false;
-            }
-
-            $this->view(array('xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+            $option = $this->excurl->reqAction('video/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile','uploadvideo']);
+            $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('video');
         }
@@ -341,7 +305,7 @@ class Video extends MX_Controller
                 $data['parent'] = $this->mparent;
                 $data['content'] = $this->config->item('base_theme') . '/video/edit_video';
 
-                $query = array('eyevideo_id' => $id, 'detail' => true);
+                $query = array('eyetube_id' => $id, 'detail' => true);
                 $ulevel = $this->library->user_check();
                 if($ulevel->ff > 0)
                 {
@@ -350,7 +314,6 @@ class Video extends MX_Controller
 
                 $data['dt1'] = $this->excurl->reqCurl('video', $query)->data[0];
                 $data['category'] = $this->excurl->reqCurl('video-category');
-                $data['subcategory'] = $this->excurl->reqCurl('video-category-sub', ['category' => $data['dt1']->video_type]);
 
                 if ($this->input->post('val') == true) {
                     $this->load->view($this->config->item('base_theme') . '/video/edit_video', $data);
@@ -370,49 +333,8 @@ class Video extends MX_Controller
     function update()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-            $text_title = $this->input->post('title');
-            $text_desc = $this->input->post('description');
-
-            $new_link = $this->library->seo_title($text_title);
-
-            $upload = $this->video_model->__upload($new_link);
-            $key = substr(md5($this->library->app_key()), 0, 7);
-
-            $cat = $this->excurl->reqCurl('video-category', ['video_type_id' => $this->input->post('category')])->data[0];
-            $catsub = $this->excurl->reqCurl('video-category-sub', ['sub_video_id' => $this->input->post('subcategory')])->data[0];
-
-            // Video
-            $dt1 = array(// General
-                'title' => addslashes($text_title),
-                'description' => addslashes($text_desc),
-                'meta_description' => $this->input->post('meta_desc'),
-                'tag' => $this->input->post('meta_keyword'),
-                'credit' => $this->input->post('credit'),
-                'category_video' => $this->input->post('recommended'),
-                'url' => $new_link.'-'.$key,
-                'pic' => $upload['data'],
-                // Data
-                'video_type' => $cat->video_type,
-                'sub_category_name' => $catsub->sub_category_name,
-                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
-                'updateon' => date('Y-m-d h:i:s')
-            );
-
-            $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,
-                                                  'where' => array('eyevideo_id' => $this->input->post('idx'))));
-            if ($option['state'] == 0) {
-                $this->video_model->__unlink($upload['data']);
-
-                $this->validation->error_message($option);
-                return false;
-            }
-
-            // Remove Old Pic If There is Upload Files
-            if ($this->input->post('video_pic') != '') {
-                $this->video_model->__unlink($this->input->post('video_pic'));
-            }
-
-            $this->view(array('xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+            $option = $this->excurl->reqAction('video/update', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile','uploadvideo']);
+            $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('video');
         }
@@ -422,20 +344,20 @@ class Video extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
             if ($id == '') {
-                redirect('video');
+                redirect('news');
             } else {
                 if ($this->input->post('val') == true) {
                     $option = $this->video_model->__delete($id);
-                    $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+                    $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
-                    redirect('video');
+                    redirect('news');
                 }
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('video');
+                redirect('news');
             }
         }
     }
@@ -478,25 +400,9 @@ class Video extends MX_Controller
                     break;
             }
 
-            $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+            $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('video');
-        }
-    }
-
-    function subcategory()
-    {
-        $search = $this->input->post('val');
-        $category = $this->excurl->reqCurl('video-category-sub', ['video_type_id' => $search]);
-
-        if ($category) {
-            if ($category->data) {
-                foreach ($category->data as $cat) {
-                    echo "<option value='$cat->sub_video_id'>$cat->sub_category_name</option>";
-                }
-            } else {
-                echo "<option value=''>- Select -</option>";
-            }
         }
     }
 
