@@ -6,3 +6,4 @@ function p($arr){
 		print_r($arr);
 	echo '</pre>';
 }
+define('NOW',date('Y-m-d G:i:s'));

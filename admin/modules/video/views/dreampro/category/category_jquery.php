@@ -8,7 +8,7 @@
         {
             $sv = $this->library->sub_view();
             echo "<div id='pageself'>
-                    <div id='showurl' value='news/category/pagetable".$sv->idstay."'></div>
+                    <div id='showurl' value='video/category/pagetable".$sv->idstay."'></div>
                     <div id='showpage' value='$showpage'></div>
                     <div id='showoff' value='4'></div>
                     <div id='showrun' value='2'></div>

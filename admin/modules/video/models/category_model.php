@@ -16,26 +16,17 @@ class Category_model extends CI_Model
     function __delete($id = '')
     {
         if (isset($_GET['id'])) {
-            $option = $this->action->delete(array('table' => $this->xtable, 'where' => array('sub_news_id' => $id)));
+            $option = $this->excurl->reqAction('video/category/delete/?id=' . $_GET['id'], array('idx' => $id));
         } else {
-            $option = $this->action->delete(array('table' => $this->dtable, 'where' => array('news_type_id' => $id)));
-            $option = $this->action->delete(array('table' => $this->xtable, 'where' => array('news_type_id' => $id)));
+            $option = $this->excurl->reqAction('video/category/delete', array('idx' => $id));
         }
-
-        if ($option['state'] == 0) {
-            $this->validation->error_message($option);
-            return false;
-        }
-
         return $option;
     }
 
     function __disable($id = '')
     {
         if ($id != NULL) {
-            $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('news_type_id' => $id));
-            $option = $this->action->update($dt);
-
+            $option = $this->excurl->reqAction('video/category/disable', array('idx' => $id));
             return $option;
         } else {
             redirect('news/category');
@@ -45,10 +36,7 @@ class Category_model extends CI_Model
     function __enable($id = '')
     {
         if ($id != NULL) {
-            $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('news_type_id' => $id));
-
-            $option = $this->action->update($dt);
-
+            $option = $this->excurl->reqAction('video/category/enable', array('idx' => $id));
             return $option;
         } else {
             redirect('news/category');

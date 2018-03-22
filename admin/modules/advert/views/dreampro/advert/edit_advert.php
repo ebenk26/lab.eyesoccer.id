@@ -1,5 +1,5 @@
 <div style='display: none;'><html><body></body></html></div>
-
+ 
 <script>
     $(function() {
         $('.chosen-select').chosen();
@@ -34,7 +34,7 @@
                     </div>
                 </div>
             </div>
-            
+             
             <div class='col-lg-4 col-md-12 col-sm-4 col-xs-12'>
                 <div class='boxtab pad-all mg-b20'>
                     <h1>Category</h1>
@@ -48,9 +48,9 @@
                                     {
                                         foreach ($category->data as $cat) {
                                             if ($cat->note == $dt1->note) {
-                                                echo "<option value='$cat->note' selected>$cat->note</option>";
+                                                echo "<option value='$cat->note;$cat->category_ads_id' selected>$cat->note</option>";
                                             } else {
-                                                echo "<option value='$cat->note'>$cat->note</option>";
+                                                echo "<option value='$cat->note;$cat->category_ads_id'>$cat->note</option>";
                                             }
                                         }
                                     }

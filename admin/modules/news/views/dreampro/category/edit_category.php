@@ -8,7 +8,7 @@
     });
 </script>
 
-<div class='boxtitle'><?php echo $title; ?></div>
+<div class='boxtitle'><?php echo $title; ?> <?php echo (isset($sub) AND isset($_GET['id'])) ? '&rsaquo; '.$sub->news_type : ''; ?></div>
 <div id='boxmessage'></div>
 
 <div id='boxjq'>
@@ -47,7 +47,7 @@
                         <div class='pad-b18'>
                             <div class='layout-row'>
                                 <span class='flex'></span>
-                                <input type='submit' value='Update' id='btn_submit' onclick="saveaddmulti('add/category/update')">
+                                <input type='submit' value='Update' id='btn_submit' onclick="saveaddmulti('news/category/update')">
                             </div>
                         </div>
                     </div>

@@ -278,6 +278,7 @@ function remove_value(val) {
     $(val).val('');
     $("a" + val).remove();
     $("img" + val).remove();
+    $("video" + val).remove();
 }
 
 function remove_item(val) {

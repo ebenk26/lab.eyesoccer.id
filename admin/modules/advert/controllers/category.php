@@ -1,5 +1,5 @@
 <?php
-
+ 
 class Category extends MX_Controller
 {
     var $roles = 'admin';
@@ -278,10 +278,6 @@ class Category extends MX_Controller
             $data['parent'] = $this->mparent;
             $data['content'] = $this->config->item('base_theme') . '/category/add_category';
 
-            if (isset($_GET['id'])) {
-                $data['sub'] = $this->excurl->reqCurl('ads-category', ['category_ads_id' => $_GET['id']])->data[0];
-            }
-
             if ($this->input->post('val') == true) {
                 $this->load->view($this->config->item('base_theme') . '/category/add_category', $data);
             } else {
@@ -300,11 +296,7 @@ class Category extends MX_Controller
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
 
-            if (isset($_GET['id'])) {
-                $option = $this->excurl->reqAction('advert/category/save/?id='.$_GET['id'], $_POST);
-            } else {
-                $option = $this->excurl->reqAction('advert/category/save', $_POST);
-            }
+            $option = $this->excurl->reqAction('advert/category/save', $_POST);
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('advert/category');

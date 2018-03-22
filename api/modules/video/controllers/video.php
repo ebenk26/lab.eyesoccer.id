@@ -1,9 +1,9 @@
 <?php
 
-class Advert extends MX_Controller
+class Video extends MX_Controller
 {
-    var $dtable = 'tbl_ads';
- 
+    var $dtable = 'tbl_eyetube';
+
     function __construct()
     {
         // PHP Version 5.4
@@ -22,7 +22,7 @@ class Advert extends MX_Controller
         }
 
         $this->restapi->__auth();
-        $this->load->model('advert_model');
+        $this->load->model('video_model');
     }
 
     function save()
@@ -30,27 +30,33 @@ class Advert extends MX_Controller
         if($_POST)
         {
             $text_title = $this->input->post('title');
-            $note = $this->input->post('note');
+            $text_desc = $this->input->post('description');
 
             $new_link = $this->library->seo_title($text_title);
-            $upload = $this->advert_model->__upload($new_link);
+            $uploadpic = $this->video_model->__upload($new_link);
+            $uploadvideo = $this->video_model->__upload_video($new_link);
 
-            $cat = $_POST['note'];
-            $cat_explode = explode(';', $cat);
+            $cat = explode(';', $this->input->post('category'));
 
-            // advert
+            // Video
             $dt1 = array(// General
                 'title' => addslashes($text_title),
-                'note' => $cat_explode[0],
-                'category_ads_id' => $cat_explode[1],
-                'pic' => $upload['data'],
+                'description' => addslashes($text_desc),
+                'thumb' => $uploadpic['data'],
+                'video' => $uploadvideo['data'],
+                'duration' => $this->input->post('duration'),
                 // Data
+                'id_category_eyetube' => $cat[0],
+                'category_name' => $cat[1],
+                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
+                'createon' => date('Y-m-d h:i:s'),
                 'admin_id' => $this->input->post('ses_user_id')
             );
 
             $option = $this->action->insert(array('table' => $this->dtable, 'insert' => $dt1));
             if ($option['state'] == 0) {
-                $this->advert_model->__unlink($upload['data']);
+                $this->video_model->__unlink($uploadpic['data']);
+                $this->video_model->__unlink_video($uploadvideo['data']);
 
                 $this->validation->error_message($option);
                 return false;
@@ -58,10 +64,11 @@ class Advert extends MX_Controller
 
             $id = $this->db->insert_id();
             $key = substr(md5($id), 0, 7);
-            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('pic' => $new_link.'-'.$key),
-                                                  'where' => array('ads_id' => $id)));
+            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('url' => $new_link.'-'.$key),
+                                                  'where' => array('eyetube_id' => $id)));
             if ($option['state'] == 0) {
-                $this->advert_model->__unlink($upload['data']);
+                $this->video_model->__unlink($uploadpic['data']);
+                $this->video_model->__unlink_video($uploadvideo['data']);
 
                 $this->validation->error_message($option);
                 return false;
@@ -81,43 +88,58 @@ class Advert extends MX_Controller
         if($_POST)
         {
             $text_title = $this->input->post('title');
-            $note = $this->input->post('note');
+            $text_desc = $this->input->post('description');
 
             $new_link = $this->library->seo_title($text_title);
-            $upload = $this->advert_model->__upload($new_link);
+            $uploadpic = $this->video_model->__upload($new_link);
+            $uploadvideo = $this->video_model->__upload_video($new_link);
 
-            $cat = $_POST['note'];
-            $cat_explode = explode(';', $cat);
+            $cat = explode(';', $this->input->post('category'));
 
-            // advert
+            // Video
             $dt1 = array(// General
                 'title' => addslashes($text_title),
-                'note' => $cat_explode[0],
-                'category_ads_id' => $cat_explode[1],
-                'pic' => $upload['data'],
+                'description' => addslashes($text_desc),
+                'thumb' => $uploadpic['data'],
+                'video' => $uploadvideo['data'],
+                'duration' => $this->input->post('duration'),
                 // Data
-                'admin_id' => $this->input->post('ses_user_id')
+                'id_category_eyetube' => $cat[0],
+                'category_name' => $cat[1],
+                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
+                'updateon' => date('Y-m-d h:i:s')
             );
 
             $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,
-                                                  'where' => array('ads_id' => $this->input->post('idx'))));
+                                                  'where' => array('eyetube_id' => $this->input->post('idx'))));
             if ($option['state'] == 0) {
-                $this->advert_model->__unlink($upload['data']);
+                $this->video_model->__unlink($uploadpic['data']);
+                $this->video_model->__unlink_video($uploadvideo['data']);
 
                 $this->validation->error_message($option);
                 return false;
             }
 
+            $id = $this->input->post('idx');
+            $key = substr(md5($id), 0, 7);
+            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('url' => $new_link.'-'.$key),
+                                                  'where' => array('eyetube_id' => $id)));
             if ($option['state'] == 0) {
-                $this->advert_model->__unlink($upload['data']);
+                $this->video_model->__unlink($uploadpic['data']);
+                $this->video_model->__unlink_video($uploadvideo['data']);
 
                 $this->validation->error_message($option);
                 return false;
             }
 
             // Remove Old Pic If There is Upload Files
-            if ($this->input->post('advert_pic') != '') {
-                $this->advert_model->__unlink($this->input->post('advert_pic'));
+            if ($this->input->post('video_pic') != '') {
+                $this->video_model->__unlink($this->input->post('video_pic'));
+            }
+
+            // Remove Old Video If There is Upload Video
+            if ($this->input->post('video_vid') != '') {
+                $this->video_model->__unlink_video($this->input->post('video_vid'));
             }
 
             $this->tools->__flashMessage($option);
@@ -133,7 +155,7 @@ class Advert extends MX_Controller
     {
         if($_POST)
         {
-            $option = $this->advert_model->__delete($this->input->post('idx'));
+            $option = $this->video_model->__delete($this->input->post('idx'));
             $this->tools->__flashMessage($option);
         } else {
             $data = $this->__rest()->__getstatus('Data must be type post', 400);
@@ -147,7 +169,7 @@ class Advert extends MX_Controller
     {
         if($_POST)
         {
-            $option = $this->advert_model->__disable($this->input->post('idx'));
+            $option = $this->video_model->__disable($this->input->post('idx'));
             $this->tools->__flashMessage($option);
         } else {
             $data = $this->__rest()->__getstatus('Data must be type post', 400);
@@ -161,7 +183,7 @@ class Advert extends MX_Controller
     {
         if($_POST)
         {
-            $option = $this->advert_model->__enable($this->input->post('idx'));
+            $option = $this->video_model->__enable($this->input->post('idx'));
             $this->tools->__flashMessage($option);
         } else {
             $data = $this->__rest()->__getstatus('Data must be type post', 400);

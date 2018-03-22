@@ -3,7 +3,7 @@
 class Member extends MX_Controller
 {
     var $roles = 'admin';
-    var $mparent = 'News';
+    var $mparent = 'Member';
     var $offset = 1;
     var $limit = 10;
     var $dtable = 'tbl_member';
@@ -25,7 +25,7 @@ class Member extends MX_Controller
 
     public function index()
     {
-        $data['title'] = 'News';
+        $data['title'] = 'Member';
         $data['parent'] = $this->mparent;
         $data['roles'] = $this->roles;
         $data['content'] = $this->config->item('base_theme') . '/member/member';
@@ -47,7 +47,6 @@ class Member extends MX_Controller
         ) {
             $query = array(
                 'sortby' => $this->session->userdata('sortBy_' . $this->dtable),
-                'sortdir' => $this->session->userdata('sortDir_' . $this->dtable),
                 'page' => $this->offset,
                 'limit' => $limit
             );
@@ -63,8 +62,10 @@ class Member extends MX_Controller
         {
             $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
         }
-        #p($ulevel);
-        #p($query);
+
+        // exit;
+        // #p($ulevel);
+        // #p($query);
         $data['dt'] = $this->excurl->reqCurl('me', $query)->data;
         $data['count'] = $this->excurl->reqCurl('me', array_merge($query, array('count' => true)))->data[0];
         $data['limit'] = $limit;
@@ -78,7 +79,7 @@ class Member extends MX_Controller
     function view($option = array())
     {
         if ($this->input->post('val') == true) {
-            $data['title'] = 'News';
+            $data['title'] = 'Member';
             $data['roles'] = $this->roles;
 
             // Limit Session
@@ -92,7 +93,7 @@ class Member extends MX_Controller
                                      'sortBy_' . $this->dtable => $this->session->userdata('sortBy_' . $this->dtable), 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
                 } else {
                     $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                     'sortBy_' . $this->dtable => 'news_id', 'sortDir_' . $this->dtable => 'desc');
+                                     'sortBy_' . $this->dtable => 'newjoin', 'sortDir_' . $this->dtable => 'desc');
                 }
             }
             $this->session->set_userdata($session);
@@ -125,7 +126,6 @@ class Member extends MX_Controller
                 $query = array(
                     $xfield => $xsearch,
                     'sortby' => $this->session->userdata('sortBy_' . $this->dtable),
-                    'sortdir' => $this->session->userdata('sortDir_' . $this->dtable),
                     'page' => $offset,
                     'limit' => $limit
                 );
@@ -150,17 +150,18 @@ class Member extends MX_Controller
                 $count = array_merge($count, array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
-            $data['dt'] = $this->excurl->reqCurl('news', $query)->data;
-            $data['count'] = $this->excurl->reqCurl('news', $count)->data[0];
+            $data['dt'] =$this->excurl->reqCurl('me', $query)->data;
+            $data['count'] = $this->excurl->reqCurl('me', $count)->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $offset;
             $data['prefix'] = $this->dtable;
             $data['showpage'] = ceil($data['count']->cc / $limit);
 
+
             if ($this->input->post('val') > 0 OR isset($option['is_check'])) {
-                $html = $this->load->view($this->config->item('base_theme') . '/news/news_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/member/member_jquery', $data, true);
             } else {
-                $html = $this->load->view($this->config->item('base_theme') . '/news/news', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/member/member', $data, true);
             }
 
             header('Content-Type: application/json');
@@ -172,7 +173,7 @@ class Member extends MX_Controller
                 echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable), 'query' => $query));
             }
         } else {
-            redirect('news');
+            redirect('member');
         }
     }
 
@@ -270,11 +271,11 @@ class Member extends MX_Controller
     function add()
     {
         if ($this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $data['title'] = 'News';
+            $data['title'] = 'member';
             $data['parent'] = $this->mparent;
             $data['content'] = $this->config->item('base_theme') . '/member/add_member';
 
-            // $data['category'] = $this->excurl->reqCurl('news-category');
+            // $data['category'] = $this->excurl->reqCurl('member-category');
 
             if ($this->input->post('val') == true) {
                 $this->load->view($this->config->item('base_theme') . '/member/add_member', $data);
@@ -293,133 +294,56 @@ class Member extends MX_Controller
     function save()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $text_title = $this->input->post('title');
-            $text_desc = $this->input->post('description');
-
-            $new_link = $this->library->seo_title($text_title);
-
-            $upload = $this->news_model->__upload($new_link);
-            $key = substr(md5($this->library->app_key()), 0, 7);
-
-            $cat = $this->excurl->reqCurl('news-category', ['news_type_id' => $this->input->post('category')])->data[0];
-            $catsub = $this->excurl->reqCurl('news-category-sub', ['sub_news_id' => $this->input->post('subcategory')])->data[0];
-
-            // News
-            $dt1 = array(// General
-                'title' => addslashes($text_title),
-                'description' => addslashes($text_desc),
-                'meta_description' => $this->input->post('meta_desc'),
-                'tag' => $this->input->post('meta_keyword'),
-                'credit' => $this->input->post('credit'),
-                'category_news' => $this->input->post('recommended'),
-                'url' => $new_link.'-'.$key,
-                'pic' => $upload['data'],
-                // Data
-                'news_type' => $cat->news_type,
-                'sub_category_name' => $catsub->sub_category_name,
-                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
-                'createon' => date('Y-m-d h:i:s'),
-                'admin_id' => $this->session->userdata('user_id')
-            );
-
-            $option = $this->action->insert(array('table' => $this->dtable, 'insert' => $dt1));
-            if ($option['state'] == 0) {
-                $this->news_model->__unlink($upload['data']);
-
-                $this->validation->error_message($option);
-                return false;
-            }
-
-            $this->view(array('xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+            $option = $this->excurl->reqAction('member/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'),'join_date'=> NOW)));
+            $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('news');
+            redirect('member');
         }
     }
 
-    function edit($id = '')
+    function edit($id= '')
     {
         if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
             if ($id == '') {
-                redirect('news');
+                redirect('member');
             } else {
-                $data['title'] = 'News';
+                $data['title'] = 'Member';
                 $data['parent'] = $this->mparent;
-                $data['content'] = $this->config->item('base_theme') . '/news/edit_news';
+                $data['content'] = $this->config->item('base_theme') . '/member/edit_member';
 
-                $query = array('member_id' => $id, 'detail' => true);
+                $query = array('id_member' => $id, 'detail' => true);
                 $ulevel = $this->library->user_check();
                 if($ulevel->ff > 0)
                 {
                     $query = array_merge($query, array('admin_id' => $this->session->userdata('user_id')));
                 }
-
-                $data['dt1'] = $this->excurl->reqCurl('news', $query)->data[0];
-                $data['category'] = $this->excurl->reqCurl('news-category');
-                $data['subcategory'] = $this->excurl->reqCurl('news-category-sub', ['category' => $data['dt1']->news_type]);
-
+                $data['dt1'] = $this->excurl->reqCurl('me',$query)->data[0];
+                // p($data['dt1']);
+                // exit;
                 if ($this->input->post('val') == true) {
-                    $this->load->view($this->config->item('base_theme') . '/news/edit_news', $data);
+                    $this->load->view($this->config->item('base_theme') . '/member/edit_member', $data);
                 } else {
                     $this->load->view($this->config->item('base_theme') . '/template', $data);
                 }
+                // p($data['dt1']);
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('news');
+                redirect('member');
             }
         }
     }
 
     function update()
     {
-        if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-            $text_title = $this->input->post('title');
-            $text_desc = $this->input->post('description');
-
-            $new_link = $this->library->seo_title($text_title);
-
-            $upload = $this->news_model->__upload($new_link);
-            $key = substr(md5($this->library->app_key()), 0, 7);
-
-            $cat = $this->excurl->reqCurl('news-category', ['news_type_id' => $this->input->post('category')])->data[0];
-            $catsub = $this->excurl->reqCurl('news-category-sub', ['sub_news_id' => $this->input->post('subcategory')])->data[0];
-
-            // News
-            $dt1 = array(// General
-                'title' => addslashes($text_title),
-                'description' => addslashes($text_desc),
-                'meta_description' => $this->input->post('meta_desc'),
-                'tag' => $this->input->post('meta_keyword'),
-                'credit' => $this->input->post('credit'),
-                'category_news' => $this->input->post('recommended'),
-                'url' => $new_link.'-'.$key,
-                'pic' => $upload['data'],
-                // Data
-                'news_type' => $cat->news_type,
-                'sub_category_name' => $catsub->sub_category_name,
-                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
-                'updateon' => date('Y-m-d h:i:s')
-            );
-
-            $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,
-                                                  'where' => array('member_id' => $this->input->post('idx'))));
-            if ($option['state'] == 0) {
-                $this->news_model->__unlink($upload['data']);
-
-                $this->validation->error_message($option);
-                return false;
-            }
-
-            // Remove Old Pic If There is Upload Files
-            if ($this->input->post('news_pic') != '') {
-                $this->news_model->__unlink($this->input->post('news_pic'));
-            }
-
-            $this->view(array('xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+    
+       if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
+            $option = $this->excurl->reqAction('member/update', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
+            $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('news');
+            redirect('member');
         }
     }
 
@@ -427,20 +351,23 @@ class Member extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
             if ($id == '') {
-                redirect('news');
+                redirect('member');
             } else {
+                // echo '1';
+                // exit;
                 if ($this->input->post('val') == true) {
-                    $option = $this->news_model->__delete($id);
-                    $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+                    $option = $this->member_model->__delete($id);
+
+                    $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
-                    redirect('news');
+                    redirect('member');
                 }
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('news');
+                redirect('member');
             }
         }
     }
@@ -455,7 +382,7 @@ class Member extends MX_Controller
                 case 1:
                     if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->news_model->__delete($split[$i]);
+                            $option = $this->member_model->__delete($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -465,7 +392,7 @@ class Member extends MX_Controller
                 case 2:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->news_model->__enable($split[$i]);
+                            $option = $this->member_model->__enable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -475,7 +402,7 @@ class Member extends MX_Controller
                 case 3:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->news_model->__disable($split[$i]);
+                            $option = $this->member_model->__disable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -485,24 +412,26 @@ class Member extends MX_Controller
 
             $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
         } else {
-            redirect('news');
+            redirect('member');
         }
     }
 
     function subcategory()
     {
         $search = $this->input->post('val');
-        $category = $this->excurl->reqCurl('news-category-sub', ['news_type_id' => $search]);
+        $category = $this->excurl->reqCurl('member-category-sub', ['member_type_id' => $search]);
 
         if ($category) {
             if ($category->data) {
                 foreach ($category->data as $cat) {
-                    echo "<option value='$cat->sub_news_id'>$cat->sub_category_name</option>";
+                    echo "<option value='$cat->sub_member_id'>$cat->sub_category_name</option>";
                 }
             } else {
                 echo "<option value=''>- Select -</option>";
             }
         }
     }
-
+    function sess(){
+        p($this->session->userdata);
+    }
 }

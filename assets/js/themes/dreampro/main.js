@@ -1203,7 +1203,7 @@ function tinymcework(idx) {
         toolbar_items_size: 'small',
         file_browser_callback: function (field, url, type, win) {
             tinyMCE.activeEditor.windowManager.open({
-                file: base_url + '../assets/js/kcfinder/?opener=tinymce4&field=' + field + '&type=' + type,
+                file: base_url + 'assets/js/kcfinder/?opener=tinymce4&field=' + field + '&type=' + type,
                 title: 'KCFinder',
                 width: 700,
                 height: 500,
