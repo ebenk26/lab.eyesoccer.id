@@ -325,8 +325,6 @@ class Match extends MX_Controller
 
                 $query2 = array('id' => $idmatch);
                 $data['dt2'] = $this->excurl->reqCurl('event-link', $query2)->data[0];
-// var_dump($data['dt2'],count($data['dt2']));exit();
-//                 $id_event = array();
 
                 if ($this->input->post('val') == true) {
                     $this->load->view($this->config->item('base_theme') . '/match/edit_match', $data);
@@ -346,7 +344,7 @@ class Match extends MX_Controller
     function update()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-            $option = $this->excurl->reqAction('match/update', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
+            $option = $this->excurl->reqAction('event/match/update', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('match');

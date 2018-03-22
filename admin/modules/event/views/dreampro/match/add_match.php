@@ -13,7 +13,7 @@
 
 <div id='boxjq'>
     <div id='boxbutton'>
-        <a href="javascript:void(0)" id='button' onclick="actmenu('match/view')">Back</a>
+        <a href="javascript:void(0)" id='button' onclick="actmenu('event/match/view')">Back</a>
         
         <div style='clear: both;'></div>
     </div>
