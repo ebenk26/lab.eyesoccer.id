@@ -10,6 +10,11 @@ tbl_news_types
 tbl_sub_category_news
 - slug
 
+/-----EYETUBE-----/
+
+tbl_category_eyetube
+- slug
+
 /-----EYEADS-----/
 
 tbl_ads
@@ -20,6 +25,9 @@ tbl_ads
 tbl_event
 - is_event
 - is_match
+
+tbl_event_category
+- slug
 
 eyevent_link -> New Table
 RUN THIS :
@@ -56,7 +64,7 @@ tbl_karir_player -> eyeprofile_career
 tbl_prestasi_player -> eyeprofile_achievement
 tbl_player_position -> eyeprofile_player_position
 tbl_player_status -> eyeprofile_player_level
-tbl_kemampuan_kaki ->
+tbl_kemampuan_kaki -> eyeprofile_player_foot
 
 tbl_online_karir_player -> eyeprofile_player_career_original
 tbl_online_player -> eyeprofile_player_original

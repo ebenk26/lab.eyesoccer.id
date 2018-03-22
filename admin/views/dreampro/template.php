@@ -37,7 +37,7 @@
     <script src='<?php echo $this->config->item('base_cdn') . '/js/datetime/jquery.datetimepicker.js'; ?>'></script>
 
     <!-- TinyMCE -->
-    <script src='<?php echo base_url(ASSETS . '/js/tinymce/tinymce.js'); ?>'></script>
+    <script src='<?php echo base_url(ASSETS . '/js/tinymce/version/js/tinymce.min.js'); ?>'></script>
 
     <!-- iScroll -->
     <script src='<?php echo $this->config->item('base_cdn') . '/js/scroll/iscroll/iscroll.js'; ?>'></script>
