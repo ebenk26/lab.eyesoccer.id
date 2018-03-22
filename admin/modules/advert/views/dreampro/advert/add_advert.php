@@ -1,4 +1,4 @@
-<script>
+<script> 
     $(function() {
         $('.chosen-select').chosen();
         $('.chosen-select-deselect').chosen({ allow_single_deselect: true });
@@ -44,7 +44,7 @@
                                     if($category)
                                     {
                                         foreach ($category->data as $cat) {
-                                            echo "<option value='$cat->note'>$cat->note</option>";
+                                            echo "<option value='$cat->note;$cat->category_ads_id'>$cat->note</option>";
                                         }
                                     }
                                 ?>

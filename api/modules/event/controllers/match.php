@@ -58,7 +58,6 @@ class Match extends MX_Controller
             }
 
             if ($option['state'] == 0) {
-                $this->event_model->__unlink($upload['data']);
 
                 $this->validation->error_message($option);
                 return false;
@@ -78,40 +77,39 @@ class Match extends MX_Controller
     {
         if($_POST)
         {
-            $text_title = $this->input->post('title');
-            $text_desc = $this->input->post('description');
-
-            $new_link = $this->library->seo_title($text_title);
-
-            $upload = $this->event_model->__upload($new_link);
-            $key = substr(md5($this->library->app_key()), 0, 7);
-
-            // News
+            // Match
             $dt1 = array(// General
-                'title' => addslashes($text_title),
-                'description' => addslashes($text_desc),
-                'url' => $new_link.'-'.$key,
-                'pic' => $upload['data'],
-                'category' => $this->input->post('category'),
-                'is_event' => $this->input->post('is_event'),
-                'is_match' => $this->input->post('is_match'),
-                // Data
-                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
-                'updateon' => date('Y-m-d h:i:s')
+                    'jadwal_pertandingan' => date('Y-m-d h:i:s', strtotime($this->input->post('jadwal_pertandingan'))),
+                    'lokasi_pertandingan' => $this->input->post('lokasi_pertandingan'),
+                    'live_pertandingan' => $this->input->post('live_pertandingan'),
+                    'tim_a' => $this->input->post('team_a'),
+                    'score_a' => $this->input->post('score_a'),
+                    'score_b' => $this->input->post('score_b'),
+                    'tim_b' => $this->input->post('team_b'),
+                    'admin_id' => $this->input->post('ses_user_id')
             );
 
             $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,
-                                                  'where' => array('id_event' => $this->input->post('idx'))));
+                                                  'where' => array('id_jadwal_event' => $this->input->post('idx'))));
+
+            $id_match = $this->input->post('idx');
+            $id_event = $this->input->post('event_id');
+
+            $hapus = $this->action->delete(array('table' => $this->xtable, 'where' => array('id_match' => $id_match)));
+
+            for ($i = 0; $i < count($id_event); $i++)
+            {
+                $dt_[$i] = array(
+                    'id_match' => $id_match,
+                    'id_event' => $id_event[$i],
+                );
+                $option99 = $this->action->insert(array('table' => $this->xtable, 'insert' => $dt_[$i]));
+            }
+
             if ($option['state'] == 0) {
-                $this->event_model->__unlink($upload['data']);
 
                 $this->validation->error_message($option);
                 return false;
-            }
-
-            // Remove Old Pic If There is Upload Files
-            if ($this->input->post('event_pic') != '') {
-                $this->event_model->__unlink($this->input->post('event_pic'));
             }
 
             $this->tools->__flashMessage($option);

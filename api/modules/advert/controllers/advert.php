@@ -3,7 +3,7 @@
 class Advert extends MX_Controller
 {
     var $dtable = 'tbl_ads';
-
+ 
     function __construct()
     {
         // PHP Version 5.4
@@ -35,13 +35,14 @@ class Advert extends MX_Controller
             $new_link = $this->library->seo_title($text_title);
             $upload = $this->advert_model->__upload($new_link);
 
-            $cat = explode(';', $this->input->post('category'));
+            $cat = $_POST['note'];
+            $cat_explode = explode(';', $cat);
 
             // advert
             $dt1 = array(// General
-                'category_ads_id' => $this->input->post('category_ads_id'),
                 'title' => addslashes($text_title),
-                'note' => $this->input->post('note'),
+                'note' => $cat_explode[0],
+                'category_ads_id' => $cat_explode[1],
                 'pic' => $upload['data'],
                 // Data
                 'admin_id' => $this->input->post('ses_user_id')
@@ -57,7 +58,7 @@ class Advert extends MX_Controller
 
             $id = $this->db->insert_id();
             $key = substr(md5($id), 0, 7);
-            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('url' => $new_link.'-'.$key),
+            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('pic' => $new_link.'-'.$key),
                                                   'where' => array('ads_id' => $id)));
             if ($option['state'] == 0) {
                 $this->advert_model->__unlink($upload['data']);
@@ -85,13 +86,14 @@ class Advert extends MX_Controller
             $new_link = $this->library->seo_title($text_title);
             $upload = $this->advert_model->__upload($new_link);
 
-            $cat = explode(';', $this->input->post('category'));
+            $cat = $_POST['note'];
+            $cat_explode = explode(';', $cat);
 
             // advert
             $dt1 = array(// General
-                'category_ads_id' => $this->input->post('category_ads_id'),
                 'title' => addslashes($text_title),
-                'note' => $this->input->post('note'),
+                'note' => $cat_explode[0],
+                'category_ads_id' => $cat_explode[1],
                 'pic' => $upload['data'],
                 // Data
                 'admin_id' => $this->input->post('ses_user_id')
@@ -106,10 +108,6 @@ class Advert extends MX_Controller
                 return false;
             }
 
-            $id = $this->input->post('idx');
-            $key = substr(md5($id), 0, 7);
-            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('url' => $new_link.'-'.$key),
-                                                  'where' => array('ads_id' => $id)));
             if ($option['state'] == 0) {
                 $this->advert_model->__unlink($upload['data']);
 

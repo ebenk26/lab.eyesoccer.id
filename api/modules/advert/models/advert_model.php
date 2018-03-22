@@ -63,6 +63,10 @@ class Advert_model extends CI_Model
     function __upload($newname = '')
     {
         $path = $this->__path();
+        // echo '<pre>';
+        // print_r($path);
+        // echo '</pre>';
+        // exit;
 
         $pic = '';
         if ($this->input->post('advert_pic') != '') {

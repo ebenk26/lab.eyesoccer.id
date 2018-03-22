@@ -1,6 +1,6 @@
 <div class='boxtitle'><?php echo $title; ?></div>
 <div id='boxmessage'></div>
-
+ 
 <div id='boxbutton'> 
     <a href="javascript:void(0)" id='button' onclick="openform('advert/add')">Add New</a>
     

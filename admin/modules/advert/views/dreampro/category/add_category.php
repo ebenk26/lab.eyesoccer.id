@@ -27,7 +27,7 @@
                         <input type='hidden' name='val' value='true'>
                         <div class='pad-b20'>
                             <label>Name</label>
-                            <input type='text' name='title' id='title' class='cinput input_multi' required>
+                            <input type='text' name='category_name_ads' id='category_name_ads' class='cinput input_multi' required>
                         </div>
                         <div class='pad-b20'>
                             <label>Note</label>

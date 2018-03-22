@@ -2,7 +2,7 @@
     <div id='boxtable'>
         <?php $this->load->view($this->config->item('base_theme').'/advert/advert_table'); ?>
     </div>
-    
+     
     <?php
         if($showpage > 1)
         {
