@@ -69,3 +69,23 @@ tbl_kemampuan_kaki -> eyeprofile_player_foot
 tbl_online_karir_player -> eyeprofile_player_career_original
 tbl_online_player -> eyeprofile_player_original
 tbl_online_prestasi_player -> eyeprofile_player_achievement_original
+
+/-----EYEMARKET-----/
+
+eyemarket_product
+- id_product -> id
+- id_parent_cat -> id_tag
+- id_toko -> id_store
+- title_slug -> slug
+- harga_sebelum -> harga
+- harga -> harga_spesial
+- ongkir -> count_view
+- created_at -> id_admin
+
+eyemarket_toko -> replace all field
+
+eyemarket_tag
++ slug
+
+eyemarket_category
++ slug
