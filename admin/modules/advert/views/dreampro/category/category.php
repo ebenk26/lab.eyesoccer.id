@@ -1,4 +1,4 @@
-<div class='boxtitle'><?php echo $title; ?> <?php echo (isset($sub) AND isset($_GET['id'])) ? '&rsaquo; '.$sub->category_name_ads : ''; ?></div>
+<div class='boxtitle'><?php echo $title; ?></div>
 <div id='boxmessage'></div>
 
 <div id='boxbutton'>
@@ -50,28 +50,6 @@
     </div>
     <a href="javascript:void(0)" id='button' onclick="actcheck('category/checked')">Action</a>
     
-    <div class='limit'>
-        <label>Limit</label>
-        <select name='climit' class='climit inselect' onchange="actlimit('category/view')">
-            <?php
-                $l1 = array('10','25','50','100','150','200');
-                foreach($l1 as $v3)
-                {
-                    if($this->session->userdata('limit_'.$prefix) == $v3)
-                    {
-                        echo "<option value='$v3' selected>$v3</option>";
-                    } else {
-                        if($limit == $v3)
-                        {
-                            echo "<option value='$v3' selected>$v3</option>";
-                        } else {
-                            echo "<option value='$v3'>$v3</option>"; 
-                        }
-                    }
-                }
-            ?>
-        </select>
-    </div>
     <div style='clear: both;'></div>
 </div>
 
