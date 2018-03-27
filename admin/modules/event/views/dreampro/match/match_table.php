@@ -5,10 +5,10 @@
         <th style='width: 5%;'>
             <input type='checkbox' name='checkall' id='checkall' onclick='actcheckall(this.id);'>
         </th>
-        <th style='width: 10%;'>
+        <th style='width: 30%;'>
             <a href="javascript:void(0)" class='csort' id="logo" val="desc" onclick="actsort(this.id)">Event</a>
         </th>
-        <th style='width: 20%;'>
+        <th style='width: 10%;'>
             <a href="javascript:void(0)" class='csort' id="logo" val="desc" onclick="actsort(this.id)">Logo</a>
         </th>
         <th>
@@ -20,7 +20,7 @@
         <th>
             <a href="javascript:void(0)" class='csort' id="title" val="desc" onclick="actsort(this.id)">Tim B</a>
         </th>
-        <th style='width: 20%;'>
+        <th style='width: 10%;'>
             <a href="javascript:void(0)" class='csort' id="logo" val="desc" onclick="actsort(this.id)">Logo</a>
         </th>
         <th style='width: 10%;'>Action</th>

@@ -2,8 +2,8 @@
 
 class Category extends MX_Controller
 {
-    var $dtable = 'tbl_news_types';
-    var $xtable = 'tbl_sub_category_news';
+    var $dtable = 'tbl_event_category';
+    // var $xtable = 'tbl_sub_category_news';
 
     function __construct()
     {
@@ -31,24 +31,27 @@ class Category extends MX_Controller
         if($_POST)
         {
             $text_title = $this->input->post('title');
-
             $new_link = $this->library->seo_title($text_title);
-            $key = substr(md5($this->library->app_key()), 0, 7);
-
             // Category
-            if (isset($_GET['id'])) {
-                $dt1 = array('news_type_id' => $_GET['id'], 'sub_category_name' => addslashes($text_title));
-            } else {
-                $dt1 = array('news_type' => addslashes($text_title));
-            }
+            
+            $dt1 = array('category' => addslashes($text_title));
 
-            $table = (isset($_GET['id'])) ? $this->xtable : $this->dtable;
+            $table = $this->dtable;
             $option = $this->action->insert(array('table' => $table, 'insert' => $dt1));
             if ($option['state'] == 0) {
                 $this->validation->error_message($option);
                 return false;
             }
 
+            $id = $this->db->insert_id();
+            $key = substr(md5($id), 0, 7);
+            $query = array('table' => $this->dtable, 'update' => array('slug' => $new_link.'-'.$key), 'where' => array('id_event_category' => $id));
+            $option = $this->action->update($query);
+            if ($option['state'] == 0) {
+                $this->validation->error_message($option);
+                return false;
+            }
+            
             $this->tools->__flashMessage($option);
         } else {
             $data = $this->__rest()->__getstatus('Data must be type post', 400);
