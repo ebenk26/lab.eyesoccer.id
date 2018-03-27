@@ -10,6 +10,11 @@ tbl_news_types
 tbl_sub_category_news
 - slug
 
+/-----EYETUBE-----/
+
+tbl_category_eyetube
+- slug
+
 /-----EYEADS-----/
 
 tbl_ads
@@ -20,6 +25,9 @@ tbl_ads
 tbl_event
 - is_event
 - is_match
+
+tbl_event_category
+- slug
 
 eyevent_link -> New Table
 RUN THIS :
@@ -56,8 +64,28 @@ tbl_karir_player -> eyeprofile_career
 tbl_prestasi_player -> eyeprofile_achievement
 tbl_player_position -> eyeprofile_player_position
 tbl_player_status -> eyeprofile_player_level
-tbl_kemampuan_kaki ->
+tbl_kemampuan_kaki -> eyeprofile_player_foot
 
 tbl_online_karir_player -> eyeprofile_player_career_original
 tbl_online_player -> eyeprofile_player_original
 tbl_online_prestasi_player -> eyeprofile_player_achievement_original
+
+/-----EYEMARKET-----/
+
+eyemarket_product
+- id_product -> id
+- id_parent_cat -> id_tag
+- id_toko -> id_store
+- title_slug -> slug
+- harga_sebelum -> harga
+- harga -> harga_spesial
+- ongkir -> count_view
+- created_at -> id_admin
+
+eyemarket_toko -> replace all field
+
+eyemarket_tag
++ slug
+
+eyemarket_category
++ slug
