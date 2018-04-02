@@ -2,13 +2,13 @@
 <div id='boxmessage'></div>
 
 <div id='boxbutton'> 
-    <a href="javascript:void(0)" id='button' onclick="openform('news/add')">Add New</a>
+    <a href="javascript:void(0)" id='button' onclick="openform('market/store/add')">Add New</a>
     
     <div class='search'>
         <label>Search By</label>
         <select name='cselect' class='cinput inselect'>
             <?php
-                $field = array('search' => 'Title', 'news_type' => 'Category');
+                $field = array('search' => 'Title');
                 foreach($field as $n1 => $v1)
                 {
                     if($this->session->userdata('xfield_'.$prefix) == $n1)
@@ -22,7 +22,7 @@
         </select>
         
         <?php $csearch = ($this->session->userdata('xsearch_'.$prefix) != '') ? $this->session->userdata('xsearch_'.$prefix) : ''; ?>
-        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('news/search')">
+        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('market/search')">
     </div>
     
     <div style='clear: both;'></div>
@@ -41,11 +41,11 @@
             ?>
         </select>
     </div>
-    <a href="javascript:void(0)" id='button' onclick="actcheck('news/checked')">Action</a>
+    <a href="javascript:void(0)" id='button' onclick="actcheck('market/checked')">Action</a>
     
     <div class='limit'>
         <label>Limit</label>
-        <select name='climit' class='climit inselect' onchange="actlimit('news/view')">
+        <select name='climit' class='climit inselect' onchange="actlimit('market/view')">
             <?php
                 $l1 = array('10','25','50','100','150','200');
                 foreach($l1 as $v3)
@@ -70,14 +70,14 @@
 
 <div id='boxjq'>
     <div id='boxtable'>
-        <?php $this->load->view($this->config->item('base_theme').'/news/news_table'); ?>
+        <?php $this->load->view($this->config->item('base_theme').'/store/store_table'); ?>
     </div>
     
     <?php
         if($showpage > 1)
         {
             echo "<div id='pageself'>
-                    <div id='showurl' value='news/pagetable'></div>
+                    <div id='showurl' value='market/pagetable'></div>
                     <div id='showpage' value='$showpage'></div>
                     <div id='showoff' value='4'></div>
                     <div id='showrun' value='2'></div>
