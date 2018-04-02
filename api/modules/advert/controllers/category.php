@@ -92,7 +92,7 @@ class Category extends MX_Controller
         $this->__rest()->__response($data, $status);
     }
 
-    function delete()
+    function delete()    
     {
         if($_POST)
         {
