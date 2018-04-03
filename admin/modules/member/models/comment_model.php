@@ -1,11 +1,11 @@
 <?php
 
-class Member_model extends CI_Model
+class Comment_model extends CI_Model
 {
 
     var $query_string = '';
     var $command = '';
-    var $dtable = 'tbl_member';
+    var $dtable = 'me_comment';
 
     function __construct()
     {
@@ -48,7 +48,7 @@ class Member_model extends CI_Model
     function __path()
     {
         // Upload Path
-        $path = UPLOAD . 'eyenews/';
+        $path = UPLOAD . 'eyeme/';
 
         // Upload Config
         $config = array(
@@ -62,21 +62,21 @@ class Member_model extends CI_Model
 
     function __upload($newname = '')
     {
-        $path = $this->__path();
+        // $path = $this->__path();
 
-        $pic = '';
-        if ($this->input->post('news_pic') != '') {
-            $pic = $this->input->post('news_pic');
-        } else {
-            if ($this->input->post('temp_news_pic') != '') {
-                $files = $this->input->post('temp_news_pic');
-                $this->uploader->__unlink($path, $files);
-            }
-        }
+        // $pic = '';
+        // if ($this->input->post('news_pic') != '') {
+        //     $pic = $this->input->post('news_pic');
+        // } else {
+        //     if ($this->input->post('temp_news_pic') != '') {
+        //         $files = $this->input->post('temp_news_pic');
+        //         $this->uploader->__unlink($path, $files);
+        //     }
+        // }
 
-        $upload = $this->uploader->single_upload($path['config'], 'uploadfile', $path['path'], $pic, $newname);
+        // $upload = $this->uploader->single_upload($path['config'], 'uploadfile', $path['path'], $pic, $newname);
 
-        return $upload;
+        // return $upload;
     }
 
     function __unlink($post_pic = '')

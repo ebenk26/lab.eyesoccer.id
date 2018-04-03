@@ -1,11 +1,11 @@
 <?php
 
-class Member_model extends CI_Model
+class Images_model extends CI_Model
 {
 
     var $query_string = '';
     var $command = '';
-    var $dtable = 'tbl_member';
+    var $dtable = 'me_img';
 
     function __construct()
     {
@@ -15,7 +15,7 @@ class Member_model extends CI_Model
     function __delete($id = '')
     {
         
-        $option = $this->excurl->reqAction('member/delete', array('idx' => $id));
+        $option = $this->excurl->reqAction('images/delete', array('idx' => $id));
         return $option;
        
     }
@@ -84,5 +84,5 @@ class Member_model extends CI_Model
         $path = $this->__path();
         $this->uploader->single_unlink($path['config'], 'uploadfile', $path['path'], $post_pic);
     }
-   
+
 }

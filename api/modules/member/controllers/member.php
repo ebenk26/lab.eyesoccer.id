@@ -31,6 +31,7 @@ class Member extends MX_Controller
 
         if($_POST)
         {
+            
             $username = $this->input->post('username');
             $name = $this->input->post('name');
             $email  = $this->input->post('email');
@@ -66,7 +67,16 @@ class Member extends MX_Controller
                 'last_online' => null,
                 'visit'  => '1',
                 'verification' => '1'];
-                $option = $this->action->insert(array('table' => $this->dtable, 'insert' => $dt1));
+
+                try{
+                    $option = $this->user_validation($this->input->post());
+                    if(!is_array($option)){
+                        throw new Exception("user validation error", 1);    
+                    }
+                }
+                catch(Exception $e){
+                    $option = $this->action->insert(array('table' => $this->dtable, 'insert' => $dt1));
+                }
                 if ($option['state'] == 0) {
                     $this->validation->error_message($option);
                 return false;
@@ -76,7 +86,6 @@ class Member extends MX_Controller
             $data = $this->__rest()->__getstatus('Data must be type post', 400);
             $status = $data['error']['status_code'];
         }
-        #echo 'fuck';
         $this->__rest()->__response($data, $status);
 
     }        
@@ -101,9 +110,6 @@ class Member extends MX_Controller
             'join_date'   => $this->input->post('join_date'),
             'active'    => $this->input->post('active'),
             'last_online' => null];
-            // p($dt1);
-            // exit;
-            
 
             $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,
                                                   'where' => array('id_member' => $this->input->post('idx'))));
@@ -126,8 +132,7 @@ class Member extends MX_Controller
 
     function delete()
     {
-        // echo '1';
-        // exit;
+ 
         if($_POST)
         {
             $option = $this->member_model->__delete($this->input->post('idx'));
@@ -167,6 +172,44 @@ class Member extends MX_Controller
 
         $this->__rest()->__response($data, $status);
     }
+    function checkUsername($username = ''){
+        $query  = ['page' => '1','limit' => '10','search'=> $username];
+        $find  = $this->excurl->reqCurl('me',$query)->data[0];
+        if(count ($find) > 0 ) {
+            return true;
+        }
+        return false;
 
+    }
+    function user_validation($data = array()){
+        $option['state'] = 1;
+        $option['add_message'] = ['xcss'=> 'boxfailed','affected'=> 1];
+        $select = array('username');
 
+        if($this->input->post('uname')){
+            $where = array('username'=> $this->input->post('uname'));
+            $res = [];
+
+            if(count($this->member_model->findUser($this->dtable,$where,$select)) > 0 ){
+                $res  = ['xcss' => 'boxfailed','message'=> 'username exist'];
+            }else{
+                $res  = ['xcss'=> 'boxsuccess','message'=> 'doesn\'t exist'];
+            }
+            echo  json_encode($res);
+            exit;
+        }
+        $where  = array('username'=> $data['username']);
+        
+        if($data['password'] !== $data['cpassword']){
+            $option['message'] ='your password confirmation doesn\'t match ';
+        }
+        elseif(count($this->member_model->findUser($this->dtable,$where,$select)) > 0 ){
+            $option['message'] =  'username exist ';
+        }
+        else{
+            return true;
+        }
+
+        return $option; 
+    }
 }
