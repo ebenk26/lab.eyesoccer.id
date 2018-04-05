@@ -78,15 +78,15 @@
                     <div class='pad-lr20'>
                         <div class='mg-b10'>
                             <label>Logo Store</label>
-                            <input type='file' name='uploadfile[]' id='pic' class='cinput input_multi' required>
+                            <input type='file' name='uploadfile1' id='pic' class='cinput input_multi' required>
                         </div>
                         <div class='mg-b10'>
                             <label>KTP Owner</label>
-                            <input type='file' name='uploadfile[]' id='ktp' class='cinput input_multi' required>
+                            <input type='file' name='uploadfile2' id='ktp' class='cinput input_multi' required>
                         </div>
                         <div class='pad-b20'>
                             <label>NPWP Owner</label>
-                            <input type='file' name='uploadfile[]' id='npwp' class='cinput input_multi'>
+                            <input type='file' name='uploadfile3' id='npwp' class='cinput input_multi'>
                         </div>
                     </div>
                 </div>
