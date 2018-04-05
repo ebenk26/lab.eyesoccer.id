@@ -1,23 +1,23 @@
 <?php
 
-class Member extends MX_Controller
+class images extends MX_Controller
 {
     var $roles = 'admin';
-    var $mparent = 'Member';
+    var $mparent = 'images';
     var $offset = 1;
     var $limit = 10;
-    var $dtable = 'tbl_member';
+    var $dtable = 'me_img';
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('member_model');
+        $this->load->model('images_model');
 
         if ($this->session->userdata('login') != TRUE AND $this->session->userdata('user_uid') == '') {
             redirect('login');
         }
 
-        $raccess = $this->library->role_access('member');
+        $raccess = $this->library->role_access('member/images');
         if (isset($raccess)) {
             $this->roles = $raccess;
         }
@@ -25,14 +25,15 @@ class Member extends MX_Controller
 
     public function index()
     {
-        $data['title'] = 'Member';
+        $data['title'] = 'images';
         $data['parent'] = $this->mparent;
         $data['roles'] = $this->roles;
-        $data['content'] = $this->config->item('base_theme') . '/member/member';
+        $data['content'] = $this->config->item('base_theme') . '/images/images';
 
         $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => 'newjoin',
                          'multi_search_' . $this->dtable => '', 'multi_data_' . $this->dtable => '', 'voffset_' . $this->dtable => '', 'xoffset_' . $this->dtable => '');
         $this->session->set_userdata($session);
+       # p($session);
 
         if ($this->session->userdata('limit_' . $this->dtable) > 0) {
             $limit = $this->session->userdata('limit_' . $this->dtable);
@@ -61,9 +62,8 @@ class Member extends MX_Controller
         {
             $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
         }
-
-        $data['dt'] = $this->excurl->reqCurl('me', $query)->data;
-        $data['count'] = $this->excurl->reqCurl('me', array_merge($query, array('count' => true)))->data[0];
+        $data['dt'] = $this->excurl->reqCurl('me-images', $query)->data;
+        $data['count'] = $this->excurl->reqCurl('me-images', array_merge($query, array('count' => true)))->data[0];
         $data['limit'] = $limit;
         $data['offset'] = $this->offset;
         $data['prefix'] = $this->dtable;
@@ -75,7 +75,7 @@ class Member extends MX_Controller
     function view($option = array())
     {
         if ($this->input->post('val') == true) {
-            $data['title'] = 'Member';
+            $data['title'] = 'images';
             $data['roles'] = $this->roles;
 
             // Limit Session
@@ -146,18 +146,17 @@ class Member extends MX_Controller
                 $count = array_merge($count, array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
-            $data['dt'] =$this->excurl->reqCurl('me', $query)->data;
-            $data['count'] = $this->excurl->reqCurl('me', $count)->data[0];
+            $data['dt'] =$this->excurl->reqCurl('me-images', $query)->data;
+            $data['count'] = $this->excurl->reqCurl('me-images', $count)->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $offset;
             $data['prefix'] = $this->dtable;
             $data['showpage'] = ceil($data['count']->cc / $limit);
 
-
             if ($this->input->post('val') > 0 OR isset($option['is_check'])) {
-                $html = $this->load->view($this->config->item('base_theme') . '/member/member_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/images/images_jquery', $data, true);
             } else {
-                $html = $this->load->view($this->config->item('base_theme') . '/member/member', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/images/images', $data, true);
             }
 
             header('Content-Type: application/json');
@@ -169,14 +168,14 @@ class Member extends MX_Controller
                 echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable), 'query' => $query));
             }
         } else {
-            redirect('member');
+            redirect('images');
         }
     }
 
     function search()
     {
         if ($this->input->post('val') == true) {
-            $data['title'] = 'Member';
+            $data['title'] = 'images';
 
             $split = explode(",", $this->input->post('val'));
 
@@ -185,6 +184,9 @@ class Member extends MX_Controller
             } else {
                 $limit = $this->limit;
             }
+            // p($query);
+            // exit;
+
             if (count($split) > 1) {
                 $opt = array('offset' => $this->offset, 'limit' => $this->limit, 'value' => $this->input->post('val'));
                 $query = $this->pagextable->search($opt, $this->dtable);
@@ -218,15 +220,15 @@ class Member extends MX_Controller
             $data['showpage'] = ceil($data['count']->cc / $query['query']['limit']);
 
             if (count($split) > 1) {
-                $html = $this->load->view($this->config->item('base_theme') . '/member/member_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/images/images_jquery', $data, true);
             } else {
-                $html = $this->load->view($this->config->item('base_theme') . '/member/member', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/images/images', $data, true);
             }
 
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('member');
+            redirect('images');
         }
     }
 
@@ -252,26 +254,26 @@ class Member extends MX_Controller
             $data['count'] = $this->excurl->reqCurl('me', $query['count'])->data[0];
             $data['offset'] = $query['offset']+1;
 
-            $html = $this->load->view($this->config->item('base_theme') . '/member/member_table', $data, true);
+            $html = $this->load->view($this->config->item('base_theme') . '/images/images_table', $data, true);
 
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('member');
+            redirect('images');
         }
     }
 
     function add()
     {
         if ($this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $data['title'] = 'member';
+            $data['title'] = 'images';
             $data['parent'] = $this->mparent;
-            $data['content'] = $this->config->item('base_theme') . '/member/add_member';
+            $data['content'] = $this->config->item('base_theme') . '/images/add_images';
 
-            // $data['category'] = $this->excurl->reqCurl('member-category');
+            // $data['category'] = $this->excurl->reqCurl('images-category');
 
             if ($this->input->post('val') == true) {
-                $this->load->view($this->config->item('base_theme') . '/member/add_member', $data);
+                $this->load->view($this->config->item('base_theme') . '/images/add_images', $data);
             } else {
                 $this->load->view($this->config->item('base_theme') . '/template', $data);
             }
@@ -279,42 +281,32 @@ class Member extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('member');
+                redirect('images');
             }
         }
     }
 
     function save()
     {
-
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $option = $this->excurl->reqAction('member/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'),'join_date'=> NOW)));
-
+            $option = $this->excurl->reqAction('images/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'),'join_date'=> NOW)));
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('member');
+            redirect('images');
         }
     }
-    function checkUsername(){
-        if($this->input->post('uname')){
-            $uname= $this->input->post('uname');
-            $req = $this->excurl->reqAction('member/user_validation',$_POST);
-            $res = json_encode($req);
-            echo $res;
-        }
-      
-    }
+
     function edit($id= '')
     {
         if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
             if ($id == '') {
-                redirect('member');
+                redirect('images');
             } else {
-                $data['title'] = 'Member';
+                $data['title'] = 'images';
                 $data['parent'] = $this->mparent;
-                $data['content'] = $this->config->item('base_theme') . '/member/edit_member';
+                $data['content'] = $this->config->item('base_theme') . '/images/edit_images';
 
-                $query = array('id_member' => $id, 'detail' => true);
+                $query = array('id_images' => $id, 'detail' => true);
                 $ulevel = $this->library->user_check();
                 if($ulevel->ff > 0)
                 {
@@ -324,7 +316,7 @@ class Member extends MX_Controller
                 // p($data['dt1']);
                 // exit;
                 if ($this->input->post('val') == true) {
-                    $this->load->view($this->config->item('base_theme') . '/member/edit_member', $data);
+                    $this->load->view($this->config->item('base_theme') . '/images/edit_images', $data);
                 } else {
                     $this->load->view($this->config->item('base_theme') . '/template', $data);
                 }
@@ -334,7 +326,7 @@ class Member extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('member');
+                redirect('images');
             }
         }
     }
@@ -343,10 +335,10 @@ class Member extends MX_Controller
     {
     
        if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $option = $this->excurl->reqAction('member/update', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
+            $option = $this->excurl->reqAction('images/update', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('member');
+            redirect('images');
         }
     }
 
@@ -354,23 +346,23 @@ class Member extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
             if ($id == '') {
-                redirect('member');
+                redirect('images');
             } else {
                 // echo '1';
                 // exit;
                 if ($this->input->post('val') == true) {
-                    $option = $this->member_model->__delete($id);
+                    $option = $this->images_model->__delete($id);
 
                     $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
-                    redirect('member');
+                    redirect('images');
                 }
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('member');
+                redirect('images');
             }
         }
     }
@@ -385,7 +377,7 @@ class Member extends MX_Controller
                 case 1:
                     if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->member_model->__delete($split[$i]);
+                            $option = $this->images_model->__delete($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -395,7 +387,7 @@ class Member extends MX_Controller
                 case 2:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->member_model->__enable($split[$i]);
+                            $option = $this->images_model->__enable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -405,7 +397,7 @@ class Member extends MX_Controller
                 case 3:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->member_model->__disable($split[$i]);
+                            $option = $this->images_model->__disable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -415,19 +407,19 @@ class Member extends MX_Controller
 
             $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
         } else {
-            redirect('member');
+            redirect('images');
         }
     }
 
     function subcategory()
     {
         $search = $this->input->post('val');
-        $category = $this->excurl->reqCurl('member-category-sub', ['member_type_id' => $search]);
+        $category = $this->excurl->reqCurl('images-category-sub', ['images_type_id' => $search]);
 
         if ($category) {
             if ($category->data) {
                 foreach ($category->data as $cat) {
-                    echo "<option value='$cat->sub_member_id'>$cat->sub_category_name</option>";
+                    echo "<option value='$cat->sub_images_id'>$cat->sub_category_name</option>";
                 }
             } else {
                 echo "<option value=''>- Select -</option>";

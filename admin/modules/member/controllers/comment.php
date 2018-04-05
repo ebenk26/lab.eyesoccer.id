@@ -1,23 +1,25 @@
 <?php
 
-class Member extends MX_Controller
+class Comment extends MX_Controller
 {
     var $roles = 'admin';
-    var $mparent = 'Member';
+    var $mparent = 'Comment';
     var $offset = 1;
     var $limit = 10;
-    var $dtable = 'tbl_member';
+    var $dtable = 'me_comment';
+    var $ci;
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('member_model');
+        $this->load->model('comment_model');
 
         if ($this->session->userdata('login') != TRUE AND $this->session->userdata('user_uid') == '') {
             redirect('login');
         }
 
-        $raccess = $this->library->role_access('member');
+        $raccess = $this->library->role_access('member/comment');
+
         if (isset($raccess)) {
             $this->roles = $raccess;
         }
@@ -25,10 +27,13 @@ class Member extends MX_Controller
 
     public function index()
     {
+        $this->ci = &get_instance();
+        $show = $this->ci->catalog->get_menu_access(array('user_level' => $this->ci->session->userdata('user_level'),
+                'menu_url' => 'member', 'row' => true));
         $data['title'] = 'Member';
         $data['parent'] = $this->mparent;
         $data['roles'] = $this->roles;
-        $data['content'] = $this->config->item('base_theme') . '/member/member';
+        $data['content'] = $this->config->item('base_theme') . '/comment/comment';
 
         $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => 'newjoin',
                          'multi_search_' . $this->dtable => '', 'multi_data_' . $this->dtable => '', 'voffset_' . $this->dtable => '', 'xoffset_' . $this->dtable => '');
@@ -62,14 +67,16 @@ class Member extends MX_Controller
             $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
         }
 
-        $data['dt'] = $this->excurl->reqCurl('me', $query)->data;
-        $data['count'] = $this->excurl->reqCurl('me', array_merge($query, array('count' => true)))->data[0];
+        $data['dt'] = $this->excurl->reqCurl('me-comment', $query)->data;
+        $data['count'] = $this->excurl->reqCurl('me-comment', array_merge($query, array('count' => true)))->data[0];
         $data['limit'] = $limit;
         $data['offset'] = $this->offset;
         $data['prefix'] = $this->dtable;
         $data['showpage'] = ceil($data['count']->cc / $limit);
 
         $this->load->view($this->config->item('base_theme') . '/template', $data);
+        // p($data);
+        // exit;
     }
 
     function view($option = array())
@@ -155,9 +162,9 @@ class Member extends MX_Controller
 
 
             if ($this->input->post('val') > 0 OR isset($option['is_check'])) {
-                $html = $this->load->view($this->config->item('base_theme') . '/member/member_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/member/comment_jquery', $data, true);
             } else {
-                $html = $this->load->view($this->config->item('base_theme') . '/member/member', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/member/comment', $data, true);
             }
 
             header('Content-Type: application/json');
@@ -169,7 +176,7 @@ class Member extends MX_Controller
                 echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable), 'query' => $query));
             }
         } else {
-            redirect('member');
+            redirect('member/comment');
         }
     }
 
@@ -185,6 +192,9 @@ class Member extends MX_Controller
             } else {
                 $limit = $this->limit;
             }
+            // p($query);
+            // exit;
+
             if (count($split) > 1) {
                 $opt = array('offset' => $this->offset, 'limit' => $this->limit, 'value' => $this->input->post('val'));
                 $query = $this->pagextable->search($opt, $this->dtable);
@@ -226,7 +236,7 @@ class Member extends MX_Controller
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('member');
+            redirect('member/comment');
         }
     }
 
@@ -252,12 +262,12 @@ class Member extends MX_Controller
             $data['count'] = $this->excurl->reqCurl('me', $query['count'])->data[0];
             $data['offset'] = $query['offset']+1;
 
-            $html = $this->load->view($this->config->item('base_theme') . '/member/member_table', $data, true);
+            $html = $this->load->view($this->config->item('base_theme') . '/comment/comment_table', $data, true);
 
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('member');
+            redirect('member/comment');
         }
     }
 
@@ -279,31 +289,21 @@ class Member extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('member');
+                redirect('member/comment');
             }
         }
     }
 
     function save()
     {
-
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
             $option = $this->excurl->reqAction('member/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'),'join_date'=> NOW)));
-
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('member');
+            redirect('member/comment');
         }
     }
-    function checkUsername(){
-        if($this->input->post('uname')){
-            $uname= $this->input->post('uname');
-            $req = $this->excurl->reqAction('member/user_validation',$_POST);
-            $res = json_encode($req);
-            echo $res;
-        }
-      
-    }
+
     function edit($id= '')
     {
         if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
@@ -334,7 +334,7 @@ class Member extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('member');
+                redirect('member/comment');
             }
         }
     }
@@ -346,7 +346,7 @@ class Member extends MX_Controller
             $option = $this->excurl->reqAction('member/update', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('member');
+            redirect('member/comment');
         }
     }
 
@@ -363,14 +363,14 @@ class Member extends MX_Controller
 
                     $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
-                    redirect('member');
+                    redirect('member/comment');
                 }
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('member');
+                redirect('member/comment');
             }
         }
     }
@@ -415,7 +415,7 @@ class Member extends MX_Controller
 
             $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
         } else {
-            redirect('member');
+            redirect('member/comment');
         }
     }
 
