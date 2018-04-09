@@ -5,7 +5,7 @@ class Competition_model extends CI_Model
 
     var $query_string = '';
     var $command = '';
-    var $dtable = 'eyeprofile_competition';
+    var $dtable = 'eyeprofile_competitions';
     var $xtable = 'eyeprofile_league';
 
     function __construct()
@@ -16,10 +16,10 @@ class Competition_model extends CI_Model
     function __delete($id = '')
     {
         if (isset($_GET['id'])) {
-            $option = $this->action->delete(array('table' => $this->xtable, 'where' => array('sub_news_id' => $id)));
+            $option = $this->action->delete(array('table' => $this->xtable, 'where' => array('id_league' => $id)));
         } else {
-            $option = $this->action->delete(array('table' => $this->dtable, 'where' => array('news_type_id' => $id)));
-            $option = $this->action->delete(array('table' => $this->xtable, 'where' => array('news_type_id' => $id)));
+            $option = $this->action->delete(array('table' => $this->dtable, 'where' => array('id_competition' => $id)));
+            $option = $this->action->delete(array('table' => $this->xtable, 'where' => array('id_competition' => $id)));
         }
 
         if ($option['state'] == 0) {
@@ -32,7 +32,7 @@ class Competition_model extends CI_Model
 
     function __disable($id = '')
     {
-        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('news_type_id' => $id));
+        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('id_competition' => $id));
         $option = $this->action->update($dt);
 
         return $option;
@@ -40,7 +40,7 @@ class Competition_model extends CI_Model
 
     function __enable($id = '')
     {
-        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('news_type_id' => $id));
+        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('id_competition' => $id));
         $option = $this->action->update($dt);
 
         return $option;

@@ -26,7 +26,7 @@
                     <div class='pad-lr20'>
                         <input type='hidden' name='val' value='true'>
                         <div class='pad-b20'>
-                            <label>Competition</label>
+                            <label><?php echo isset($_GET['id']) ? 'League' : 'Competition' ?></label>
                             <input type='text' name='competition' id='competition' class='cinput input_multi' required>
                         </div>
                     </div>

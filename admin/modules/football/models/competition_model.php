@@ -5,7 +5,8 @@ class Competition_model extends CI_Model
 
     var $query_string = '';
     var $command = '';
-    var $dtable = 'tbl_event_Competition';
+    var $dtable = 'eyeprofile_competitions';
+    var $xtable = 'eyeprofile_league';
 
     function __construct()
     {
@@ -14,13 +15,11 @@ class Competition_model extends CI_Model
 
     function __delete($id = '')
     {
-        $option = $this->action->delete(array('table' => $this->dtable, 'where' => array('id_event_Competition' => $id)));
-
-        if ($option['state'] == 0) {
-            $this->validation->error_message($option);
-            return false;
+        if (isset($_GET['id'])) {
+            $option = $this->excurl->reqAction('football/competition/delete/?id=' . $_GET['id'], array('idx' => $id));
+        } else {
+            $option = $this->excurl->reqAction('football/competition/delete', array('idx' => $id));
         }
-
         return $option;
     }
 

@@ -15,15 +15,15 @@
     <div id='boxbutton'>
         <?php
             $sv = $this->library->sub_view();
-            $id = (isset($_GET['id'])) ? 'sub_news_id' : 'news_type_id';
-            $name = (isset($_GET['id'])) ? 'sub_category_name' : 'news_type';
+            $id = (isset($_GET['id'])) ? 'id_league' : 'id_competition';
+            $name = (isset($_GET['id'])) ? 'league' : 'competition';
         ?>
-        <a href="javascript:void(0)" id='button' onclick="actmenu('news/category/view<?php echo $sv->idstay; ?>')">Back</a>
+        <a href="javascript:void(0)" id='button' onclick="actmenu('football/competition/view<?php echo $sv->idstay; ?>')">Back</a>
         
         <div style='clear: both;'></div>
     </div>
     
-    <?php echo form_open_multipart('news/category/update'.$sv->idstay, array('name' => 'form_addmulti', 'id' => 'form_addmulti'));?>
+    <?php echo form_open_multipart('football/competition/update'.$sv->idstay, array('name' => 'form_addmulti', 'id' => 'form_addmulti'));?>
     <div id='boxtable' class='shadow'>
         <div class='row'>
             <div class='col-lg-8 col-md-12 col-sm-8 col-xs-12'>
@@ -33,7 +33,7 @@
                         <input type='hidden' name='idx' id='idx' value='<?php echo $dt1->$id; ?>'>
                         <input type='hidden' name='val' value='true'>
                         <div class='pad-b20'>
-                            <label>Name</label>
+                            <label><?php echo isset($_GET['id']) ? 'League' : 'Competition' ?></label>
                             <input type='text' name='title' id='title' value='<?php echo $dt1->$name; ?>' class='cinput input_multi' required>
                         </div>
                     </div>
@@ -47,7 +47,7 @@
                         <div class='pad-b18'>
                             <div class='layout-row'>
                                 <span class='flex'></span>
-                                <input type='submit' value='Update' id='btn_submit' onclick="saveaddmulti('add/category/update')">
+                                <input type='submit' value='Update' id='btn_submit' onclick="saveaddmulti('competition/update')">
                             </div>
                         </div>
                     </div>

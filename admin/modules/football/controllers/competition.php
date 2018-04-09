@@ -336,7 +336,7 @@ class Competition extends MX_Controller
 
                 if (isset($_GET['id'])) {
                     $data['sub'] = $this->excurl->reqCurl('competition', ['id_competition' => $_GET['id']])->data[0];
-                    $data['dt1'] = $this->excurl->reqCurl('competition-sub', ['sub_news_id' => $id])->data[0];
+                    $data['dt1'] = $this->excurl->reqCurl('league', ['id_league' => $id])->data[0];
                 } else {
                     $data['dt1'] = $this->excurl->reqCurl('competition', ['id_competition' => $id])->data[0];
                 }
@@ -367,13 +367,13 @@ class Competition extends MX_Controller
 
             // Competition
             if (isset($_GET['id'])) {
-                $dt1 = array('id_competition' => $_GET['id'], 'sub_Competition_name' => addslashes($text_title));
+                $dt1 = array('id_competition' => $_GET['id'], 'league' => addslashes($text_title));
             } else {
-                $dt1 = array('news_type' => addslashes($text_title));
+                $dt1 = array('competition' => addslashes($text_title));
             }
 
             $table = $this->dtable;
-            $where = (isset($_GET['id'])) ? ['sub_news_id' => $this->input->post('idx')] : ['id_competition' => $this->input->post('idx')];
+            $where = (isset($_GET['id'])) ? ['id_competition' => $this->input->post('idx')] : ['id_competition' => $this->input->post('idx')];
             $option = $this->action->update(array('table' => $table, 'update' => $dt1, 'where' => $where));
             if ($option['state'] == 0) {
                 $this->validation->error_message($option);
@@ -382,7 +382,7 @@ class Competition extends MX_Controller
 
             $this->view(array('xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
         } else {
-            redirect('news/Competition');
+            redirect('football/competition');
         }
     }
 
@@ -390,20 +390,20 @@ class Competition extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
             if ($id == '') {
-                redirect('event/Competition');
+                redirect('football/competition');
             } else {
                 if ($this->input->post('val') == true) {
                     $option = $this->Competition_model->__delete($id);
-                    $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+                    $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
-                    redirect('event/Competition');
+                    redirect('football/competition');
                 }
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('event/Competition');
+                redirect('football/competition');
             }
         }
     }
@@ -446,9 +446,9 @@ class Competition extends MX_Controller
                     break;
             }
 
-            $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+            $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('news/Competition');
+            redirect('football/Competition');
         }
     }
 
