@@ -7,7 +7,7 @@ class Competition extends MX_Controller
     var $offset = 1;
     var $limit = 10;
     var $dtable = 'eyeprofile_competitions';
-    // var $xtable = 'tbl_sub_Competition_news';
+    var $xtable = 'eyeprofile_league';
 
     function __construct()
     {
@@ -31,7 +31,7 @@ class Competition extends MX_Controller
         $data['roles'] = $this->roles;
         $data['content'] = $this->config->item('base_theme') . '/competition/competition';
 
-        $id = 'id_competition';
+        $id = (isset($_GET['id'])) ? 'id_competition' : 'id_league';
         $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => 'desc',
                          'multi_search_' . $this->dtable => '', 'multi_data_' . $this->dtable => '', 'voffset_' . $this->dtable => '', 'xoffset_' . $this->dtable => '');
         $this->session->set_userdata($session);
@@ -59,8 +59,16 @@ class Competition extends MX_Controller
             );
         }
 
-        $data['dt'] = $this->excurl->reqCurl('competition', $query)->data;
-        $data['count'] = $this->excurl->reqCurl('competition', array_merge($query, array('count' => true)))->data[0];
+        if (isset($_GET['id'])) {
+            $query = array_merge($query, array('id_competition' => $_GET['id']));
+            $data['sub'] = $this->excurl->reqCurl('competition', ['id_competition' => $_GET['id']])->data[0];
+
+            $data['dt'] = $this->excurl->reqCurl('league', $query)->data;
+            $data['count'] = $this->excurl->reqCurl('league', array_merge($query, array('count' => true)))->data[0];
+        } else {
+            $data['dt'] = $this->excurl->reqCurl('competition', $query)->data;
+            $data['count'] = $this->excurl->reqCurl('competition', array_merge($query, array('count' => true)))->data[0];
+        }
 
         $data['limit'] = $limit;
         $data['offset'] = $this->offset;
@@ -83,11 +91,18 @@ class Competition extends MX_Controller
                 if ($this->session->userdata('sortDir_' . $this->dtable) == 'asc' OR
                     $this->session->userdata('sortDir_' . $this->dtable) == 'desc'
                 ) {
-                    $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                     'sortBy_' . $this->dtable => $this->session->userdata('sortBy_' . $this->dtable), 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
+                    if (isset($_GET['id'])) {
+                        $id = ($this->session->userdata('sortBy_' . $this->dtable) == 'id_competition') ? 'id_league' : $this->session->userdata('sortBy_' . $this->dtable);
+                        $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
+                                         'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
+                    } else {
+                        $id = ($this->session->userdata('sortBy_' . $this->dtable) == 'id_league') ? 'id_competition' : $this->session->userdata('sortBy_' . $this->dtable);
+                        $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
+                                         'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
+                    }
                 } else {
                     $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                     'sortBy_' . $this->dtable => 'id_event_Competition', 'sortDir_' . $this->dtable => 'desc');
+                                     'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => 'desc');
                 }
             }
             $this->session->set_userdata($session);
@@ -138,13 +153,17 @@ class Competition extends MX_Controller
                 $count = array_merge($count, $this->session->userdata('multi_data_' . $this->dtable));
             }
 
-            // if (isset($_GET['id'])) {
-            //     $query = array_merge($query, array('parent_id' => $_GET['id']));
-            //     $count = array_merge($count, array('parent_id' => $_GET['id']));
-            // }
+            if (isset($_GET['id'])) {
+                $query = array_merge($query, array('id_competition' => $_GET['id']));
+                $count = array_merge($count, array('id_competition' => $_GET['id']));
+                $data['sub'] = $this->excurl->reqCurl('competition', ['id_competition' => $_GET['id']])->data[0];
 
-            $data['dt'] = $this->excurl->reqCurl('event-Competition', $query)->data;
-            $data['count'] = $this->excurl->reqCurl('event-Competition', $count)->data[0];
+                $data['dt'] = $this->excurl->reqCurl('league', $query)->data;
+                $data['count'] = $this->excurl->reqCurl('league', $count)->data[0];
+            } else {
+                $data['dt'] = $this->excurl->reqCurl('competition', $query)->data;
+                $data['count'] = $this->excurl->reqCurl('competition', $count)->data[0];
+            }
             
             $data['limit'] = $limit;
             $data['offset'] = $offset;
@@ -201,15 +220,15 @@ class Competition extends MX_Controller
             }
 
             if (isset($_GET['id'])) {
-                $query['query'] = array_merge($query['query'], array('id_event_Competition' => $_GET['id']));
-                $query['count'] = array_merge($query['count'], array('id_event_Competition' => $_GET['id']));
-                $data['sub'] = $this->excurl->reqCurl('event-Competition', ['id_event_Competition' => $_GET['id']])->data[0];
+                $query['query'] = array_merge($query['query'], array('id_competition' => $_GET['id']));
+                $query['count'] = array_merge($query['count'], array('id_competition' => $_GET['id']));
+                $data['sub'] = $this->excurl->reqCurl('competition', ['id_competition' => $_GET['id']])->data[0];
 
-                $data['dt'] = $this->excurl->reqCurl('event-Competition-sub', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('event-Competition-sub', $query['count'])->data[0];
+                $data['dt'] = $this->excurl->reqCurl('competition-sub', $query['query'])->data;
+                $data['count'] = $this->excurl->reqCurl('competition-sub', $query['count'])->data[0];
             } else {
-                $data['dt'] = $this->excurl->reqCurl('event-Competition', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('event-Competition', $query['count'])->data[0];
+                $data['dt'] = $this->excurl->reqCurl('competition', $query['query'])->data;
+                $data['count'] = $this->excurl->reqCurl('competition', $query['count'])->data[0];
             }
 
             $data['limit'] = $limit;
@@ -226,7 +245,7 @@ class Competition extends MX_Controller
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('news/Competition');
+            redirect('football/Competition');
         }
     }
 
@@ -242,15 +261,15 @@ class Competition extends MX_Controller
             }
 
             if (isset($_GET['id'])) {
-                $query['query'] = array_merge($query['query'], array('id_event_Competition' => $_GET['id']));
-                $query['count'] = array_merge($query['count'], array('id_event_Competition' => $_GET['id']));
-                $data['sub'] = $this->excurl->reqCurl('event-Competition', ['id_event_Competition' => $_GET['id']])->data[0];
+                $query['query'] = array_merge($query['query'], array('id_competition' => $_GET['id']));
+                $query['count'] = array_merge($query['count'], array('id_competition' => $_GET['id']));
+                $data['sub'] = $this->excurl->reqCurl('competition', ['id_competition' => $_GET['id']])->data[0];
 
-                $data['dt'] = $this->excurl->reqCurl('event-Competition-sub', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('event-Competition-sub', $query['count'])->data[0];
+                $data['dt'] = $this->excurl->reqCurl('competition-sub', $query['query'])->data;
+                $data['count'] = $this->excurl->reqCurl('competition-sub', $query['count'])->data[0];
             } else {
-                $data['dt'] = $this->excurl->reqCurl('event-Competition', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('event-Competition', $query['count'])->data[0];
+                $data['dt'] = $this->excurl->reqCurl('competition', $query['query'])->data;
+                $data['count'] = $this->excurl->reqCurl('competition', $query['count'])->data[0];
             }
 
             $data['offset'] = $query['offset']+1;
@@ -260,7 +279,7 @@ class Competition extends MX_Controller
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('news/Competition');
+            redirect('football/Competition');
         }
     }
 
@@ -272,7 +291,7 @@ class Competition extends MX_Controller
             $data['content'] = $this->config->item('base_theme') . '/Competition/add_Competition';
 
             if (isset($_GET['id'])) {
-                $data['sub'] = $this->excurl->reqCurl('event-Competition', ['id_event_Competition' => $_GET['id']])->data[0];
+                $data['sub'] = $this->excurl->reqCurl('competition', ['id_competition' => $_GET['id']])->data[0];
             }
 
             if ($this->input->post('val') == true) {
@@ -284,7 +303,7 @@ class Competition extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('event/Competition');
+                redirect('football/Competition');
             }
         }
     }
@@ -292,17 +311,15 @@ class Competition extends MX_Controller
     function save()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
 
-                if (isset($_GET['id'])) {
-                    $option = $this->excurl->reqAction('event/Competition/save/?id='.$_GET['id'], $_POST);
-                } else {
-                    $option = $this->excurl->reqAction('event/Competition/save', $_POST);
-                }
-                $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
+            if (isset($_GET['id'])) {
+                $option = $this->excurl->reqAction('football/competition/save/?id='.$_GET['id'], $_POST);
             } else {
-                redirect('event/Competition');
+                $option = $this->excurl->reqAction('football/competition/save', $_POST);
             }
+            $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
+        } else {
+            redirect('football/competition');
         }
     }
 
@@ -310,7 +327,7 @@ class Competition extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
             if ($id == '') {
-                redirect('news/Competition');
+                redirect('football/Competition');
             } else {
                 $data['title'] = 'Competition';
                 $data['parent'] = $this->mparent;
@@ -318,10 +335,10 @@ class Competition extends MX_Controller
 
 
                 if (isset($_GET['id'])) {
-                    $data['sub'] = $this->excurl->reqCurl('event-Competition', ['id_event_Competition' => $_GET['id']])->data[0];
-                    $data['dt1'] = $this->excurl->reqCurl('event-Competition-sub', ['sub_news_id' => $id])->data[0];
+                    $data['sub'] = $this->excurl->reqCurl('competition', ['id_competition' => $_GET['id']])->data[0];
+                    $data['dt1'] = $this->excurl->reqCurl('competition-sub', ['sub_news_id' => $id])->data[0];
                 } else {
-                    $data['dt1'] = $this->excurl->reqCurl('event-Competition', ['id_event_Competition' => $id])->data[0];
+                    $data['dt1'] = $this->excurl->reqCurl('competition', ['id_competition' => $id])->data[0];
                 }
 
                 if ($this->input->post('val') == true) {
@@ -334,7 +351,7 @@ class Competition extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('news/Competition');
+                redirect('football/Competition');
             }
         }
     }
@@ -350,13 +367,13 @@ class Competition extends MX_Controller
 
             // Competition
             if (isset($_GET['id'])) {
-                $dt1 = array('id_event_Competition' => $_GET['id'], 'sub_Competition_name' => addslashes($text_title));
+                $dt1 = array('id_competition' => $_GET['id'], 'sub_Competition_name' => addslashes($text_title));
             } else {
                 $dt1 = array('news_type' => addslashes($text_title));
             }
 
             $table = $this->dtable;
-            $where = (isset($_GET['id'])) ? ['sub_news_id' => $this->input->post('idx')] : ['id_event_Competition' => $this->input->post('idx')];
+            $where = (isset($_GET['id'])) ? ['sub_news_id' => $this->input->post('idx')] : ['id_competition' => $this->input->post('idx')];
             $option = $this->action->update(array('table' => $table, 'update' => $dt1, 'where' => $where));
             if ($option['state'] == 0) {
                 $this->validation->error_message($option);

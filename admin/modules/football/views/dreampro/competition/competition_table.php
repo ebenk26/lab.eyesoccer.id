@@ -5,18 +5,18 @@
             <input type='checkbox' name='checkall' id='checkall' onclick='actcheckall(this.id);'>
         </th>
         <th style='width: 5%;'>
-            <?php $id = 'id'; ?>
+            <?php $id = (isset($_GET['id'])) ? 'id_league' : 'id_competition'; ?>
             <a href="javascript:void(0)" class='csort' id="<?php echo $id; ?>" val="desc" onclick="actsort(this.id)">No</a>
         </th>
         <th style="text-align: left;">
-            <?php $name = 'competititon'; ?>
+            <?php $name = (isset($_GET['id'])) ? 'league' : 'competition'; ?>
             <a href="javascript:void(0)" class='csort' id="<?php echo $name; ?>" val="desc" onclick="actsort(this.id)">Name</a>
         </th>
         <th style='width: 10%;'>Action</th>
     </tr>
     
     <?php
-    var_dump($dt);exit();
+    
     if($count->cc > 0)
     {
         $sv = $this->library->sub_view();
@@ -26,11 +26,15 @@
         {
             echo "<tr>";
             echo "  <td class='center'> 
-                        <input type='checkbox' name='selected[]' value='" . $r->$id_competition . "' class='ctab'> 
+                        <input type='checkbox' name='selected[]' value='" . $r->$id . "' class='ctab'> 
                     </td>";
             echo "  <td class='center'>" . $i . "</td>";
-            echo "  <td>" . $r->$competititon . "</td>";
+            echo "  <td>" . $r->$name . "</td>";
             echo "  <td class='center'>";
+                        if(empty($_GET['id']))
+                        {
+                            echo "<a class='btn_action mg-r5' href='javascript:void(0)' onclick=\"actmenu('football/competition/view/?id=". $r->$id.$sv->idsub ."')\" title='League'><i class='fa fa-search fa-fw'></i></a>";
+                        }
             echo "      <a class='btn_action' href='javascript:void(0)' onclick=\"openform('football/competition/edit/". $r->$id ."$sv->idstay')\" title='Edit'> 
                             <i class='fa fa-edit fa-fw'></i> 
                         </a>

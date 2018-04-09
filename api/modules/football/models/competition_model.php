@@ -1,12 +1,12 @@
 <?php
 
-class Category_model extends CI_Model
+class Competition_model extends CI_Model
 {
 
     var $query_string = '';
     var $command = '';
-    var $dtable = 'tbl_news_types';
-    var $xtable = 'tbl_sub_category_news';
+    var $dtable = 'eyeprofile_competition';
+    var $xtable = 'eyeprofile_league';
 
     function __construct()
     {

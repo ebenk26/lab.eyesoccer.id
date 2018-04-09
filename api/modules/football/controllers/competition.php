@@ -1,9 +1,9 @@
 <?php
 
-class Category extends MX_Controller
+class Competition extends MX_Controller
 {
-    var $dtable = 'tbl_news_types';
-    var $xtable = 'tbl_sub_category_news';
+    var $dtable = 'eyeprofile_competitions';
+    var $xtable = 'eyeprofile_league';
 
     function __construct()
     {
@@ -23,21 +23,21 @@ class Category extends MX_Controller
         }
 
         $this->restapi->__auth();
-        $this->load->model('category_model');
+        $this->load->model('competition_model');
     }
 
     function save()
     {
         if($_POST)
         {
-            $text_title = $this->input->post('title');
+            $text_title = $this->input->post('competition');
             $new_link = $this->library->seo_title($text_title);
 
-            // Category
+
             if (isset($_GET['id'])) {
-                $dt1 = array('news_type_id' => $_GET['id'], 'sub_category_name' => addslashes($text_title));
+                $dt1 = array('id_competition' => $_GET['id'], 'league' => addslashes($text_title));
             } else {
-                $dt1 = array('news_type' => addslashes($text_title));
+                $dt1 = array('competition' => addslashes($text_title));
             }
 
             $table = (isset($_GET['id'])) ? $this->xtable : $this->dtable;
@@ -51,9 +51,9 @@ class Category extends MX_Controller
             $key = substr(md5($id), 0, 7);
             $query = array('table' => $table, 'update' => array('slug' => $new_link.'-'.$key));
             if (isset($_GET['id'])) {
-                $query = array_merge($query, array('where' => array('sub_news_id' => $id)));
+                $query = array_merge($query, array('where' => array('id_league' => $id)));
             } else {
-                $query = array_merge($query, array('where' => array('news_type_id' => $id)));
+                $query = array_merge($query, array('where' => array('id_competition' => $id)));
             }
 
             $option = $this->action->update($query);
