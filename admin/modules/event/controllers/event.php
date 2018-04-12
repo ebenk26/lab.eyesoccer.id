@@ -147,8 +147,7 @@ class Event extends MX_Controller
                 $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
                 $count = array_merge($count, array($ulevel->fu => $this->session->userdata('user_id')));
             }
-            p($query);
-            exit;
+            
             $data['dt'] = $this->excurl->reqCurl('Event', $query)->data;
             $data['count'] = $this->excurl->reqCurl('Event', $count)->data[0];
             $data['limit'] = $limit;

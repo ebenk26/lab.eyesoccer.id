@@ -1,6 +1,6 @@
 <table id='routertable'>
     <tr>
-        <div id='showsort' value='event/category/search'></div>
+        <div id='showsort' value='football/competition/search'></div>
         <th style='width: 5%;'>
             <input type='checkbox' name='checkall' id='checkall' onclick='actcheckall(this.id);'>
         </th>
