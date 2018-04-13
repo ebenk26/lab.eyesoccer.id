@@ -105,7 +105,7 @@
                         <div class='pad-b20'>
                             <div class='layout-row'>
                                 <span class='flex'></span>
-                                <input type='submit' value='Save' id='btn_submit' onclick="saveaddmulti('football/competition/save')">
+                                <input type='submit' value='Save' id='btn_submit' onclick="saveaddmulti('football/official/save')">
                             </div>
                         </div>
                     </div>

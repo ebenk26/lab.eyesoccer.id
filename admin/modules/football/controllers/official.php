@@ -307,14 +307,8 @@ class Official extends MX_Controller
                 $data['parent'] = $this->mparent;
                 $data['content'] = $this->config->item('base_theme') . '/official/edit_official';
 
-
-                if (isset($_GET['id'])) {
-                    $data['sub'] = $this->excurl->reqCurl('official', ['id_official' => $_GET['id']])->data[0];
-                    $data['dt1'] = $this->excurl->reqCurl('league', ['id_league' => $id])->data[0];
-                } else {
-                    $data['dt1'] = $this->excurl->reqCurl('official', ['id_official' => $id])->data[0];
-                }
-
+                $data['dt1'] = $this->excurl->reqCurl('profile-official', ['id_official' => $id, 'detail' => true])->data[0];
+                // var_dump($data['dt1']);exit();
                 if ($this->input->post('val') == true) {
                     $this->load->view($this->config->item('base_theme') . '/official/edit_official', $data);
                 } else {
@@ -333,28 +327,8 @@ class Official extends MX_Controller
     function update()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-
-            $text_title = $this->input->post('title');
-
-            $new_link = $this->library->seo_title($text_title);
-            $key = substr(md5($this->library->app_key()), 0, 7);
-
-            // official
-            if (isset($_GET['id'])) {
-                $dt1 = array('id_official' => $_GET['id'], 'league' => addslashes($text_title));
-            } else {
-                $dt1 = array('official' => addslashes($text_title));
-            }
-
-            $table = $this->dtable;
-            $where = (isset($_GET['id'])) ? ['id_official' => $this->input->post('idx')] : ['id_official' => $this->input->post('idx')];
-            $option = $this->action->update(array('table' => $table, 'update' => $dt1, 'where' => $where));
-            if ($option['state'] == 0) {
-                $this->validation->error_message($option);
-                return false;
-            }
-
-            $this->view(array('xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+            $option = $this->excurl->reqAction('football/official/update', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
+            $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('football/official');
         }

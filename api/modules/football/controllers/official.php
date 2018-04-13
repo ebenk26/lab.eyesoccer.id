@@ -74,39 +74,41 @@ class Official extends MX_Controller
     {
         if($_POST)
         {
-            $text_title = $this->input->post('title');
+            $text_title = $this->input->post('name');
             $new_link = $this->library->seo_title($text_title);
+            $key = substr(md5($this->library->app_key()), 0, 7);
+            $upload = $this->official_model->__upload($new_link);
 
-            // Category
-            if (isset($_GET['id'])) {
-                $dt1 = array('news_type_id' => $_GET['id'], 'sub_category_name' => addslashes($text_title));
-            } else {
-                $dt1 = array('news_type' => addslashes($text_title));
-            }
+            $dt1 =  array(
+                        'name' => addslashes($text_title),
+                        'id_club' => $this->input->post('team_a_id'),
+                        'pic' => $upload['data'],
+                        'position' => $this->input->post('position'),
+                        'license' => $this->input->post('license'),
+                        'no_identity' => $this->input->post('no_identity'),
+                        'nationality' => $this->input->post('nationality'),
+                        'email' => $this->input->post('email'),
+                        'phone' => $this->input->post('phone'),
+                        'address' => $this->input->post('address'),
+                        'birth_place' => $this->input->post('birth_place'),
+                        'birth_date' => date('Y-m-d', strtotime($this->input->post('birth_date'))),
+                    );
 
-            $table = (isset($_GET['id'])) ? $this->xtable : $this->dtable;
-            $where = (isset($_GET['id'])) ? ['sub_news_id' => $this->input->post('idx')] : ['news_type_id' => $this->input->post('idx')];
+            $table = $this->dtable;
+            $where = array('id_official' => $this->input->post('idx'));
             $option = $this->action->update(array('table' => $table, 'update' => $dt1, 'where' => $where));
+
             if ($option['state'] == 0) {
+                $this->official_model->__unlink($upload['data']);
+
                 $this->validation->error_message($option);
                 return false;
             }
 
-            $id = $this->input->post('idx');
-            $key = substr(md5($id), 0, 7);
-            $query = array('table' => $table, 'update' => array('slug' => $new_link.'-'.$key));
-            if (isset($_GET['id'])) {
-                $query = array_merge($query, array('where' => array('sub_news_id' => $id)));
-            } else {
-                $query = array_merge($query, array('where' => array('news_type_id' => $id)));
+            // Remove Old Pic If There is Upload Files
+            if ($this->input->post('pic') != '') {
+                $this->event_model->__unlink($this->input->post('pic'));
             }
-
-            $option = $this->action->update($query);
-            if ($option['state'] == 0) {
-                $this->validation->error_message($option);
-                return false;
-            }
-
             $this->tools->__flashMessage($option);
         } else {
             $data = $this->__rest()->__getstatus('Data must be type post', 400);
