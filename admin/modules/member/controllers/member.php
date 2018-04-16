@@ -33,7 +33,6 @@ class Member extends MX_Controller
         $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => 'newjoin',
                          'multi_search_' . $this->dtable => '', 'multi_data_' . $this->dtable => '', 'voffset_' . $this->dtable => '', 'xoffset_' . $this->dtable => '');
         $this->session->set_userdata($session);
-       # p($session);
 
         if ($this->session->userdata('limit_' . $this->dtable) > 0) {
             $limit = $this->session->userdata('limit_' . $this->dtable);
@@ -63,9 +62,6 @@ class Member extends MX_Controller
             $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
         }
 
-        // exit;
-        // #p($ulevel);
-        // #p($query);
         $data['dt'] = $this->excurl->reqCurl('me', $query)->data;
         $data['count'] = $this->excurl->reqCurl('me', array_merge($query, array('count' => true)))->data[0];
         $data['limit'] = $limit;
@@ -189,9 +185,6 @@ class Member extends MX_Controller
             } else {
                 $limit = $this->limit;
             }
-            // p($query);
-            // exit;
-
             if (count($split) > 1) {
                 $opt = array('offset' => $this->offset, 'limit' => $this->limit, 'value' => $this->input->post('val'));
                 $query = $this->pagextable->search($opt, $this->dtable);
@@ -293,14 +286,24 @@ class Member extends MX_Controller
 
     function save()
     {
+
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
             $option = $this->excurl->reqAction('member/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'),'join_date'=> NOW)));
+
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('member');
         }
     }
-
+    function checkUsername(){
+        if($this->input->post('uname')){
+            $uname= $this->input->post('uname');
+            $req = $this->excurl->reqAction('member/user_validation',$_POST);
+            $res = json_encode($req);
+            echo $res;
+        }
+      
+    }
     function edit($id= '')
     {
         if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {

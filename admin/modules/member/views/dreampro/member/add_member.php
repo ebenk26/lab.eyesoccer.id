@@ -8,7 +8,7 @@
 
 <div class='boxtitle'><?php echo $title; ?></div>
 <div id='boxmessage'></div>
-
+<div class="baseurl" val="<?php echo base_url().'member/'?>">
 <div id='boxjq'>
     <div id='boxbutton'>
         <a href="javascript:void(0)" id='button' onclick="actmenu('member/view')">Back</a>
@@ -27,22 +27,28 @@
                         <input type='hidden' name='val' value='true'>
                         <div class='mg-b10'>
                             <label>Username</label>
-                            <input type='text' name='username' id='title' class='cinput input_multi' >
+                            <div id="ugroup">
+                            <input type='text' name='username' id='username' class='cinput input_multi form-control' required>
+                            <span class="input-group-addon" style="display:none;background: transparent;" id="addon"></span>
+                       
+                            </div>
+                            <span id="lusername"></span>
+                            
                         </div>
                         <div class='mg-b10'>
                             <label>Nama</label>
-                            <input type="text" name="name" class="cinput input_multi" >
+                            <input type="text" name="name" class="cinput input_multi" required>
                         </div>
                         
                         <div class='mg-b10'>
                             <label>Password  <a href="javascript:void(0)" onclick="genpass()"> generate password</a> </label>
-                            <input type="password" name="password" class="cinput input_multi"  id="pass">
+                            <input type="password" name="password" class="cinput input_multi"  id="pass" required>
                 
                         </div>
                         <div class='mg-b10'>
-                            <label>Confirm Password</label>
+                            <label>Confirm Password</label><span id="lcpass"></span>
 
-                            <input type="password" name="password" class="cinput input_multi"  id="cpass">
+                            <input type="password" name="cpassword" class="cinput input_multi"  id="cpass" required>
                            
                             <span id="respass" style="color:#960000"></span>
 
@@ -79,10 +85,7 @@
                             <textarea name="about" id="about" class="tiny-active">
                                 
                             </textarea>
-                            
-
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -160,7 +163,6 @@
             gen += pattern.charAt(Math.floor(Math.random() * n));
         }
         return gen;
-        //console.log(arr.random());
     }
     function genpass(){
         let str = generate(8);
@@ -168,4 +170,57 @@
         $('#cpass').val(str);
         $('#respass').html('Your Password : ' + str);
     }
+    function checkPass(){
+        let pass = $('#pass');
+        let cpass= $('#cpass');
+        let lcpass = $('#respass');
+        let str;
+        cpass.on('keyup',function(){
+            str = (pass.val() !== cpass.val() ? 'your password doesn\'t match' : '');
+            lcpass.html(str);
+        })
+    }
+    checkPass();
+    let typingInterval = 1000;//2 second interval
+    let typing;
+    let iduname = $('#username');
+    $(iduname).on('keyup',function(){
+        $('#ugroup').addClass('input-group');
+        $('#addon').html('<i class="fa fa-refresh fa-spin fa-fw"></i>');
+        $('#addon').css({'display':'table-cell'});
+
+
+        clearTimeout(typing);
+        typing = setTimeout(doneTyping,typingInterval);
+       
+    })
+    function doneTyping(){
+        let val  = $(iduname).val();
+        let url  = '<?php echo base_url().'member/checkusername'?>';
+       $.ajax({
+           url: url,
+           type: 'POST',
+           dataType: 'JSON',
+           data: {uname: val},
+       })
+       .done(function(r) {
+        
+            if(r.xcss == 'boxfailed'){
+                
+                $('#addon').html('<i class="fa fa-close"></i>');
+                $('#addon').css({'color' : '#F42F2F'});
+                $('#lusername').html(r.message);
+            }
+            else{ 
+                $('#addon').html('<i class="fa fa-check"></i>');
+                 $('#addon').css({'color' : '#19AA5A'});
+                $('#lusername').html('');
+            }  
+             
+       })
+       .fail(function() {
+           console.log("error");
+       })
+    }
+
 </script>

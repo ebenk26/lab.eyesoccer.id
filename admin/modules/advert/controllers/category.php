@@ -30,7 +30,7 @@ class Category extends MX_Controller
         $data['roles'] = $this->roles;
         $data['content'] = $this->config->item('base_theme') . '/category/category';
 
-        $id = (isset($_GET['id'])) ? '' : 'category_ads_id';
+        $id = 'category_ads_id';
         $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => 'desc',
                          'multi_search_' . $this->dtable => '', 'multi_data_' . $this->dtable => '', 'voffset_' . $this->dtable => '', 'xoffset_' . $this->dtable => '');
         $this->session->set_userdata($session);
@@ -58,14 +58,9 @@ class Category extends MX_Controller
             );
         }
 
-        if (isset($_GET['id'])) {
-            $query = array_merge($query, array('category_ads_id' => $_GET['id']));
-            $data['sub'] = $this->excurl->reqCurl('ads-category', ['category_ads_id' => $_GET['id']])->data[0];
 
-        } else {
-            $data['dt'] = $this->excurl->reqCurl('ads-category', $query)->data;
-            $data['count'] = $this->excurl->reqCurl('ads-category', array_merge($query, array('count' => true)))->data[0];
-        }
+        $data['dt'] = $this->excurl->reqCurl('ads-category', $query)->data;
+        $data['count'] = $this->excurl->reqCurl('ads-category', array_merge($query, array('count' => true)))->data[0];
 
         $data['limit'] = $limit;
         $data['offset'] = $this->offset;
@@ -88,15 +83,9 @@ class Category extends MX_Controller
                 if ($this->session->userdata('sortDir_' . $this->dtable) == 'asc' OR
                     $this->session->userdata('sortDir_' . $this->dtable) == 'desc'
                 ) {
-                    if (isset($_GET['id'])) {
-                        $id = ($this->session->userdata('sortBy_' . $this->dtable) == 'category_ads_id') ? '' : $this->session->userdata('sortBy_' . $this->dtable);
-                        $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                         'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
-                    } else {
                         $id = ($this->session->userdata('sortBy_' . $this->dtable) == '') ? 'category_ads_id' : $this->session->userdata('sortBy_' . $this->dtable);
                         $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
                                          'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
-                    }
                 } else {
                     $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
                                      'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => 'desc');
@@ -150,16 +139,10 @@ class Category extends MX_Controller
                 $count = array_merge($count, $this->session->userdata('multi_data_' . $this->dtable));
             }
 
-            if (isset($_GET['id'])) {
-                $query = array_merge($query, array('category_ads_id' => $_GET['id']));
-                $count = array_merge($count, array('category_ads_id' => $_GET['id']));
-                $data['sub'] = $this->excurl->reqCurl('ads-category', ['category_ads_id' => $_GET['id']])->data[0];
-            } else {
-                $data['dt'] = $this->excurl->reqCurl('ads-category', $query)->data;
-                $data['count'] = $this->excurl->reqCurl('ads-category', $count)->data[0];
-            }
+            $data['dt'] = $this->excurl->reqCurl('ads-category', $query)->data;
+            $data['count'] = $this->excurl->reqCurl('ads-category', $count)->data[0];
 
-            $data['limit'] = $limit;
+           $data['limit'] = $limit;
             $data['offset'] = $offset;
             $data['prefix'] = $this->dtable;
             $data['showpage'] = ceil($data['count']->cc / $limit);
@@ -213,14 +196,8 @@ class Category extends MX_Controller
                 $this->session->set_userdata($session);
             }
 
-            if (isset($_GET['id'])) {
-                $query['query'] = array_merge($query['query'], array('category_ads_id' => $_GET['id']));
-                $query['count'] = array_merge($query['count'], array('category_ads_id' => $_GET['id']));
-                $data['sub'] = $this->excurl->reqCurl('ads-category', ['category_ads_id' => $_GET['id']])->data[0];
-            } else {
-                $data['dt'] = $this->excurl->reqCurl('ads-category', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('ads-category', $query['count'])->data[0];
-            }
+            $data['dt'] = $this->excurl->reqCurl('ads-category', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('ads-category', $query['count'])->data[0];
 
             $data['limit'] = $limit;
             $data['offset'] = $this->offset;
@@ -250,15 +227,8 @@ class Category extends MX_Controller
                 $query['query'] = array_merge($query['query'], $this->session->userdata('multi_data_' . $this->dtable));
                 $query['count'] = array_merge($query['count'], $this->session->userdata('multi_data_' . $this->dtable));
             }
-
-            if (isset($_GET['id'])) {
-                $query['query'] = array_merge($query['query'], array('category_ads_id' => $_GET['id']));
-                $query['count'] = array_merge($query['count'], array('category_ads_id' => $_GET['id']));
-                $data['sub'] = $this->excurl->reqCurl('ads-category', ['category_ads_id' => $_GET['id']])->data[0];
-            } else {
                 $data['dt'] = $this->excurl->reqCurl('ads-category', $query['query'])->data;
                 $data['count'] = $this->excurl->reqCurl('ads-category', $query['count'])->data[0];
-            }
 
             $data['offset'] = $query['offset']+1;
 
@@ -313,12 +283,7 @@ class Category extends MX_Controller
                 $data['parent'] = $this->mparent;
                 $data['content'] = $this->config->item('base_theme') . '/category/edit_category';
 
-
-                if (isset($_GET['id'])) {
-                    $data['sub'] = $this->excurl->reqCurl('ads-category', ['category_ads_id' => $_GET['id']])->data[0];
-                } else {
                     $data['dt1'] = $this->excurl->reqCurl('ads-category', ['category_ads_id' => $id])->data[0];
-                }
 
                 if ($this->input->post('val') == true) {
                     $this->load->view($this->config->item('base_theme') . '/category/edit_category', $data);
@@ -338,13 +303,8 @@ class Category extends MX_Controller
     function update()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-
-            if (isset($_GET['id'])) {
-                $option = $this->excurl->reqAction('advert/category/update/?id='.$_GET['id'], $_POST);
-            } else {
-                $option = $this->excurl->reqAction('advert/category/update', $_POST);
-            }
-            $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
+                   $option = $this->excurl->reqAction('advert/category/update', $_POST);
+                   $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('advert/category');
         }

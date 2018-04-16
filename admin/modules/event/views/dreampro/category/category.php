@@ -1,4 +1,4 @@
-<div class='boxtitle'><?php echo $title; ?> <?php echo (isset($sub) AND isset($_GET['id'])) ? '&rsaquo; '.$sub->news_type : ''; ?></div>
+<div class='boxtitle'><?php echo $title; ?> <?php echo (isset($sub) AND isset($_GET['id'])) ? '&rsaquo; '.$sub->event_type : ''; ?></div>
 <div id='boxmessage'></div>
 
 <div id='boxbutton'>
@@ -6,21 +6,16 @@
         $sv = $this->library->sub_view();
         if(isset($_GET['id']))
         {
-            ?> <a href="javascript:void(0)" id='button' onclick="actmenu('news/category/view<?php echo $sv->idback; ?>')">Back</a> <?php
+            ?> <a href="javascript:void(0)" id='button' onclick="actmenu('event/category/view<?php echo $sv->idback; ?>')">Back</a> <?php
         }
     ?>
-    <a href="javascript:void(0)" id='button' onclick="openform('news/category/add<?php echo $sv->idstay; ?>')">Add New</a>
+    <a href="javascript:void(0)" id='button' onclick="openform('event/category/add<?php echo $sv->idstay; ?>')">Add New</a>
     
     <div class='search'>
         <label>Search By</label>
         <select name='cselect' class='cinput inselect'>
             <?php
-                if(isset($_GET['id']))
-                {
-                    $field = array('sub_category_name' => 'Name');
-                } else {
-                    $field = array('news_type' => 'Name');
-                }
+                $field = array('event_type' => 'Name');
 
                 foreach($field as $n1 => $v1)
                 {
@@ -35,7 +30,7 @@
         </select>
         
         <?php $csearch = ($this->session->userdata('xsearch_'.$prefix) != '') ? $this->session->userdata('xsearch_'.$prefix) : ''; ?>
-        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('news/category/search<?php echo $sv->idstay; ?>')">
+        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('event/category/search<?php echo $sv->idstay; ?>')">
     </div>
     
     <div style='clear: both;'></div>
@@ -54,11 +49,11 @@
             ?>
         </select>
     </div>
-    <a href="javascript:void(0)" id='button' onclick="actcheck('news/category/checked')">Action</a>
+    <a href="javascript:void(0)" id='button' onclick="actcheck('event/category/checked')">Action</a>
     
     <div class='limit'>
         <label>Limit</label>
-        <select name='climit' class='climit inselect' onchange="actlimit('news/category/view')">
+        <select name='climit' class='climit inselect' onchange="actlimit('event/category/view')">
             <?php
                 $l1 = array('10','25','50','100','150','200');
                 foreach($l1 as $v3)
@@ -90,7 +85,7 @@
         if($showpage > 1)
         {
             echo "<div id='pageself'>
-                    <div id='showurl' value='news/category/pagetable".$sv->idstay."'></div>
+                    <div id='showurl' value='event/category/pagetable".$sv->idstay."'></div>
                     <div id='showpage' value='$showpage'></div>
                     <div id='showoff' value='4'></div>
                     <div id='showrun' value='2'></div>

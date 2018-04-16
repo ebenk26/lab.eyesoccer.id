@@ -217,15 +217,15 @@ class Match extends MX_Controller
                 $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
-            $data['dt'] = $this->excurl->reqCurl('match', $query['query'])->data;
-            $data['count'] = $this->excurl->reqCurl('match', $query['count'])->data[0];
+            $data['dt'] = $this->excurl->reqCurl('event-match', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('event-match', $query['count'])->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $this->offset;
             $data['prefix'] = $this->dtable;
             $data['showpage'] = ceil($data['count']->cc / $query['query']['limit']);
 
             if (count($split) > 1) {
-                $html = $this->load->view($this->config->item('base_theme') . '/match/Match_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/match/match_jquery', $data, true);
             } else {
                 $html = $this->load->view($this->config->item('base_theme') . '/match/match', $data, true);
             }

@@ -86,4 +86,26 @@ class Member_model extends CI_Model
         $this->uploader->single_unlink($path['config'], 'uploadfile', $path['path'], $post_pic);
     }
 
+     function findUser($tbl,$where = array(),$select=array()){
+        if(is_array($where)){
+            foreach($where as $k => $v){
+                $this->db->where($k,$v);
+            }
+        }
+        $s = '';
+        if(is_array($select)){
+            if(count($select) > 0){
+                foreach($select as $vs){                
+                    $s .= ','.$vs;
+                }
+                $s = substr($s,1);
+                $this->db->select($s);
+            }
+        }
+        $this->db->set_dbprefix('');
+        $get = $this->db->get($tbl);
+        return $get->result();
+    }
+
+
 }

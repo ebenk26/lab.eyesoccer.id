@@ -84,5 +84,5 @@ class Member_model extends CI_Model
         $path = $this->__path();
         $this->uploader->single_unlink($path['config'], 'uploadfile', $path['path'], $post_pic);
     }
-
+   
 }

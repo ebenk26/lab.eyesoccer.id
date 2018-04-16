@@ -8,7 +8,7 @@
         <label>Search By</label>
         <select name='cselect' class='cinput inselect'>
             <?php
-                $field = array('search' => 'Title'/*, 'match_type' => 'Category'*/);
+                $field = array('event' => 'Event', 'team_a' => 'Team A', 'team_b' => 'Team B');
                 foreach($field as $n1 => $v1)
                 {
                     if($this->session->userdata('xfield_'.$prefix) == $n1)
@@ -22,7 +22,7 @@
         </select>
         
         <?php $csearch = ($this->session->userdata('xsearch_'.$prefix) != '') ? $this->session->userdata('xsearch_'.$prefix) : ''; ?>
-        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('match/search')">
+        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('event/match/search')">
     </div>
     
     <div style='clear: both;'></div>
