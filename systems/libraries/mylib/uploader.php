@@ -304,9 +304,11 @@ class Uploader
 
     function __imagine($path = '', $size = '', $filename = '', $width = '', $height = '')
     {
+        if ($width == 1280 AND $height == 1280) rename($path . 'ori_' . $filename, $path . 'temp_ori_' . $filename);
+
         $this->ci->load->library('image_lib');
         $config = array(
-            'source_image' => $path . 'ori_' . $filename,
+            'source_image' => ($width == 1280 AND $height == 1280) ? $path . 'temp_ori_' . $filename : $path . 'ori_' . $filename,
             'new_image' => $path . $size . '_' . $filename,
             'maintain_ration' => true,
             'width' => $width,
@@ -340,6 +342,10 @@ class Uploader
             $this->ci->image_lib->initialize($config);
             $this->ci->image_lib->resize();
             $this->ci->image_lib->clear();
+
+            if ($width == 1280 AND $height == 1280) {
+                unlink($path . 'temp_ori_' . $filename);
+            }
         }
     }
 

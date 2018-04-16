@@ -1385,8 +1385,8 @@ function geoLocation(location, map, marker, infowindow, geocoder) {
 // Geocoder Location with Listener Maps
 function geoListener(map, infowindow, geocoder, location, setdata) {
     latlng = {
-        lat: map.getCenter().lat(),
-        lng: map.getCenter().lng()
+        lat: (map.getCenter()) ? map.getCenter().lat() : 0,
+        lng: (map.getCenter()) ? map.getCenter().lng() : 0
     };
 
     deleteMarkers();
