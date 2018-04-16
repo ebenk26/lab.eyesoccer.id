@@ -1,11 +1,11 @@
 <?php
 
-class Foot_model extends CI_Model
+class Level_model extends CI_Model
 {
 
     var $query_string = '';
     var $command = '';
-    var $dtable = 'eyeprofile_player_foot';
+    var $dtable = 'eyeprofile_player_level';
 
     function __construct()
     {
@@ -14,7 +14,7 @@ class Foot_model extends CI_Model
 
     function __delete($id = '')
     {
-        $option = $this->excurl->reqAction('football/foot/delete', array('idx' => $id));
+        $option = $this->excurl->reqAction('football/level/delete', array('idx' => $id));
         return $option;
     }
 

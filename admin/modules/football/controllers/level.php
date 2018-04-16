@@ -1,23 +1,23 @@
 <?php
  
-class Foot extends MX_Controller
+class Level extends MX_Controller
 {
     var $roles = 'admin';
     var $mparent = 'Football';
     var $offset = 1;
     var $limit = 10;
-    var $dtable = 'eyeprofile_player_foot';
+    var $dtable = 'eyeprofile_player_level';
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('foot_model');
+        $this->load->model('level_model');
 
         if ($this->session->userdata('login') != TRUE AND $this->session->userdata('user_uid') == '') {
             redirect('login');
         }
 
-        $raccess = $this->library->role_access('football/foot');
+        $raccess = $this->library->role_access('football/level');
         if (isset($raccess)) {
             $this->roles = $raccess;
         }
@@ -25,12 +25,12 @@ class Foot extends MX_Controller
 
     public function index()
     {
-        $data['title'] = 'Foot';
+        $data['title'] = 'Level';
         $data['parent'] = $this->mparent;
         $data['roles'] = $this->roles;
-        $data['content'] = $this->config->item('base_theme') . '/foot/foot';
+        $data['content'] = $this->config->item('base_theme') . '/level/level';
 
-        $id = 'id_foot';
+        $id = 'id_level';
         $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => 'desc',
                          'multi_search_' . $this->dtable => '', 'multi_data_' . $this->dtable => '', 'voffset_' . $this->dtable => '', 'xoffset_' . $this->dtable => '');
         $this->session->set_userdata($session);
@@ -59,8 +59,8 @@ class Foot extends MX_Controller
         }
 
 
-        $data['dt'] = $this->excurl->reqCurl('player-foot', $query)->data;
-        $data['count'] = $this->excurl->reqCurl('player-foot', array_merge($query, array('count' => true)))->data[0];
+        $data['dt'] = $this->excurl->reqCurl('player-level', $query)->data;
+        $data['count'] = $this->excurl->reqCurl('player-level', array_merge($query, array('count' => true)))->data[0];
 
         $data['limit'] = $limit;
         $data['offset'] = $this->offset;
@@ -73,7 +73,7 @@ class Foot extends MX_Controller
     function view($option = array())
     {
         if ($this->input->post('val') == true) {
-            $data['title'] = 'Foot';
+            $data['title'] = 'Level';
             $data['roles'] = $this->roles;
 
             // Limit Session
@@ -83,7 +83,7 @@ class Foot extends MX_Controller
                 if ($this->session->userdata('sortDir_' . $this->dtable) == 'asc' OR
                     $this->session->userdata('sortDir_' . $this->dtable) == 'desc'
                 ) {
-                        $id = ($this->session->userdata('sortBy_' . $this->dtable) == '') ? 'id_foot' : $this->session->userdata('sortBy_' . $this->dtable);
+                        $id = ($this->session->userdata('sortBy_' . $this->dtable) == '') ? 'id_level' : $this->session->userdata('sortBy_' . $this->dtable);
                         $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
                                          'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
                 } else {
@@ -139,8 +139,8 @@ class Foot extends MX_Controller
                 $count = array_merge($count, $this->session->userdata('multi_data_' . $this->dtable));
             }
 
-            $data['dt'] = $this->excurl->reqCurl('player-foot', $query)->data;
-            $data['count'] = $this->excurl->reqCurl('player-foot', $count)->data[0];
+            $data['dt'] = $this->excurl->reqCurl('player-level', $query)->data;
+            $data['count'] = $this->excurl->reqCurl('player-level', $count)->data[0];
 
             $data['limit'] = $limit;
             $data['offset'] = $offset;
@@ -148,9 +148,9 @@ class Foot extends MX_Controller
             $data['showpage'] = ceil($data['count']->cc / $limit);
 
             if ($this->input->post('val') > 0 OR isset($option['is_check'])) {
-                $html = $this->load->view($this->config->item('base_theme') . '/foot/foot_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/level/level_jquery', $data, true);
             } else {
-                $html = $this->load->view($this->config->item('base_theme') . '/foot/foot', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/level/level', $data, true);
             }
 
             header('Content-Type: application/json');
@@ -162,14 +162,14 @@ class Foot extends MX_Controller
                 echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable), 'query' => $query));
             }
         } else {
-            redirect('football/foot');
+            redirect('football/level');
         }
     }
 
     function search()
     {
         if ($this->input->post('val') == true) {
-            $data['title'] = 'Foot';
+            $data['title'] = 'Level';
 
             $split = explode(",", $this->input->post('val'));
 
@@ -196,8 +196,8 @@ class Foot extends MX_Controller
                 $this->session->set_userdata($session);
             }
 
-            $data['dt'] = $this->excurl->reqCurl('player-foot', $query['query'])->data;
-            $data['count'] = $this->excurl->reqCurl('player-foot', $query['count'])->data[0];
+            $data['dt'] = $this->excurl->reqCurl('player-level', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('player-level', $query['count'])->data[0];
 
             $data['limit'] = $limit;
             $data['offset'] = $this->offset;
@@ -205,15 +205,15 @@ class Foot extends MX_Controller
             $data['showpage'] = ceil($data['count']->cc / $query['query']['limit']);
 
             if (count($split) > 1) {
-                $html = $this->load->view($this->config->item('base_theme') . '/foot/foot_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/level/level_jquery', $data, true);
             } else {
-                $html = $this->load->view($this->config->item('base_theme') . '/foot/foot', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/level/level', $data, true);
             }
 
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('football/foot');
+            redirect('football/level');
         }
     }
 
@@ -227,29 +227,29 @@ class Foot extends MX_Controller
                 $query['query'] = array_merge($query['query'], $this->session->userdata('multi_data_' . $this->dtable));
                 $query['count'] = array_merge($query['count'], $this->session->userdata('multi_data_' . $this->dtable));
             }
-                $data['dt'] = $this->excurl->reqCurl('player-foot', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('player-foot', $query['count'])->data[0];
+                $data['dt'] = $this->excurl->reqCurl('player-level', $query['query'])->data;
+                $data['count'] = $this->excurl->reqCurl('player-level', $query['count'])->data[0];
 
             $data['offset'] = $query['offset']+1;
 
-            $html = $this->load->view($this->config->item('base_theme') . '/foot/foot_table', $data, true);
+            $html = $this->load->view($this->config->item('base_theme') . '/level/level_table', $data, true);
 
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('football/foot');
+            redirect('football/level');
         }
     }
 
     function add()
     {
         if ($this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $data['title'] = 'Foot';
+            $data['title'] = 'Level';
             $data['parent'] = $this->mparent;
-            $data['content'] = $this->config->item('base_theme') . '/foot/add_foot';
+            $data['content'] = $this->config->item('base_theme') . '/level/add_level';
 
             if ($this->input->post('val') == true) {
-                $this->load->view($this->config->item('base_theme') . '/foot/add_foot', $data);
+                $this->load->view($this->config->item('base_theme') . '/level/add_level', $data);
             } else {
                 $this->load->view($this->config->item('base_theme') . '/template', $data);
             }
@@ -257,7 +257,7 @@ class Foot extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('football/foot');
+                redirect('football/level');
             }
         }
     }
@@ -266,10 +266,10 @@ class Foot extends MX_Controller
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
 
-            $option = $this->excurl->reqAction('football/foot/save', $_POST);
+            $option = $this->excurl->reqAction('football/level/save', $_POST);
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('football/foot');
+            redirect('football/level');
         }
     }
 
@@ -277,15 +277,15 @@ class Foot extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
             if ($id == '') {
-                redirect('football/foot');
+                redirect('football/level');
             } else {
-                $data['title'] = 'Foot';
+                $data['title'] = 'Level';
                 $data['parent'] = $this->mparent;
-                $data['content'] = $this->config->item('base_theme') . '/foot/edit_foot';
-                $data['dt1'] = $this->excurl->reqCurl('player-foot', ['id_foot' => $id])->data[0];
+                $data['content'] = $this->config->item('base_theme') . '/level/edit_level';
+                $data['dt1'] = $this->excurl->reqCurl('player-level', ['id_level' => $id])->data[0];
 
                 if ($this->input->post('val') == true) {
-                    $this->load->view($this->config->item('base_theme') . '/foot/edit_foot', $data);
+                    $this->load->view($this->config->item('base_theme') . '/level/edit_level', $data);
                 } else {
                     $this->load->view($this->config->item('base_theme') . '/template', $data);
                 }
@@ -294,7 +294,7 @@ class Foot extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('football/foot');
+                redirect('football/level');
             }
         }
     }
@@ -302,10 +302,10 @@ class Foot extends MX_Controller
     function update()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-                   $option = $this->excurl->reqAction('football/foot/update', $_POST);
+                   $option = $this->excurl->reqAction('football/level/update', $_POST);
                    $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
-        } else {
-            redirect('football/foot');
+                        } else {
+            redirect('football/level');
         }
     }
 
@@ -313,20 +313,20 @@ class Foot extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
             if ($id == '') {
-                redirect('football/foot');
+                redirect('football/level');
             } else {
                 if ($this->input->post('val') == true) {
-                    $option = $this->foot_model->__delete($id);
+                    $option = $this->level_model->__delete($id);
                     $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
-                    redirect('football/foot');
+                    redirect('football/level');
                 }
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('football/foot');
+                redirect('football/level');
             }
         }
     }
@@ -341,7 +341,7 @@ class Foot extends MX_Controller
                 case 1:
                     if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->foot_model->__delete($split[$i]);
+                            $option = $this->level_model->__delete($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -351,7 +351,7 @@ class Foot extends MX_Controller
                 case 2:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->foot_model->__enable($split[$i]);
+                            $option = $this->level_model->__enable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -361,7 +361,7 @@ class Foot extends MX_Controller
                 case 3:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->foot_model->__disable($split[$i]);
+                            $option = $this->level_model->__disable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -371,7 +371,7 @@ class Foot extends MX_Controller
 
             $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('football/foot');
+            redirect('football/level');
         }
     }
 
