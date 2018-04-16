@@ -1,6 +1,6 @@
 <?php
 
-class position extends MX_Controller
+class Position extends MX_Controller
 {
     var $dtable = 'eyeprofile_player_position';
  
