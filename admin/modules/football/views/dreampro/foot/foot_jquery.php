@@ -6,7 +6,6 @@
     <?php
         if($showpage > 1)
         {
-            $sv = $this->library->sub_view();
             echo "<div id='pageself'>
                     <div id='showurl' value='football/foot/pagetable'></div>
                     <div id='showpage' value='$showpage'></div>

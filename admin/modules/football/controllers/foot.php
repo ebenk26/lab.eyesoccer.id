@@ -25,7 +25,7 @@ class Foot extends MX_Controller
 
     public function index()
     {
-        $data['title'] = 'foot';
+        $data['title'] = 'Foot';
         $data['parent'] = $this->mparent;
         $data['roles'] = $this->roles;
         $data['content'] = $this->config->item('base_theme') . '/foot/foot';
@@ -73,7 +73,7 @@ class Foot extends MX_Controller
     function view($option = array())
     {
         if ($this->input->post('val') == true) {
-            $data['title'] = 'foot';
+            $data['title'] = 'Foot';
             $data['roles'] = $this->roles;
 
             // Limit Session
@@ -142,7 +142,7 @@ class Foot extends MX_Controller
             $data['dt'] = $this->excurl->reqCurl('player-foot', $query)->data;
             $data['count'] = $this->excurl->reqCurl('player-foot', $count)->data[0];
 
-           $data['limit'] = $limit;
+            $data['limit'] = $limit;
             $data['offset'] = $offset;
             $data['prefix'] = $this->dtable;
             $data['showpage'] = ceil($data['count']->cc / $limit);
@@ -169,7 +169,7 @@ class Foot extends MX_Controller
     function search()
     {
         if ($this->input->post('val') == true) {
-            $data['title'] = 'foot';
+            $data['title'] = 'Foot';
 
             $split = explode(",", $this->input->post('val'));
 
@@ -244,7 +244,7 @@ class Foot extends MX_Controller
     function add()
     {
         if ($this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $data['title'] = 'foot';
+            $data['title'] = 'Foot';
             $data['parent'] = $this->mparent;
             $data['content'] = $this->config->item('base_theme') . '/foot/add_foot';
 
@@ -279,11 +279,10 @@ class Foot extends MX_Controller
             if ($id == '') {
                 redirect('football/foot');
             } else {
-                $data['title'] = 'foot';
+                $data['title'] = 'Foot';
                 $data['parent'] = $this->mparent;
                 $data['content'] = $this->config->item('base_theme') . '/foot/edit_foot';
-
-                    $data['dt1'] = $this->excurl->reqCurl('player-foot')->data[0];
+                $data['dt1'] = $this->excurl->reqCurl('player-foot', ['id_foot' => $id])->data[0];
 
                 if ($this->input->post('val') == true) {
                     $this->load->view($this->config->item('base_theme') . '/foot/edit_foot', $data);

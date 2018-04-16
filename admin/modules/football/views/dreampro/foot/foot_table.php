@@ -5,11 +5,11 @@
             <input type='checkbox' name='checkall' id='checkall' onclick='actcheckall(this.id);'>
         </th>
         <th style='width: 5%;'>
-            <?php $id = (isset($_GET['id'])) ? '' : 'id_foot'; ?>
+            <?php $id = 'id_foot'; ?>
             <a href="javascript:void(0)" class='csort' id="<?php echo $id; ?>" val="desc" onclick="actsort(this.id)">No</a>
         </th>
         <th>
-            <?php $foot = (isset($_GET['id'])) ? '' : 'foot'; ?>
+            <?php $foot = 'foot'; ?>
             <a href="javascript:void(0)" class='csort' id="<?php echo $foot; ?>" val="desc" onclick="actsort(this.id)">Name Foot</a>
         </th>
         <th style='width: 10%;'>Action</th>
@@ -30,8 +30,8 @@
             echo "<td align='center'>" . $r->foot . "</td>";
             echo "<td class='center'>";
 
-              echo "<a class='btn_action' href='javascript:void(0)' onclick=\"openform('football/foot/edit/". $r->$id ."$sv->idstay')\" title='Edit'><i class='fa fa-edit fa-fw'></i></a>
-                    <a class='btn_action' href='javascript:void(0)' onclick=\"deleteid('football/foot/delete/". $r->$id ."$sv->idstay')\" title='Remove'><i class='fa fa-minus-square fa-fw'></i></a>
+              echo "<a class='btn_action' href='javascript:void(0)' onclick=\"openform('football/foot/edit/". $r->$id ."')\" title='Edit'><i class='fa fa-edit fa-fw'></i></a>
+                    <a class='btn_action' href='javascript:void(0)' onclick=\"deleteid('football/foot/delete/". $r->$id ."')\" title='Remove'><i class='fa fa-minus-square fa-fw'></i></a>
                  </td>";
             echo "</tr>";
             
