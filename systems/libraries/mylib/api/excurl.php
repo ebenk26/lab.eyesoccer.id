@@ -156,7 +156,7 @@ class Excurl {
         $ch = curl_init();
         $curl_options = array(
             CURLOPT_URL => $url,
-            CURLOPT_HTTPHEADER => array_merge($contents, array('Authorization: Basic ' . base64_encode($cred))),
+            CURLOPT_HTTPHEADER => array_merge($contents, array('Authorization: Basic ' . base64_encode($cred), 'REMOTE_ADDR: ' . $_SERVER['REMOTE_ADDR'])),
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_RETURNTRANSFER => true
         );
