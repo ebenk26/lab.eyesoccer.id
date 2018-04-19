@@ -29,6 +29,10 @@ tbl_event
 tbl_event_category
 - slug
 
+tbl_jadwal_event
+- tim_a -> Varchar to Int
+- tim_b -> Varchar to Int
+
 eyevent_link -> New Table
 RUN THIS :
 DELETE FROM eyevent_link;
