@@ -1,24 +1,25 @@
 <?php
 
-class Competition extends MX_Controller
+class Player extends MX_Controller
 {
     var $roles = 'admin';
     var $mparent = 'Football';
     var $offset = 1;
     var $limit = 10;
-    var $dtable = 'eyeprofile_competitions';
-    var $xtable = 'eyeprofile_league';
+    var $dtable = 'eyeprofile_player';
+    var $xtable = 'eyeprofile_player_career';
+    var $ztable = 'eyeprofile_player_achievement';
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Competition_model');
+        $this->load->model('Player_model');
 
         if ($this->session->userdata('login') != TRUE AND $this->session->userdata('user_uid') == '') {
             redirect('login');
         }
 
-        $raccess = $this->library->role_access('competition');
+        $raccess = $this->library->role_access('player');
         if (isset($raccess)) {
             $this->roles = $raccess;
         }
@@ -26,12 +27,12 @@ class Competition extends MX_Controller
 
     public function index()
     {
-        $data['title'] = 'Competition';
+        $data['title'] = 'Player';
         $data['parent'] = $this->mparent;
         $data['roles'] = $this->roles;
-        $data['content'] = $this->config->item('base_theme') . '/competition/competition';
+        $data['content'] = $this->config->item('base_theme') . '/player/player';
 
-        $id = (isset($_GET['id'])) ? 'id_league' : 'id_competition';
+        $id = (isset($_GET['id'])) ? 'id_career' : 'id_player';
         $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => 'desc',
                          'multi_search_' . $this->dtable => '', 'multi_data_' . $this->dtable => '', 'voffset_' . $this->dtable => '', 'xoffset_' . $this->dtable => '');
         $this->session->set_userdata($session);
@@ -60,14 +61,14 @@ class Competition extends MX_Controller
         }
 
         if (isset($_GET['id'])) {
-            $query = array_merge($query, array('id_competition' => $_GET['id']));
-            $data['sub'] = $this->excurl->reqCurl('competition', ['id_competition' => $_GET['id']])->data[0];
+            $query = array_merge($query, array('id_player' => $_GET['id']));
+            $data['sub'] = $this->excurl->reqCurl('profile', ['id_player' => $_GET['id']])->data[0];
 
-            $data['dt'] = $this->excurl->reqCurl('league', $query)->data;
-            $data['count'] = $this->excurl->reqCurl('league', array_merge($query, array('count' => true)))->data[0];
+            $data['dt'] = $this->excurl->reqCurl('profile', $query)->data;
+            $data['count'] = $this->excurl->reqCurl('profile', array_merge($query, array('count' => true)))->data[0];
         } else {
-            $data['dt'] = $this->excurl->reqCurl('competition', $query)->data;
-            $data['count'] = $this->excurl->reqCurl('competition', array_merge($query, array('count' => true)))->data[0];
+            $data['dt'] = $this->excurl->reqCurl('profile', $query)->data;
+            $data['count'] = $this->excurl->reqCurl('profile', array_merge($query, array('count' => true)))->data[0];
         }
 
         $data['limit'] = $limit;
@@ -286,16 +287,17 @@ class Competition extends MX_Controller
     function add()
     {
         if ($this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $data['title'] = 'Competition';
+            $data['title'] = 'Player';
             $data['parent'] = $this->mparent;
-            $data['content'] = $this->config->item('base_theme') . '/Competition/add_Competition';
+            $data['content'] = $this->config->item('base_theme') . '/Player/add_player';
 
-            if (isset($_GET['id'])) {
-                $data['sub'] = $this->excurl->reqCurl('competition', ['id_competition' => $_GET['id']])->data[0];
-            }
+            $query = array('page' => 1, 'limit' => 10);
+            $data['pos'] = $this->excurl->reqCurl('player-position', $query)->data;
+            $data['foot'] = $this->excurl->reqCurl('player-foot', $query)->data;
+            $data['level'] = $this->excurl->reqCurl('player-level', $query)->data;
 
             if ($this->input->post('val') == true) {
-                $this->load->view($this->config->item('base_theme') . '/Competition/add_Competition', $data);
+                $this->load->view($this->config->item('base_theme') . '/Player/add_player', $data);
             } else {
                 $this->load->view($this->config->item('base_theme') . '/template', $data);
             }
@@ -303,7 +305,7 @@ class Competition extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('football/Competition');
+                redirect('football/Player');
             }
         }
     }
@@ -449,6 +451,33 @@ class Competition extends MX_Controller
             $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('football/Competition');
+        }
+    }
+
+    function autoteam($idx = '')
+    {
+        $search = $this->input->post('val');
+
+        $query = array('page' => 1, 'limit' => '100', 'search' => $search);
+        $clubs = $this->excurl->reqCurl('profile-club', $query)->data;
+
+        $tag = 'team_a';
+
+        if($clubs)
+        {
+            foreach($clubs as $t)
+            {
+                $bold_search = "<b>$search</b>";
+                $team_name = str_ireplace($search, $bold_search, $t->name);
+
+                echo "<div class='showauto' val='$t->id_club' idx='$idx' tag='$tag' style='text-transform: capitalize;'>
+                        <span class='$t->id_club' val='$t->name'>$team_name</span>
+                    </div>";
+            }
+        }
+        else
+        {
+            echo "<div class='showauto'><span>No Result</span></div>";
         }
     }
 
