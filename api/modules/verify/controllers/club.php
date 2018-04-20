@@ -144,7 +144,7 @@ class Club extends MX_Controller
     {
         if($_POST)
         {
-            $option = $this->official_model->__delete($this->input->post('idx'));
+            $option = $this->club_model->__delete($this->input->post('idx'));
             
             $this->tools->__flashMessage($option);
         } else {

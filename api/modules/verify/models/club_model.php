@@ -6,6 +6,7 @@ class Club_model extends CI_Model
     var $query_string = '';
     var $command = '';
     var $xtable = 'eyeprofile_club_register';
+    var $ztable = 'eyeprofile_club';
 
     function __construct()
     {
@@ -14,7 +15,8 @@ class Club_model extends CI_Model
 
     function __delete($id = '')
     {
-        $option = $this->action->delete(array('table' => $this->xtable, 'where' => array('id_official' => $id)));
+        $option = $this->action->delete(array('table' => $this->xtable, 'where' => array('id_club' => $id)));
+        $option2 = $this->action->delete(array('table' => $this->ztable, 'where' => array('id_club' => $id)));
 
         if ($option['state'] == 0) {
             $this->validation->error_message($option);
