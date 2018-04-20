@@ -1,25 +1,23 @@
 <?php
 
-class Player extends MX_Controller
+class Club extends MX_Controller
 {
     var $roles = 'admin';
-    var $mparent = 'Football';
+    var $mparent = 'Verify';
     var $offset = 1;
     var $limit = 10;
-    var $dtable = 'eyeprofile_player';
-    var $xtable = 'eyeprofile_player_career';
-    var $ztable = 'eyeprofile_player_achievement';
+    var $dtable = 'eyeprofile_club_register';
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Player_model');
+        $this->load->model('Club_model');
 
         if ($this->session->userdata('login') != TRUE AND $this->session->userdata('user_uid') == '') {
             redirect('login');
         }
 
-        $raccess = $this->library->role_access('player');
+        $raccess = $this->library->role_access('Verify');
         if (isset($raccess)) {
             $this->roles = $raccess;
         }
@@ -27,13 +25,12 @@ class Player extends MX_Controller
 
     public function index()
     {
-        $data['title'] = 'Player';
+        $data['title'] = 'Verification Club';
         $data['parent'] = $this->mparent;
         $data['roles'] = $this->roles;
-        $data['content'] = $this->config->item('base_theme') . '/player/player';
+        $data['content'] = $this->config->item('base_theme') . '/club/club';
 
-        $id = (isset($_GET['id'])) ? 'id_career' : 'id_player';
-        $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => 'desc',
+        $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => 'a.id_club', 'sortDir_' . $this->dtable => 'desc',
                          'multi_search_' . $this->dtable => '', 'multi_data_' . $this->dtable => '', 'voffset_' . $this->dtable => '', 'xoffset_' . $this->dtable => '');
         $this->session->set_userdata($session);
 
@@ -60,9 +57,17 @@ class Player extends MX_Controller
             );
         }
 
-        $data['dt'] = $this->excurl->reqCurl('profile', $query)->data;
-        $data['count'] = $this->excurl->reqCurl('profile', array_merge($query, array('count' => true)))->data[0];
+        $ulevel = $this->library->user_check();
+        if($ulevel->ff > 0)
+        {
+            $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
+        }
 
+        $query = array_merge($query, array('verify' => 0, 'active' => 0, 'detail' => true));
+        
+
+        $data['dt'] = $this->excurl->reqCurl('reglist-club', $query)->data;
+        $data['count'] = $this->excurl->reqCurl('reglist-club', array_merge($query, array('count' => true)))->data[0];
         $data['limit'] = $limit;
         $data['offset'] = $this->offset;
         $data['prefix'] = $this->dtable;
@@ -74,7 +79,7 @@ class Player extends MX_Controller
     function view($option = array())
     {
         if ($this->input->post('val') == true) {
-            $data['title'] = 'Player';
+            $data['title'] = 'Verification Club';
             $data['roles'] = $this->roles;
 
             // Limit Session
@@ -84,12 +89,11 @@ class Player extends MX_Controller
                 if ($this->session->userdata('sortDir_' . $this->dtable) == 'asc' OR
                     $this->session->userdata('sortDir_' . $this->dtable) == 'desc'
                 ) {
-                    $id = $this->session->userdata('sortBy_' . $this->dtable);
                     $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                     'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
+                                     'sortBy_' . $this->dtable => $this->session->userdata('sortBy_' . $this->dtable), 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
                 } else {
                     $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                     'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => 'desc');
+                                     'sortBy_' . $this->dtable => 'Market_id', 'sortDir_' . $this->dtable => 'desc');
                 }
             }
             $this->session->set_userdata($session);
@@ -140,18 +144,24 @@ class Player extends MX_Controller
                 $count = array_merge($count, $this->session->userdata('multi_data_' . $this->dtable));
             }
 
-            $data['dt'] = $this->excurl->reqCurl('profile', $query)->data;
-            $data['count'] = $this->excurl->reqCurl('profile', $count)->data[0];
-            
+            $ulevel = $this->library->user_check();
+            if($ulevel->ff > 0)
+            {
+                $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
+                $count = array_merge($count, array($ulevel->fu => $this->session->userdata('user_id')));
+            }
+
+            $data['dt'] = $this->excurl->reqCurl('Market', $query)->data;
+            $data['count'] = $this->excurl->reqCurl('Market', $count)->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $offset;
             $data['prefix'] = $this->dtable;
             $data['showpage'] = ceil($data['count']->cc / $limit);
 
             if ($this->input->post('val') > 0 OR isset($option['is_check'])) {
-                $html = $this->load->view($this->config->item('base_theme') . '/Player/player_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/Market/Market_jquery', $data, true);
             } else {
-                $html = $this->load->view($this->config->item('base_theme') . '/Player/player', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/Market/Market', $data, true);
             }
 
             header('Content-Type: application/json');
@@ -163,14 +173,14 @@ class Player extends MX_Controller
                 echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable), 'query' => $query));
             }
         } else {
-            redirect('footbal/player');
+            redirect('Market');
         }
     }
 
     function search()
     {
         if ($this->input->post('val') == true) {
-            $data['title'] = 'Competition';
+            $data['title'] = 'Verification Club';
 
             $split = explode(",", $this->input->post('val'));
 
@@ -197,33 +207,30 @@ class Player extends MX_Controller
                 $this->session->set_userdata($session);
             }
 
-            if (isset($_GET['id'])) {
-                $query['query'] = array_merge($query['query'], array('id_competition' => $_GET['id']));
-                $query['count'] = array_merge($query['count'], array('id_competition' => $_GET['id']));
-                $data['sub'] = $this->excurl->reqCurl('competition', ['id_competition' => $_GET['id']])->data[0];
-
-                $data['dt'] = $this->excurl->reqCurl('competition-sub', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('competition-sub', $query['count'])->data[0];
-            } else {
-                $data['dt'] = $this->excurl->reqCurl('competition', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('competition', $query['count'])->data[0];
+            $ulevel = $this->library->user_check();
+            if($ulevel->ff > 0)
+            {
+                $query['query'] = array_merge($query['query'], array($ulevel->fu => $this->session->userdata('user_id')));
+                $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
+            $data['dt'] = $this->excurl->reqCurl('Market', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('Market', $query['count'])->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $this->offset;
             $data['prefix'] = $this->dtable;
             $data['showpage'] = ceil($data['count']->cc / $query['query']['limit']);
 
             if (count($split) > 1) {
-                $html = $this->load->view($this->config->item('base_theme') . '/Competition/Competition_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/Market/Market_jquery', $data, true);
             } else {
-                $html = $this->load->view($this->config->item('base_theme') . '/Competition/Competition', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/Market/Market', $data, true);
             }
 
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('football/Competition');
+            redirect('Market');
         }
     }
 
@@ -238,43 +245,37 @@ class Player extends MX_Controller
                 $query['count'] = array_merge($query['count'], $this->session->userdata('multi_data_' . $this->dtable));
             }
 
-            if (isset($_GET['id'])) {
-                $query['query'] = array_merge($query['query'], array('id_competition' => $_GET['id']));
-                $query['count'] = array_merge($query['count'], array('id_competition' => $_GET['id']));
-                $data['sub'] = $this->excurl->reqCurl('competition', ['id_competition' => $_GET['id']])->data[0];
-
-                $data['dt'] = $this->excurl->reqCurl('competition-sub', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('competition-sub', $query['count'])->data[0];
-            } else {
-                $data['dt'] = $this->excurl->reqCurl('competition', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('competition', $query['count'])->data[0];
+            $ulevel = $this->library->user_check();
+            if($ulevel->ff > 0)
+            {
+                $query['query'] = array_merge($query['query'], array($ulevel->fu => $this->session->userdata('user_id')));
+                $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
+            $data['dt'] = $this->excurl->reqCurl('Market', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('Market', $query['count'])->data[0];
             $data['offset'] = $query['offset']+1;
 
-            $html = $this->load->view($this->config->item('base_theme') . '/Competition/Competition_table', $data, true);
+            $html = $this->load->view($this->config->item('base_theme') . '/Market/Market_table', $data, true);
 
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('football/Competition');
+            redirect('Market');
         }
     }
 
     function add()
     {
         if ($this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $data['title'] = 'Player';
+            $data['title'] = 'Verification Club';
             $data['parent'] = $this->mparent;
-            $data['content'] = $this->config->item('base_theme') . '/Player/add_player';
+            $data['content'] = $this->config->item('base_theme') . '/store/add_store';
 
-            $query = array('page' => 1, 'limit' => 10);
-            $data['pos'] = $this->excurl->reqCurl('player-position', $query)->data;
-            $data['foot'] = $this->excurl->reqCurl('player-foot', $query)->data;
-            $data['level'] = $this->excurl->reqCurl('player-level', $query)->data;
+            // $data['category'] = $this->excurl->reqCurl('Market-category');
 
             if ($this->input->post('val') == true) {
-                $this->load->view($this->config->item('base_theme') . '/Player/add_player', $data);
+                $this->load->view($this->config->item('base_theme') . '/store/add_store', $data);
             } else {
                 $this->load->view($this->config->item('base_theme') . '/template', $data);
             }
@@ -282,7 +283,7 @@ class Player extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('football/Player');
+                redirect('store');
             }
         }
     }
@@ -290,12 +291,11 @@ class Player extends MX_Controller
     function save()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-
-            $option = $this->excurl->reqAction('football/player/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
-
+            $option = $this->excurl->reqAction('market/store/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile1','uploadfile2','uploadfile3']);
+            var_dump($option);exit();
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('football/player');
+            redirect('event');
         }
     }
 
@@ -303,22 +303,25 @@ class Player extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
             if ($id == '') {
-                redirect('football/Competition');
+                redirect('Market');
             } else {
-                $data['title'] = 'Competition';
+                $data['title'] = 'Verification Club';
                 $data['parent'] = $this->mparent;
-                $data['content'] = $this->config->item('base_theme') . '/Competition/edit_Competition';
+                $data['content'] = $this->config->item('base_theme') . '/Market/edit_Market';
 
-
-                if (isset($_GET['id'])) {
-                    $data['sub'] = $this->excurl->reqCurl('competition', ['id_competition' => $_GET['id']])->data[0];
-                    $data['dt1'] = $this->excurl->reqCurl('league', ['id_league' => $id])->data[0];
-                } else {
-                    $data['dt1'] = $this->excurl->reqCurl('competition', ['id_competition' => $id])->data[0];
+                $query = array('eyeMarket_id' => $id, 'detail' => true);
+                $ulevel = $this->library->user_check();
+                if($ulevel->ff > 0)
+                {
+                    $query = array_merge($query, array('admin_id' => $this->session->userdata('user_id')));
                 }
 
+                $data['dt1'] = $this->excurl->reqCurl('Market', $query)->data[0];
+                $data['category'] = $this->excurl->reqCurl('Market-category');
+                $data['subcategory'] = $this->excurl->reqCurl('Market-category-sub', ['category' => $data['dt1']->Market_type]);
+
                 if ($this->input->post('val') == true) {
-                    $this->load->view($this->config->item('base_theme') . '/Competition/edit_Competition', $data);
+                    $this->load->view($this->config->item('base_theme') . '/Market/edit_Market', $data);
                 } else {
                     $this->load->view($this->config->item('base_theme') . '/template', $data);
                 }
@@ -327,7 +330,7 @@ class Player extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('football/Competition');
+                redirect('Market');
             }
         }
     }
@@ -335,30 +338,51 @@ class Player extends MX_Controller
     function update()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-
             $text_title = $this->input->post('title');
+            $text_desc = $this->input->post('description');
 
             $new_link = $this->library->seo_title($text_title);
+
+            $upload = $this->Market_model->__upload($new_link);
             $key = substr(md5($this->library->app_key()), 0, 7);
 
-            // Competition
-            if (isset($_GET['id'])) {
-                $dt1 = array('id_competition' => $_GET['id'], 'league' => addslashes($text_title));
-            } else {
-                $dt1 = array('competition' => addslashes($text_title));
-            }
+            $cat = $this->excurl->reqCurl('Market-category', ['Market_type_id' => $this->input->post('category')])->data[0];
+            $catsub = $this->excurl->reqCurl('Market-category-sub', ['sub_Market_id' => $this->input->post('subcategory')])->data[0];
 
-            $table = $this->dtable;
-            $where = (isset($_GET['id'])) ? ['id_competition' => $this->input->post('idx')] : ['id_competition' => $this->input->post('idx')];
-            $option = $this->action->update(array('table' => $table, 'update' => $dt1, 'where' => $where));
+            // Market
+            $dt1 = array(// General
+                'title' => addslashes($text_title),
+                'description' => addslashes($text_desc),
+                'meta_description' => $this->input->post('meta_desc'),
+                'tag' => $this->input->post('meta_keyword'),
+                'credit' => $this->input->post('credit'),
+                'category_Market' => $this->input->post('recommended'),
+                'url' => $new_link.'-'.$key,
+                'pic' => $upload['data'],
+                // Data
+                'Market_type' => $cat->Market_type,
+                'sub_category_name' => $catsub->sub_category_name,
+                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
+                'updateon' => date('Y-m-d h:i:s')
+            );
+
+            $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,
+                                                  'where' => array('eyeMarket_id' => $this->input->post('idx'))));
             if ($option['state'] == 0) {
+                $this->Market_model->__unlink($upload['data']);
+
                 $this->validation->error_message($option);
                 return false;
             }
 
+            // Remove Old Pic If There is Upload Files
+            if ($this->input->post('Market_pic') != '') {
+                $this->Market_model->__unlink($this->input->post('Market_pic'));
+            }
+
             $this->view(array('xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
         } else {
-            redirect('football/competition');
+            redirect('Market');
         }
     }
 
@@ -366,20 +390,20 @@ class Player extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
             if ($id == '') {
-                redirect('football/competition');
+                redirect('Market');
             } else {
                 if ($this->input->post('val') == true) {
-                    $option = $this->Competition_model->__delete($id);
-                    $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
+                    $option = $this->Market_model->__delete($id);
+                    $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
                 } else {
-                    redirect('football/competition');
+                    redirect('Market');
                 }
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('football/competition');
+                redirect('Market');
             }
         }
     }
@@ -394,7 +418,7 @@ class Player extends MX_Controller
                 case 1:
                     if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->Competition_model->__delete($split[$i]);
+                            $option = $this->Market_model->__delete($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -404,7 +428,7 @@ class Player extends MX_Controller
                 case 2:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->Competition_model->__enable($split[$i]);
+                            $option = $this->Market_model->__enable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -414,7 +438,7 @@ class Player extends MX_Controller
                 case 3:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->Competition_model->__disable($split[$i]);
+                            $option = $this->Market_model->__disable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -422,36 +446,32 @@ class Player extends MX_Controller
                     break;
             }
 
-            $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
+            $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
         } else {
-            redirect('football/Competition');
+            redirect('Market');
         }
     }
 
-    function autoteam($idx = '')
+    function verifying($id = '')
     {
-        $search = $this->input->post('val');
-
-        $query = array('page' => 1, 'limit' => '100', 'search' => $search);
-        $clubs = $this->excurl->reqCurl('profile-club', $query)->data;
-
-        $tag = 'team_a';
-
-        if($clubs)
-        {
-            foreach($clubs as $t)
-            {
-                $bold_search = "<b>$search</b>";
-                $team_name = str_ireplace($search, $bold_search, $t->name);
-
-                echo "<div class='showauto' val='$t->id_club' idx='$idx' tag='$tag' style='text-transform: capitalize;'>
-                        <span class='$t->id_club' val='$t->name'>$team_name</span>
-                    </div>";
+        if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
+            if ($id == '') {
+                redirect('verify/club');
+            } else {
+                if ($this->input->post('val') == true) {
+                    $option = $this->Club_model->__verifying($id);
+                    // var_dump($option);exit();
+                    $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
+                } else {
+                    redirect('verify/club');
+                }
             }
-        }
-        else
-        {
-            echo "<div class='showauto'><span>No Result</span></div>";
+        } else {
+            if ($this->input->post('val') == true) {
+                $this->library->role_failed();
+            } else {
+                redirect('verify/club');
+            }
         }
     }
 

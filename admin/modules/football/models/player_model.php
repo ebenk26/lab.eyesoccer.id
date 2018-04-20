@@ -5,8 +5,7 @@ class Player_model extends CI_Model
 
     var $query_string = '';
     var $command = '';
-    var $dtable = 'eyeprofile_competitions';
-    var $xtable = 'eyeprofile_league';
+    var $dtable = 'eyeprofile_player';
 
     function __construct()
     {
