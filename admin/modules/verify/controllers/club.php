@@ -281,7 +281,7 @@ class Club extends MX_Controller
             } else {
                 if ($this->input->post('val') == true) {
                     $option = $this->Club_model->__delete($id);
-                    $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+                    $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
                     redirect('verify/club');
                 }
@@ -323,7 +323,7 @@ class Club extends MX_Controller
                     break;
             }
 
-            $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
+            $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('verify/club');
         }
