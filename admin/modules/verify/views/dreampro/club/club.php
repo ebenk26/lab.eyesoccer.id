@@ -8,7 +8,7 @@
         <label>Search By</label>
         <select name='cselect' class='cinput inselect'>
             <?php
-                $field = array('search' => 'Title');
+                $field = array('search' => 'Name');
                 foreach($field as $n1 => $v1)
                 {
                     if($this->session->userdata('xfield_'.$prefix) == $n1)
@@ -33,7 +33,7 @@
         <select name='caction' class='caction inselect'>
             <option value=''>- Select -</option>
             <?php
-                $sort = array('Delete' => '1'/*, 'Enabled' => '2', 'Disabled' => '3'*/);
+                $sort = array('Delete' => '1', 'Verify' => '2');
                 foreach($sort as $n2 => $v2)
                 {
                     echo "<option value='$v2'>$n2</option>";

@@ -64,7 +64,6 @@ class Club extends MX_Controller
         }
 
         $query = array_merge($query, array('verify' => 'false', 'active' => 'false', 'detail' => true));
-        
 
         $data['dt'] = $this->excurl->reqCurl('reglist-club', $query)->data;
         $data['count'] = $this->excurl->reqCurl('reglist-club', array_merge($query, array('count' => true)))->data[0];
@@ -152,6 +151,7 @@ class Club extends MX_Controller
             }
 
             $query = array_merge($query, array('verify' => 'false', 'active' => 'false', 'detail' => true));
+            $count = array_merge($count, array('verify' => 'false', 'active' => 'false'));
 
             $data['dt'] = $this->excurl->reqCurl('reglist-club', $query)->data;
             $data['count'] = $this->excurl->reqCurl('reglist-club', $count)->data[0];
@@ -216,6 +216,9 @@ class Club extends MX_Controller
                 $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
+            $query['query'] = array_merge($query['query'], array('verify' => 'false', 'active' => 'false', 'detail' => true));
+            $query['count'] = array_merge($query['count'], array('verify' => 'false', 'active' => 'false'));
+
             $data['dt'] = $this->excurl->reqCurl('reglist-club', $query['query'])->data;
             $data['count'] = $this->excurl->reqCurl('reglist-club', $query['count'])->data[0];
             $data['limit'] = $limit;
@@ -255,6 +258,7 @@ class Club extends MX_Controller
             }
 
             $query['query'] = array_merge($query['query'], array('verify' => 'false', 'active' => 'false', 'detail' => true));
+            $query['count'] = array_merge($query['count'], array('verify' => 'false', 'active' => 'false'));
 
             $data['dt'] = $this->excurl->reqCurl('reglist-club', $query['query'])->data;
             $data['count'] = $this->excurl->reqCurl('reglist-club', $query['count'])->data[0];
@@ -268,127 +272,6 @@ class Club extends MX_Controller
             redirect('verify/club');
         }
     }
-
-    function add()
-    {
-        if ($this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $data['title'] = 'Verification Club';
-            $data['parent'] = $this->mparent;
-            $data['content'] = $this->config->item('base_theme') . '/store/add_store';
-
-            // $data['category'] = $this->excurl->reqCurl('Market-category');
-
-            if ($this->input->post('val') == true) {
-                $this->load->view($this->config->item('base_theme') . '/store/add_store', $data);
-            } else {
-                $this->load->view($this->config->item('base_theme') . '/template', $data);
-            }
-        } else {
-            if ($this->input->post('val') == true) {
-                $this->library->role_failed();
-            } else {
-                redirect('store');
-            }
-        }
-    }
-
-    function save()
-    {
-        if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $option = $this->excurl->reqAction('market/store/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile1','uploadfile2','uploadfile3']);
-            var_dump($option);exit();
-            $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
-        } else {
-            redirect('event');
-        }
-    }
-
-    /*function edit($id = '')
-    {
-        if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-            if ($id == '') {
-                redirect('Market');
-            } else {
-                $data['title'] = 'Verification Club';
-                $data['parent'] = $this->mparent;
-                $data['content'] = $this->config->item('base_theme') . '/Market/edit_Market';
-
-                $query = array('eyeMarket_id' => $id, 'detail' => true);
-                $ulevel = $this->library->user_check();
-                if($ulevel->ff > 0)
-                {
-                    $query = array_merge($query, array('admin_id' => $this->session->userdata('user_id')));
-                }
-
-                $data['dt1'] = $this->excurl->reqCurl('Market', $query)->data[0];
-                $data['category'] = $this->excurl->reqCurl('Market-category');
-                $data['subcategory'] = $this->excurl->reqCurl('Market-category-sub', ['category' => $data['dt1']->Market_type]);
-
-                if ($this->input->post('val') == true) {
-                    $this->load->view($this->config->item('base_theme') . '/Market/edit_Market', $data);
-                } else {
-                    $this->load->view($this->config->item('base_theme') . '/template', $data);
-                }
-            }
-        } else {
-            if ($this->input->post('val') == true) {
-                $this->library->role_failed();
-            } else {
-                redirect('Market');
-            }
-        }
-    }
-
-    function update()
-    {
-        if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-            $text_title = $this->input->post('title');
-            $text_desc = $this->input->post('description');
-
-            $new_link = $this->library->seo_title($text_title);
-
-            $upload = $this->Club_model->__upload($new_link);
-            $key = substr(md5($this->library->app_key()), 0, 7);
-
-            $cat = $this->excurl->reqCurl('Market-category', ['Market_type_id' => $this->input->post('category')])->data[0];
-            $catsub = $this->excurl->reqCurl('Market-category-sub', ['sub_Market_id' => $this->input->post('subcategory')])->data[0];
-
-            // Market
-            $dt1 = array(// General
-                'title' => addslashes($text_title),
-                'description' => addslashes($text_desc),
-                'meta_description' => $this->input->post('meta_desc'),
-                'tag' => $this->input->post('meta_keyword'),
-                'credit' => $this->input->post('credit'),
-                'category_Market' => $this->input->post('recommended'),
-                'url' => $new_link.'-'.$key,
-                'pic' => $upload['data'],
-                // Data
-                'Market_type' => $cat->Market_type,
-                'sub_category_name' => $catsub->sub_category_name,
-                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
-                'updateon' => date('Y-m-d h:i:s')
-            );
-
-            $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,
-                                                  'where' => array('eyeMarket_id' => $this->input->post('idx'))));
-            if ($option['state'] == 0) {
-                $this->Club_model->__unlink($upload['data']);
-
-                $this->validation->error_message($option);
-                return false;
-            }
-
-            // Remove Old Pic If There is Upload Files
-            if ($this->input->post('Market_pic') != '') {
-                $this->Club_model->__unlink($this->input->post('Market_pic'));
-            }
-
-            $this->view(array('xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
-        } else {
-            redirect('Market');
-        }
-    }*/
 
     function delete($id = '')
     {
@@ -412,7 +295,7 @@ class Club extends MX_Controller
         }
     }
 
-    /*function checked($id = '')
+    function checked($id = '')
     {
         if ($this->input->post('checked') != NULL) {
             $split = explode(",", $this->input->post('checked'));
@@ -432,17 +315,7 @@ class Club extends MX_Controller
                 case 2:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->Club_model->__enable($split[$i]);
-                        }
-                    } else {
-                        $this->library->role_failed();
-                    }
-                    break;
-
-                case 3:
-                    if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-                        for ($i = 0; $i < $count; $i++) {
-                            $option = $this->Club_model->__disable($split[$i]);
+                            $option = $this->Club_model->__verifying($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -452,30 +325,7 @@ class Club extends MX_Controller
 
             $this->view(array('is_check' => true, 'xcss' => $option['add_message']['xcss'], 'xmsg' => $option['message']));
         } else {
-            redirect('Market');
-        }
-    }*/
-
-    function verifying($id = '')
-    { 
-        if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
-            if ($id == '') {
-                redirect('verify/club');
-            } else {
-                if ($this->input->post('val') == true) {
-                    $option = $this->Club_model->__verifying($id);
-                    
-                    $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
-                } else {
-                    redirect('verify/club');
-                }
-            }
-        } else {
-            if ($this->input->post('val') == true) {
-                $this->library->role_failed();
-            } else {
-                redirect('verify/club');
-            }
+            redirect('verify/club');
         }
     }
 
