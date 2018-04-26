@@ -9,7 +9,7 @@
 if($_SERVER['SERVER_NAME'] == 'localhost') {
     $xurl = 'http://api.eyesoccer.id:3000/v1/';
 } else {
-    $xurl = 'http://api.eyesoccer.id:8080/v1/';
+    $xurl = 'http://api.eyesoccer.id:3000/v1/';
 }
 
 $config['xurl'] = $xurl;
