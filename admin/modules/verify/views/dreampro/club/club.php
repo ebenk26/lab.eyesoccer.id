@@ -22,7 +22,7 @@
         </select>
         
         <?php $csearch = ($this->session->userdata('xsearch_'.$prefix) != '') ? $this->session->userdata('xsearch_'.$prefix) : ''; ?>
-        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('club/search')">
+        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('verify/club/search')">
     </div>
     
     <div style='clear: both;'></div>
@@ -41,11 +41,11 @@
             ?>
         </select>
     </div>
-    <a href="javascript:void(0)" id='button' onclick="actcheck('club/checked')">Action</a>
+    <a href="javascript:void(0)" id='button' onclick="actcheck('verify/club/checked')">Action</a>
     
     <div class='limit'>
         <label>Limit</label>
-        <select name='climit' class='climit inselect' onchange="actlimit('club/view')">
+        <select name='climit' class='climit inselect' onchange="actlimit('verify/club/view')">
             <?php
                 $l1 = array('10','25','50','100','150','200');
                 foreach($l1 as $v3)
@@ -70,7 +70,7 @@
 
 <div id='boxjq'>
     <div id='boxtable'>
-        <?php $this->load->view($this->config->item('base_theme').'/club/club_table'); ?>
+        <?php $this->load->view($this->config->item('base_theme').'/verify/club/club_table'); ?>
     </div>
     
     <?php
