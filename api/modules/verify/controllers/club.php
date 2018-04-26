@@ -119,7 +119,7 @@ class Club extends MX_Controller
     }
 
     function verifying()
-    {
+    { 
         if($_POST)
         {
             $dt1 =  array(

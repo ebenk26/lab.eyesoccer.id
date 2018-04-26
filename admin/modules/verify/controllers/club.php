@@ -63,7 +63,7 @@ class Club extends MX_Controller
             $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
         }
 
-        $query = array_merge($query, array('verify' => 0, 'active' => 0, 'detail' => true));
+        $query = array_merge($query, array('verify' => 'false', 'active' => 'false', 'detail' => true));
         
 
         $data['dt'] = $this->excurl->reqCurl('reglist-club', $query)->data;
@@ -151,6 +151,8 @@ class Club extends MX_Controller
                 $count = array_merge($count, array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
+            $query = array_merge($query, array('verify' => 'false', 'active' => 'false', 'detail' => true));
+
             $data['dt'] = $this->excurl->reqCurl('reglist-club', $query)->data;
             $data['count'] = $this->excurl->reqCurl('reglist-club', $count)->data[0];
             $data['limit'] = $limit;
@@ -173,7 +175,7 @@ class Club extends MX_Controller
                 echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable), 'query' => $query));
             }
         } else {
-            redirect('Market');
+            redirect('verify/club');
         }
     }
 
@@ -252,16 +254,18 @@ class Club extends MX_Controller
                 $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
-            $data['dt'] = $this->excurl->reqCurl('Market', $query['query'])->data;
-            $data['count'] = $this->excurl->reqCurl('Market', $query['count'])->data[0];
+            $query['query'] = array_merge($query['query'], array('verify' => 'false', 'active' => 'false', 'detail' => true));
+
+            $data['dt'] = $this->excurl->reqCurl('reglist-club', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('reglist-club', $query['count'])->data[0];
             $data['offset'] = $query['offset']+1;
 
-            $html = $this->load->view($this->config->item('base_theme') . '/Market/Market_table', $data, true);
+            $html = $this->load->view($this->config->item('base_theme') . '/club/club_table', $data, true);
 
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('Market');
+            redirect('verify/club');
         }
     }
 
@@ -299,7 +303,7 @@ class Club extends MX_Controller
         }
     }
 
-    function edit($id = '')
+    /*function edit($id = '')
     {
         if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
             if ($id == '') {
@@ -384,7 +388,7 @@ class Club extends MX_Controller
         } else {
             redirect('Market');
         }
-    }
+    }*/
 
     function delete($id = '')
     {
@@ -408,7 +412,7 @@ class Club extends MX_Controller
         }
     }
 
-    function checked($id = '')
+    /*function checked($id = '')
     {
         if ($this->input->post('checked') != NULL) {
             $split = explode(",", $this->input->post('checked'));
@@ -450,17 +454,17 @@ class Club extends MX_Controller
         } else {
             redirect('Market');
         }
-    }
+    }*/
 
     function verifying($id = '')
-    {
+    { 
         if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
             if ($id == '') {
                 redirect('verify/club');
             } else {
                 if ($this->input->post('val') == true) {
                     $option = $this->Club_model->__verifying($id);
-                    // var_dump($option);exit();
+                    
                     $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
                     redirect('verify/club');
