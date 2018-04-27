@@ -32,7 +32,7 @@ class Club_model extends CI_Model
 
             return $option;
         } else {
-            redirect('news');
+            redirect('verify/club');
         }
     }
 
@@ -45,7 +45,7 @@ class Club_model extends CI_Model
 
             return $option;
         } else {
-            redirect('news');
+            redirect('verify/club');
         }
     }
 

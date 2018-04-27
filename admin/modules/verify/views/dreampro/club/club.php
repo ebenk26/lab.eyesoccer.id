@@ -8,7 +8,7 @@
         <label>Search By</label>
         <select name='cselect' class='cinput inselect'>
             <?php
-                $field = array('search' => 'Title');
+                $field = array('search' => 'Name');
                 foreach($field as $n1 => $v1)
                 {
                     if($this->session->userdata('xfield_'.$prefix) == $n1)
@@ -22,7 +22,7 @@
         </select>
         
         <?php $csearch = ($this->session->userdata('xsearch_'.$prefix) != '') ? $this->session->userdata('xsearch_'.$prefix) : ''; ?>
-        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('club/search')">
+        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('verify/club/search')">
     </div>
     
     <div style='clear: both;'></div>
@@ -33,7 +33,7 @@
         <select name='caction' class='caction inselect'>
             <option value=''>- Select -</option>
             <?php
-                $sort = array('Delete' => '1'/*, 'Enabled' => '2', 'Disabled' => '3'*/);
+                $sort = array('Delete' => '1', 'Verify' => '2');
                 foreach($sort as $n2 => $v2)
                 {
                     echo "<option value='$v2'>$n2</option>";
@@ -41,11 +41,11 @@
             ?>
         </select>
     </div>
-    <a href="javascript:void(0)" id='button' onclick="actcheck('club/checked')">Action</a>
+    <a href="javascript:void(0)" id='button' onclick="actcheck('verify/club/checked')">Action</a>
     
     <div class='limit'>
         <label>Limit</label>
-        <select name='climit' class='climit inselect' onchange="actlimit('club/view')">
+        <select name='climit' class='climit inselect' onchange="actlimit('verify/club/view')">
             <?php
                 $l1 = array('10','25','50','100','150','200');
                 foreach($l1 as $v3)
@@ -77,7 +77,7 @@
         if($showpage > 1)
         {
             echo "<div id='pageself'>
-                    <div id='showurl' value='market/pagetable'></div>
+                    <div id='showurl' value='verify/club/pagetable'></div>
                     <div id='showpage' value='$showpage'></div>
                     <div id='showoff' value='4'></div>
                     <div id='showrun' value='2'></div>
