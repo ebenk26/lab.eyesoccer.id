@@ -305,7 +305,8 @@ class Club extends MX_Controller
                 case 1:
                     if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->Club_model->__delete($split[$i]);
+                            $idx = explode(';', $split[$i]);
+                            $option = $this->Club_model->__delete($idx[0]);
                         }
                     } else {
                         $this->library->role_failed();

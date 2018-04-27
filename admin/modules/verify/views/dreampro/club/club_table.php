@@ -32,7 +32,7 @@
                 ?>
                     <tr>
                         <td class='center'>
-                            <input type='checkbox' name='selected[]' value='<?= $r->id_club ?>' class='ctab'>
+                            <input type='checkbox' name='selected[]' value='<?= $r->id_club ?>;<?= $r->id_member; ?>' class='ctab'>
                         </td>
                         <td class='center'>
                             <?= $r->name; ?>

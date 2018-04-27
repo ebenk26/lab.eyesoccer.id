@@ -3,6 +3,7 @@
 class Club extends MX_Controller
 {
     var $dtable = 'eyeprofile_club';
+    var $xtable = 'tbl_member';
 
     function __construct()
     {
@@ -25,111 +26,23 @@ class Club extends MX_Controller
         $this->load->model('club_model');
     }
 
-    function save()
-    {
-        if($_POST)
-        {
-            $text_title = $this->input->post('name');
-            $new_link = $this->library->seo_title($text_title);
-            $key = substr(md5($this->library->app_key()), 0, 7);
-            $upload = $this->official_model->__upload($new_link);
-
-            $dt1 =  array(
-                        'name' => addslashes($text_title),
-                        'id_club' => $this->input->post('team_a_id'),
-                        'pic' => $upload['data'],
-                        'position' => $this->input->post('position'),
-                        'license' => $this->input->post('license'),
-                        'no_identity' => $this->input->post('no_identity'),
-                        'nationality' => $this->input->post('nationality'),
-                        'email' => $this->input->post('email'),
-                        'phone' => $this->input->post('phone'),
-                        'address' => $this->input->post('address'),
-                        'birth_place' => $this->input->post('birth_place'),
-                        'birth_date' => date('Y-m-d', strtotime($this->input->post('birth_date'))),
-                        'slug' => $new_link.'-'.$key,
-                        'date_create' => date('Y-m-d h:i:s'),
-                    );
-
-            $table = $this->dtable;
-            $option = $this->action->insert(array('table' => $table, 'insert' => $dt1));
-            
-            if ($option['state'] == 0) {
-                $this->event_model->__unlink($upload['data']);
-
-                $this->validation->error_message($option);
-                return false;
-            }
-
-            $this->tools->__flashMessage($option);
-        } else {
-            $data = $this->__rest()->__getstatus('Data must be type post', 400);
-            $status = $data['error']['status_code'];
-        }
-
-        $this->__rest()->__response($data, $status);
-    }
-
-    function update()
-    {
-        if($_POST)
-        {
-            $text_title = $this->input->post('name');
-            $new_link = $this->library->seo_title($text_title);
-            $key = substr(md5($this->library->app_key()), 0, 7);
-            $upload = $this->official_model->__upload($new_link);
-
-            $dt1 =  array(
-                        'name' => addslashes($text_title),
-                        'id_club' => $this->input->post('team_a_id'),
-                        'pic' => $upload['data'],
-                        'position' => $this->input->post('position'),
-                        'license' => $this->input->post('license'),
-                        'no_identity' => $this->input->post('no_identity'),
-                        'nationality' => $this->input->post('nationality'),
-                        'email' => $this->input->post('email'),
-                        'phone' => $this->input->post('phone'),
-                        'address' => $this->input->post('address'),
-                        'birth_place' => $this->input->post('birth_place'),
-                        'birth_date' => date('Y-m-d', strtotime($this->input->post('birth_date'))),
-                    );
-
-            $table = $this->dtable;
-            $where = array('id_official' => $this->input->post('idx'));
-            $option = $this->action->update(array('table' => $table, 'update' => $dt1, 'where' => $where));
-
-            if ($option['state'] == 0) {
-                $this->official_model->__unlink($upload['data']);
-
-                $this->validation->error_message($option);
-                return false;
-            }
-
-            // Remove Old Pic If There is Upload Files
-            if ($this->input->post('pic') != '') {
-                $this->event_model->__unlink($this->input->post('pic'));
-            }
-            $this->tools->__flashMessage($option);
-        } else {
-            $data = $this->__rest()->__getstatus('Data must be type post', 400);
-            $status = $data['error']['status_code'];
-        }
-
-        $this->__rest()->__response($data, $status);
-    }
-
     function verifying()
     { 
         if($_POST)
         {
+            $idx = explode(';', $this->input->post('idx'));
             $dt1 =  array(
                         'is_active' => '1',
                         'is_verify' => '1',
                     );
 
-            $table = $this->dtable;
-            $where = array('id_club' => $this->input->post('idx'));
-            $option = $this->action->update(array('table' => $table, 'update' => $dt1, 'where' => $where));
+            $where = array('id_club' => $idx[0]);
+            $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1, 'where' => $where));
+
+            $dt2 = array('id_club' => $idx[0]);
+
+            $where = array('id_member' => $idx[1]);
+            $option = $this->action->update(array('table' => $this->xtable, 'update' => $dt2, 'where' => $where));
 
             $this->tools->__flashMessage($option);
         } else {
@@ -146,34 +59,6 @@ class Club extends MX_Controller
         {
             $option = $this->club_model->__delete($this->input->post('idx'));
             
-            $this->tools->__flashMessage($option);
-        } else {
-            $data = $this->__rest()->__getstatus('Data must be type post', 400);
-            $status = $data['error']['status_code'];
-        }
-
-        $this->__rest()->__response($data, $status);
-    }
-
-    function disable()
-    {
-        if($_POST)
-        {
-            $option = $this->official_model->__delete($this->input->post('idx'));
-            $this->tools->__flashMessage($option);
-        } else {
-            $data = $this->__rest()->__getstatus('Data must be type post', 400);
-            $status = $data['error']['status_code'];
-        }
-
-        $this->__rest()->__response($data, $status);
-    }
-
-    function enable()
-    {
-        if($_POST)
-        {
-            $option = $this->official_model->__enable($this->input->post('idx'));
             $this->tools->__flashMessage($option);
         } else {
             $data = $this->__rest()->__getstatus('Data must be type post', 400);
