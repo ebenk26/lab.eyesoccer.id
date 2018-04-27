@@ -7,7 +7,13 @@
         <th>
             <a href="javascript:void(0)" class='csort' id="name" val="desc" onclick="actsort(this.id)">Name</a>
         </th>
-        <th style='width: 15%;'>
+        <th style='width: auto;'>
+            <a href="javascript:void(0)" class='csort' id="phone" val="desc" onclick="actsort(this.id)">Phone</a>
+        </th>
+		<th style='width: auto;'>
+            <a href="javascript:void(0)" class='csort' id="address" val="desc" onclick="actsort(this.id)">Address</a>
+        </th>
+		<th style='width: 15%;'>
             <a href="javascript:void(0)" class='csort' id="legal_pt" val="desc" onclick="actsort(this.id)">Legal PT</a>
         </th>
         <th class='hd-mobile' style='width: 15%;'>
@@ -36,6 +42,20 @@
                         </td>
                         <td class='center'>
                             <?= $r->name; ?>
+                        </td>
+						<td class='center'>
+                            <div class='picproduct'>
+                                <a href="<?= $r->phone; ?>" target="_blank">
+                                    <?= $r->phone; ?>
+                                </a>
+                            </div>
+                        </td>
+						<td class='center'>
+                            <div class='picproduct'>
+                                <a href="<?= $r->address; ?>" target="_blank">
+                                    <?= $r->address; ?>
+                                </a>
+                            </div>
                         </td>
                         <td class='center'>
                             <div class='picproduct'>
