@@ -41,9 +41,8 @@
             echo "<td class='center capital hd-mobile'>" . $r->rank . "</td>";
             echo "<td class='center capital hd-mobile'>" . $r->coach . "</td>";
             echo "<td class='center'>
-					<a class='btn_action mg-r5' href='javascript:void(0)' onclick=\"actmenu('football/club/view/?id=". $r->id_club ."')\" title='League'><i class='fa fa-search fa-fw'></i></a>
-                    <a class='btn_action' href='javascript:void(0)' onclick=\"openform('football/club/edit/". $r->id_club ."')\" title='Edit'><i class='fa fa-edit fa-fw'></i></a>
-                    <a class='btn_action' href='javascript:void(0)' onclick=\"deleteid('football/club/delete/". $r->id_club ."')\" title='Remove'><i class='fa fa-minus-square fa-fw'></i></a>
+                    <a class='btn_action' href='javascript:void(0)' onclick=\"openform('football/clubcareer/edit/". $r->id_career ."')\" title='Edit'><i class='fa fa-edit fa-fw'></i></a>
+                    <a class='btn_action' href='javascript:void(0)' onclick=\"deleteid('football/clubcareer/delete/". $r->id_career ."?id=". $r->id_club ."')\" title='Remove'><i class='fa fa-minus-square fa-fw'></i></a>
                  </td>";
             echo "</tr>";
             

@@ -5,13 +5,13 @@
 	<div style='clear: both;'></div>
 </div>
 <div id='boxbutton'> 
-    <a href="javascript:void(0)" id='button' onclick="openform('football/clubcareer/add')">Add New</a>
+    <a href="javascript:void(0)" id='button' onclick="openform('football/clubcareer/add?id=<?php echo $_GET['id']?>')">Add New</a>
     
     <div class='search'>
         <label>Search By</label>
         <select name='cselect' class='cinput inselect'>
             <?php
-                $field = array('search' => 'Club Name');
+                $field = array('search' => 'Turnamen');
                 foreach($field as $n1 => $v1)
                 {
                     if($this->session->userdata('xfield_'.$prefix) == $n1)
@@ -25,7 +25,7 @@
         </select>
         
         <?php $csearch = ($this->session->userdata('xsearch_'.$prefix) != '') ? $this->session->userdata('xsearch_'.$prefix) : ''; ?>
-        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('football/club/search')">
+        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('football/clubcareer/search/?id=<?php echo $_GET['id']; ?>')">
     </div>
     
     <div style='clear: both;'></div>
@@ -44,11 +44,11 @@
             ?>
         </select>
     </div>
-    <a href="javascript:void(0)" id='button' onclick="actcheck('club/checked')">Action</a>
+    <a href="javascript:void(0)" id='button' onclick="actcheck('clubcareer/checked')">Action</a>
     
     <div class='limit'>
         <label>Limit</label>
-        <select name='climit' class='climit inselect' onchange="actlimit('club/view')">
+        <select name='climit' class='climit inselect' onchange="actlimit('clubcareer/view')">
             <?php
                 $l1 = array('10','25','50','100','150','200');
                 foreach($l1 as $v3)
