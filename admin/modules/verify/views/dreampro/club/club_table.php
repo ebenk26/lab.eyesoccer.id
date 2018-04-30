@@ -5,9 +5,9 @@
             <input type='checkbox' name='checkall' id='checkall' onclick='actcheckall(this.id);'>
         </th>
         <th>
-            <a href="javascript:void(0)" class='csort' id="name" val="desc" onclick="actsort(this.id)">Name</a>
+            <a href="javascript:void(0)" class='csort' id="name" val="desc" onclick="actsort(this.id)">Detail</a>
         </th>
-        <th style='width: 15%;'>
+		<th style='width: 15%;'>
             <a href="javascript:void(0)" class='csort' id="legal_pt" val="desc" onclick="actsort(this.id)">Legal PT</a>
         </th>
         <th class='hd-mobile' style='width: 15%;'>
@@ -35,7 +35,11 @@
                             <input type='checkbox' name='selected[]' value='<?= $r->id_club ?>;<?= $r->id_member; ?>' class='ctab'>
                         </td>
                         <td class='center'>
-                            <?= $r->name; ?>
+                            <b><?= $r->name; ?></b>
+                            <br>
+                            <?= $r->phone; ?>
+                            <br>
+                            <?= $r->address; ?>
                         </td>
                         <td class='center'>
                             <div class='picproduct'>
