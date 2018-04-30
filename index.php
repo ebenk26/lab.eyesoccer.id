@@ -206,16 +206,18 @@ if (version_compare(PHP_VERSION, '5.4.0', '<'))
 	define('ASSETS', $assets_folder.'/');
 	define('UPLOAD', $upload_folder.'/');
 
-    define('FDEYENEWS', '/eyenews_storage/');
-    define('FDEYETUBE', '/eyetube_storage/');
-    define('FDEYEVENT', '/eyevent_storage/');
-    define('FDEYEADS', '/eyeads_storage/');
-    define('FDEYEMARKET', '/eyemarket/');
-    define('FDEYEME', '/eyeme/');
-    define('FDCLUB', '/club_storage/');
-    define('FDOFFICIAL', '/official_storage/');
-    define('FDPLAYER', '/player_storage/');
-    define('FDIMAGES', '/img_storage/');
+    $eyesoccer = ($_SERVER['SERVER_NAME'] == 'localhost') ? '/eyesoccer' : '';
+
+    define('FDEYENEWS', $eyesoccer.'/eyenews_storage/');
+    define('FDEYETUBE', $eyesoccer.'/eyetube_storage/');
+    define('FDEYEVENT', $eyesoccer.'/eyevent_storage/');
+    define('FDEYEADS', $eyesoccer.'/eyeads_storage/');
+    define('FDEYEMARKET', $eyesoccer.'/eyemarket/');
+    define('FDEYEME', $eyesoccer.'/eyeme/');
+    define('FDCLUB', $eyesoccer.'/club_storage/');
+    define('FDOFFICIAL', $eyesoccer.'/official_storage/');
+    define('FDPLAYER', $eyesoccer.'/player_storage/');
+    define('FDIMAGES', $eyesoccer.'/img_storage/');
 
 /*
  * --------------------------------------------------------------------
