@@ -5,13 +5,7 @@
             <input type='checkbox' name='checkall' id='checkall' onclick='actcheckall(this.id);'>
         </th>
         <th>
-            <a href="javascript:void(0)" class='csort' id="name" val="desc" onclick="actsort(this.id)">Name</a>
-        </th>
-        <th style='width: auto;'>
-            <a href="javascript:void(0)" class='csort' id="phone" val="desc" onclick="actsort(this.id)">Phone</a>
-        </th>
-		<th style='width: auto;'>
-            <a href="javascript:void(0)" class='csort' id="address" val="desc" onclick="actsort(this.id)">Address</a>
+            <a href="javascript:void(0)" class='csort' id="name" val="desc" onclick="actsort(this.id)">Detail</a>
         </th>
 		<th style='width: 15%;'>
             <a href="javascript:void(0)" class='csort' id="legal_pt" val="desc" onclick="actsort(this.id)">Legal PT</a>
@@ -41,21 +35,11 @@
                             <input type='checkbox' name='selected[]' value='<?= $r->id_club ?>;<?= $r->id_member; ?>' class='ctab'>
                         </td>
                         <td class='center'>
-                            <?= $r->name; ?>
-                        </td>
-						<td class='center'>
-                            <div class='picproduct'>
-                                <a href="<?= $r->phone; ?>" target="_blank">
-                                    <?= $r->phone; ?>
-                                </a>
-                            </div>
-                        </td>
-						<td class='center'>
-                            <div class='picproduct'>
-                                <a href="<?= $r->address; ?>" target="_blank">
-                                    <?= $r->address; ?>
-                                </a>
-                            </div>
+                            <b><?= $r->name; ?></b>
+                            <br>
+                            <?= $r->phone; ?>
+                            <br>
+                            <?= $r->address; ?>
                         </td>
                         <td class='center'>
                             <div class='picproduct'>
