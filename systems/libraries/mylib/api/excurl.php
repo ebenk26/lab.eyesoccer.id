@@ -138,7 +138,7 @@ class Excurl {
         if (is_array($file)) {
             $files = [];
             foreach ($file as $f) {
-                if ($_FILES[$f]['tmp_name'] != '') {
+                if (isset($_FILES[$f]['tmp_name']) AND $_FILES[$f]['tmp_name'] != '') {
                     $files[] = array('name' => $f, 'filename' => $_FILES[$f]['name'], 'filetype' => $_FILES[$f]['type'],
                         'content' => file_get_contents($_FILES[$f]['tmp_name']));
                 }

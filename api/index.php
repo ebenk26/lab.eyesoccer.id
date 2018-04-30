@@ -206,6 +206,17 @@ if (version_compare(PHP_VERSION, '5.4.0', '<'))
 		define('UPLOAD', $upload_folder.'/');
 	}
 
+    define('FDEYENEWS', '/eyenews_storage/');
+    define('FDEYETUBE', '/eyetube_storage/');
+    define('FDEYEVENT', '/eyevent_storage/');
+    define('FDEYEADS', '/eyeads_storage/');
+    define('FDEYEMARKET', '/eyemarket/');
+    define('FDEYEME', '/eyeme/');
+    define('FDCLUB', '/club_storage/');
+    define('FDOFFICIAL', '/official_storage/');
+    define('FDPLAYER', '/player_storage/');
+    define('FDIMAGES', '/img_storage/');
+
 /*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE

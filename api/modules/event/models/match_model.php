@@ -48,7 +48,7 @@ class Match_model extends CI_Model
     function __path()
     {
         // Upload Path
-        $path = UPLOAD . 'eyevent/';
+        $path = UPLOAD . FDEYEVENT;
 
         // Upload Config
         $config = array(

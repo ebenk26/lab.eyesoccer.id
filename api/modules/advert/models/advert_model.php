@@ -48,7 +48,7 @@ class Advert_model extends CI_Model
     function __path()
     {
         // Upload Path
-        $path = UPLOAD . 'eyeads/';
+        $path = UPLOAD . FDEYEADS;
 
         // Upload Config
         $config = array(

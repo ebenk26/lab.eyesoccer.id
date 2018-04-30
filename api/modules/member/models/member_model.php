@@ -49,7 +49,7 @@ class Member_model extends CI_Model
     function __path()
     {
         // Upload Path
-        $path = UPLOAD . 'eyenews/';
+        $path = UPLOAD . FDEYENEWS;
 
         // Upload Config
         $config = array(

@@ -53,7 +53,7 @@ class Video_model extends CI_Model
     function __path($type = 'image')
     {
         // Upload Path
-        $path = UPLOAD . 'eyetube/';
+        $path = UPLOAD . FDEYETUBE;
 
         // Upload Config
         $config = array(

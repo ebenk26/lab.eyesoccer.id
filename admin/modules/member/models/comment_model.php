@@ -48,7 +48,7 @@ class Comment_model extends CI_Model
     function __path()
     {
         // Upload Path
-        $path = UPLOAD . 'eyeme/';
+        $path = UPLOAD . FDEYEME;
 
         // Upload Config
         $config = array(

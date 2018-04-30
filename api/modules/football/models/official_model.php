@@ -43,7 +43,7 @@ class Official_model extends CI_Model
     function __path()
     {
         // Upload Path
-        $path = UPLOAD . 'eyeprofile/';
+        $path = UPLOAD . FDE;
 
         // Upload Config
         $config = array(

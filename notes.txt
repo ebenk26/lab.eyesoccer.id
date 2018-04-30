@@ -44,11 +44,12 @@ SELECT COUNT(id_match) FROM eyevent_link;
 tbl_player -> eyeprofile_player
 -> Change Birth Date First (dateplayer.txt) -> Query Import
 INSERT INTO eyeprofile_player (id_player, id_admin, id_club, NAME, nickname, description, birth_place, birth_date, phone, mobile, email, height, weight, gender,
-nationality, position_a, position_b, back_number, pic, id_foot, id_level, fav_club, fav_player, fav_coach, contract_start, contract_end, father, mother, slug, date_create, last_update)
+nationality, position_a, position_b, back_number, pic, id_foot, id_level, fav_club, fav_player, fav_coach,
+contract_start, contract_end, father, mother, slug, is_verify, is_active, date_create, last_update)
 SELECT player_id, admin_id, club_id, NAME, call_name, description, birth_place, birth_date, telp, no_hp, email, height, weight, gender,
 nationality, (SELECT pp_id FROM tbl_player_position WHERE POSITION = a.position) AS POSITION, (SELECT pp_id FROM tbl_player_position WHERE POSITION = a.position_2) AS position_2,
 number, pic, (SELECT id_kaki FROM tbl_kemampuan_kaki WHERE kaki_value = a.foot) AS foot, (SELECT ps_id FROM tbl_player_status WHERE player_status = a.status) AS STATUS,
-fav_club, fav_player, fav_coach, contract_range1, contract_range2, father, mother, url, createon, updateon FROM tbl_player a;
+fav_club, fav_player, fav_coach, contract_range1, contract_range2, father, mother, url, 1, 1, createon, updateon FROM tbl_player a;
 
 tbl_karir_player -> eyeprofile_career
 -> Query Import
@@ -82,10 +83,10 @@ tbl_club -> eyeprofile_club
 -> Change Established Date First (dateclub.txt) -> Query Import
 INSERT INTO eyeprofile_club (id_club, id_league, id_competition, NAME, nickname, description, establish_date, address, phone, fax, email, website, logo,
 OWNER, coach, manager, alumnus_name, supporter_name, training_schedule, stadium, stadium_address, stadium_capacity, legalitas_pt, legalitas_kemenham, legalitas_npwp, legalitas_dirut,
-id_provinsi, id_kabupaten, id_admin, is_active, slug, date_create, last_update)
+id_provinsi, id_kabupaten, id_admin, is_verify, is_active, slug, date_create, last_update)
 SELECT club_id, id_liga, (SELECT competition_id FROM tbl_competitions WHERE competition = a.competition) AS competition, NAME, nickname, description, establish_date,
 address, phone, fax, email, website, logo, OWNER, coach, manager, alumnus_name, supporter_name, training_schedule, stadium, stadium_address, stadium_capacity,
-legalitas_pt, legalitas_kemenham, legalitas_npwp, legalitas_dirut, IDProvinsi, IDKabupaten, admin_id, active, url, createon, last_update FROM tbl_club a;
+legalitas_pt, legalitas_kemenham, legalitas_npwp, legalitas_dirut, IDProvinsi, IDKabupaten, admin_id, 1, active, url, createon, last_update FROM tbl_club a;
 
 tbl_official_team -> eyeprofile_club_official
 -> Change Birth Date First (dateofficial.txt) -> Query Import
@@ -116,3 +117,10 @@ eyemarket_tag
 
 eyemarket_category
 + slug
+
+/-----OTHERS-----/
+
+tbl_gallery
++ id_member
+- player_id -> id_player
+- klub_id -> id_club

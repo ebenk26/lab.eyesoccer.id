@@ -48,7 +48,7 @@ class Store_model extends CI_Model
     function __path()
     {
         // Upload Path
-        $path = UPLOAD . 'eyemarket/';
+        $path = UPLOAD . FDEYEMARKET;
 
         // Upload Config
         $config = array(

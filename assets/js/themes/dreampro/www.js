@@ -71,15 +71,27 @@ $(document).ready(function () {
     $(document).on("click", ".form_get", function (e) {
         e.preventDefault();
 
+        var cnt = 1;
+        if ($(this).attr('confirm') != undefined) {
+            if (confirm($(this).attr('confirm'))) {
+                cnt = 1;
+            } else {
+                cnt = 0;
+                return false;
+            }
+        }
+
         $('#boxmessage').fadeOut(200);
-        $('.loading').show();
-        box_popup();
+        if (cnt > 0) {
+            $('.loading').show();
+            box_popup();
+        }
 
         var msgBox = $(this).attr('msg');
         var formURL = $(this).attr('action');
         var msgRequest = ($('#' + msgBox + '.msg').attr('value') == undefined) ? 'ajaxMessage' : $('#' + msgBox + '.msg').attr('value');
 
-        ajaxReqGet(formURL, msgRequest);
+        if (cnt > 0) ajaxReqGet(formURL, msgRequest);
     });
 
     // Post on Click
@@ -145,9 +157,19 @@ $(document).ready(function () {
         var actURL = $(this).attr('action');
         var baseURL = $('.baseurl').attr('val');
 
+        var cnt = 1;
+        if ($(this).attr('confirm') != undefined) {
+            if (confirm($(this).attr('confirm'))) {
+                cnt = 1;
+            } else {
+                cnt = 0;
+                return false;
+            }
+        }
+
         $('#boxmessage').fadeOut(200);
         var loading = ($(this).attr('loading') == 'off') ? 0 : 1;
-        if (loading > 0) {
+        if (loading > 0 && cnt > 0) {
             $('.loading').show();
             box_popup();
         }
@@ -180,7 +202,7 @@ $(document).ready(function () {
             $(this).data('wait', wait);
             return false;
         } else {
-            ajaxReqBasic(formURL, postData, msgRequest);
+            if (cnt > 0) ajaxReqBasic(formURL, postData, msgRequest);
         }
     });
 
@@ -288,9 +310,21 @@ $(document).ready(function () {
     $(document).on("submit", ".form_basic", function (e) {
         e.preventDefault();
 
+        var cnt = 1;
+        if ($(this).attr('confirm') != undefined) {
+            if (confirm($(this).attr('confirm'))) {
+                cnt = 1;
+            } else {
+                cnt = 0;
+                return false;
+            }
+        }
+
         $('#boxmessage').fadeOut(200);
-        $('.loading').show();
-        box_popup();
+        if (cnt > 0) {
+            $('.loading').show();
+            box_popup();
+        }
 
         $(this).append('<input type="hidden" name="val" value="true">');
 
@@ -300,16 +334,28 @@ $(document).ready(function () {
         var msgBox = $(this).attr('msg');
         var msgRequest = ($('#' + msgBox + '.msg').attr('value') == undefined) ? 'ajaxMessage' : $('#' + msgBox + '.msg').attr('value');
 
-        ajaxReqBasic(formURL, postData, msgRequest);
+        if (cnt > 0) ajaxReqBasic(formURL, postData, msgRequest);
     });
 
     // Multipart
     $(document).on("submit", ".form_multi", function (e) {
         e.preventDefault();
 
+        var cnt = 1;
+        if ($(this).attr('confirm') != undefined) {
+            if (confirm($(this).attr('confirm'))) {
+                cnt = 1;
+            } else {
+                cnt = 0;
+                return false;
+            }
+        }
+
         $('#boxmessage').fadeOut(200);
-        $('.loading').show();
-        box_popup();
+        if (cnt > 0) {
+            $('.loading').show();
+            box_popup();
+        }
 
         $(this).append('<input type="hidden" name="val" value="true">');
 
@@ -319,7 +365,7 @@ $(document).ready(function () {
         var msgBox = $(this).attr('msg');
         var msgRequest = ($('#' + msgBox + '.msg').attr('value') == undefined) ? 'ajaxMessage' : $('#' + msgBox + '.msg').attr('value');
 
-        ajaxReqMulti(formURL, postData, msgRequest);
+        if (cnt > 0) ajaxReqMulti(formURL, postData, msgRequest);
     });
 
 });

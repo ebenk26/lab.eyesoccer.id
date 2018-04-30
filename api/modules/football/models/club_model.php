@@ -48,7 +48,7 @@ class Club_model extends CI_Model
     function __path()
     {
         // Upload Path
-        $path = UPLOAD . 'eyeprofile/';
+        $path = UPLOAD . FDCLUB;
 
         // Upload Config
         $config = array(
