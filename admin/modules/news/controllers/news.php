@@ -57,7 +57,7 @@ class News extends MX_Controller
             );
         }
 
-        $ulevel = $this->library->user_check();
+        $ulevel = $this->library->user_check('admin_id');
         if($ulevel->ff > 0)
         {
             $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
@@ -141,7 +141,7 @@ class News extends MX_Controller
                 $count = array_merge($count, $this->session->userdata('multi_data_' . $this->dtable));
             }
 
-            $ulevel = $this->library->user_check();
+            $ulevel = $this->library->user_check('admin_id');
             if($ulevel->ff > 0)
             {
                 $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
@@ -204,7 +204,7 @@ class News extends MX_Controller
                 $this->session->set_userdata($session);
             }
 
-            $ulevel = $this->library->user_check();
+            $ulevel = $this->library->user_check('admin_id');
             if($ulevel->ff > 0)
             {
                 $query['query'] = array_merge($query['query'], array($ulevel->fu => $this->session->userdata('user_id')));
@@ -242,7 +242,7 @@ class News extends MX_Controller
                 $query['count'] = array_merge($query['count'], $this->session->userdata('multi_data_' . $this->dtable));
             }
 
-            $ulevel = $this->library->user_check();
+            $ulevel = $this->library->user_check('admin_id');
             if($ulevel->ff > 0)
             {
                 $query['query'] = array_merge($query['query'], array($ulevel->fu => $this->session->userdata('user_id')));

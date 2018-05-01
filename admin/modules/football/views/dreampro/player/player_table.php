@@ -4,72 +4,70 @@
         <th style='width: 5%;'>
             <input type='checkbox' name='checkall' id='checkall' onclick='actcheckall(this.id);'>
         </th>
-        <th style='width: 5%;'>
-            <?php $id = 'id_player'; ?>
-            <a href="javascript:void(0)" class='csort' id="<?php echo $id; ?>" val="desc" onclick="actsort(this.id)">No</a>
+        <th style='width: 15%;'>
+            <a href="javascript:void(0)" class='csort' id="id_player" val="desc" onclick="actsort(this.id)">Images</a>
         </th>
-        <th style="text-align: center;">
-            <?php $pic = 'url_pic'; ?>
-            <a href="javascript:void(0)" class='csort' id="<?php echo $pic; ?>" val="desc" onclick="actsort(this.id)">Photo</a>
+        <th>
+            <a href="javascript:void(0)" class='csort' id="name" val="desc" onclick="actsort(this.id)">Name</a>
         </th>
-        <th style="text-align: center;">
-            <?php $name = 'name'; ?>
-            <a href="javascript:void(0)" class='csort' id="<?php echo $name; ?>" val="desc" onclick="actsort(this.id)">Name</a>
-        </th>
-        <th style="text-align: center;">
+        <th class='hd-mobile' style='width: 20%;'>
             <a href="javascript:void(0)" class='csort' id="club" val="desc" onclick="actsort(this.id)">Club</a>
+        </th>
+        <th class='hd-mobile' style='width: 10%;'>
+            <a href="javascript:void(0)" class='csort' id="is_active" val="desc" onclick="actsort(this.id)">Active</a>
         </th>
         <th style='width: 10%;'>Action</th>
     </tr>
-    
-    <?php
-    
-    if($count->cc > 0)
-    {
-        $sv = $this->library->sub_view();
 
-        $i= $offset;
-        foreach($dt as $r)
-        {
-    ?>
+    <?php
+
+    if ($count->cc > 0) {
+        $sv = $this->library->sub_view();
+        $i = $offset;
+        foreach ($dt as $r) {
+            $pic = $this->library->picUrl($r->pic, $r->url_pic, FDPLAYER, 'small');
+
+            ?>
             <tr>
                 <td class="center">
-                    <input type='checkbox' name='selected[]' value='<?= $r->$id ?>' class='ctab'>
+                    <input type='checkbox' name='selected[]' value='<?= $r->id_player ?>' class='ctab'>
                 </td>
                 <td class="center">
-                    <?= $i; ?>
-                </td>
-                <td class="center">
-                    <div class='picproduct'> 
-                        <span style='background-image: url("<?= $r->url_pic; ?>");'></span> 
+                    <div class='picproduct'>
+                        <span style='background-image: url("<?= $pic; ?>");'></span>
                     </div>
                 </td>
-                <td class="center">
-                    <?= $r->$name; ?>
+                <td>
+                    <?=  $r->name.'<br>Position : '.$r->position_a; ?>
                 </td>
-                <td class="center">
+                <td class="center capital hd-mobile">
                     <?= $r->club; ?>
                 </td>
+                <td class="center capital hd-mobile">
+                    <?= $this->enum->active_string($r->is_active); ?>
+                </td>
                 <td class="center">
-                    <?php
-                        echo "<a class='btn_action mg-r5' href='javascript:void(0)' onclick=\"actmenu('football/playercareer/view/?id=". $r->$id.$sv->idsub ."')\" title='Career'><i class='fa fa-briefcase fa-fw'></i></a>";
-                    ?>
-                    <a class='btn_action' href='javascript:void(0)'
-                    onclick="openform('football/player/edit/<?= $r->$id.$sv->idstay; ?>')" title='Edit'> 
-                        <i class='fa fa-edit fa-fw'></i> 
+                    <a class='btn_action mg-r5' href='javascript:void(0)'
+                       onclick="openform('football/playercareer/view/?id=<?= $r->id_player . $sv->idsub; ?>')" title='View'>
+                        <i class='fa fa-search fa-fw'></i>
                     </a>
                     <a class='btn_action' href='javascript:void(0)'
-                    onclick="deleteid('football/player/delete/<?= $r->$id.$sv->idstay; ?>')" title='Remove'> 
-                        <i class='fa fa-minus-square fa-fw'></i> 
+                       onclick="openform('football/player/edit/<?= $r->id_player . $sv->idstay; ?>')" title='Edit'>
+                        <i class='fa fa-edit fa-fw'></i>
+                    </a>
+                    <a class='btn_action' href='javascript:void(0)'
+                       onclick="deleteid('football/player/delete/<?= $r->id_player . $sv->idstay; ?>')" title='Remove'>
+                        <i class='fa fa-minus-square fa-fw'></i>
                     </a>
                 </td>
             </tr>
-    <?php
+            <?php
+
             $i++;
         }
     } else {
-        echo "<tr><td colspan=4 style='text-transform: none;'>Data is not available</td></tr>";
+        echo "<tr><td colspan=6 style='text-transform: none;'>Data is not available</td></tr>";
     }
-    
+
     ?>
 </table>

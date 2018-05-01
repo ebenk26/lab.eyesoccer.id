@@ -170,7 +170,7 @@ class Club extends MX_Controller
                 echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable), 'query' => $query));
             }
         } else {
-            redirect('club');
+            redirect('football/club');
         }
     }
 
@@ -227,7 +227,7 @@ class Club extends MX_Controller
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('club');
+            redirect('football/club');
         }
     }
 
@@ -258,7 +258,7 @@ class Club extends MX_Controller
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('club');
+            redirect('football/club');
         }
     }
 
@@ -282,7 +282,7 @@ class Club extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('club');
+                redirect('football/club');
             }
         }
     }
@@ -294,7 +294,7 @@ class Club extends MX_Controller
             $option = $this->excurl->reqAction('football/club/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), $upload);
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('club');
+            redirect('football/club');
         }
     }
 
@@ -302,19 +302,17 @@ class Club extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
             if ($id == '') {
-                redirect('club');
+                redirect('football/club');
             } else {
                 $data['title'] = 'Club';
                 $data['parent'] = $this->mparent;
                 $data['content'] = $this->config->item('base_theme') . '/club/edit_club';
-				$data['competition'] = $this->excurl->reqCurl('competition');
-				$data['league'] = $this->excurl->reqCurl('league');
 
                 $query = array('id_club' => $id, 'detail' => true);
                 $ulevel = $this->library->user_check();
                 if($ulevel->ff > 0)
                 {
-                    $query = array_merge($query, array('admin_id' => $this->session->userdata('user_id')));
+                    $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
                 }
 
                 $data['dt1'] = $this->excurl->reqCurl('profile-club', $query)->data[0];
@@ -333,7 +331,7 @@ class Club extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('club');
+                redirect('football/club');
             }
         }
     }
@@ -345,7 +343,7 @@ class Club extends MX_Controller
             $option = $this->excurl->reqAction('football/club/update', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), $upload);
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('club');
+            redirect('football/club');
         }
     }
 
@@ -353,20 +351,20 @@ class Club extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
             if ($id == '') {
-                redirect('club');
+                redirect('football/club');
             } else {
                 if ($this->input->post('val') == true) {
                     $option = $this->club_model->__delete($id);
                     $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
-                    redirect('club');
+                    redirect('football/club');
                 }
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('club');
+                redirect('football/club');
             }
         }
     }
@@ -411,7 +409,7 @@ class Club extends MX_Controller
 
             $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('club');
+            redirect('football/club');
         }
     }
 

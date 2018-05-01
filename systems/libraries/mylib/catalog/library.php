@@ -159,7 +159,7 @@ class Library
         return array($lang, $lg->lang_code, $numlang);
     }
 
-    function user_check()
+    function user_check($field = 'id_admin')
     {
         $ff = 0;
         $fu = '';
@@ -167,7 +167,7 @@ class Library
             switch ($this->ci->session->userdata('user_level')) {
                 default:
                     $ff = 1;
-                    $fu = 'admin_id';
+                    $fu = $field;
                     break;
                 case 'admin':
                     $ff = 0;

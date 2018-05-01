@@ -33,7 +33,7 @@
         <select name='caction' class='caction inselect'>
             <option value=''>- Select -</option>
             <?php
-                $sort = array('Delete' => '1'/*, 'Enabled' => '2', 'Disabled' => '3'*/);
+                $sort = array('Delete' => '1', 'Enabled' => '2', 'Disabled' => '3');
                 foreach($sort as $n2 => $v2)
                 {
                     echo "<option value='$v2'>$n2</option>";

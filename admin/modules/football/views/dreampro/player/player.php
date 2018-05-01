@@ -1,23 +1,19 @@
-<div class='boxtitle'> 
-    <?php echo $title; ?> <?php echo (isset($sub) AND isset($_GET['id'])) ? '&rsaquo; tes' : ''; ?> 
-</div>
+<div class='boxtitle'><?php echo $title; ?> <?php echo (isset($sub) AND isset($_GET['id'])) ? '&rsaquo; '.$sub->name : ''; ?></div>
 <div id='boxmessage'></div>
 
+<?php
+    $sv = $this->library->sub_view();
+    $this->load->view($this->config->item('base_theme').'/club/club_header', ['tab' => 'player']);
+?>
+
 <div id='boxbutton'>
-    <?php
-        $sv = $this->library->sub_view();
-        if(isset($_GET['id']))
-        {
-            ?> <a href="javascript:void(0)" id='button' onclick="actmenu('football/player/view<?php echo $sv->idback; ?>')">Back</a> <?php
-        }
-    ?>
     <a href="javascript:void(0)" id='button' onclick="openform('football/player/add<?php echo $sv->idstay; ?>')">Add New</a>
     
     <div class='search'>
         <label>Search By</label>
         <select name='cselect' class='cinput inselect'>
             <?php
-                $field = array('player' => 'Name');
+                $field = array('search' => 'Player Detail', 'club' => 'Club');
 
                 foreach($field as $n1 => $v1)
                 {
@@ -43,7 +39,7 @@
         <select name='caction' class='caction inselect'>
             <option value=''>- Select -</option>
             <?php
-                $sort = array('Delete' => '1'/*, 'Enabled' => '2', 'Disabled' => '3'*/);
+                $sort = array('Delete' => '1', 'Enabled' => '2', 'Disabled' => '3');
                 foreach($sort as $n2 => $v2)
                 {
                     echo "<option value='$v2'>$n2</option>";
