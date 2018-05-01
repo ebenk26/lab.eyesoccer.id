@@ -332,7 +332,7 @@ class Player extends MX_Controller
             } else {
                 $data['title'] = 'Player';
                 $data['parent'] = $this->mparent;
-                $data['content'] = $this->config->item('base_theme') . '/player/edit_Player';
+                $data['content'] = $this->config->item('base_theme') . '/player/edit_player';
 
                 $query = array('id_player' => $id, 'detail' => true);
                 if (isset($_GET['id'])) {
@@ -352,7 +352,7 @@ class Player extends MX_Controller
                 $data['level'] = $this->excurl->reqCurl('player-level');
 
                 if ($this->input->post('val') == true) {
-                    $this->load->view($this->config->item('base_theme') . '/player/edit_Player', $data);
+                    $this->load->view($this->config->item('base_theme') . '/player/edit_player', $data);
                 } else {
                     $this->load->view($this->config->item('base_theme') . '/template', $data);
                 }
