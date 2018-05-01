@@ -29,49 +29,30 @@ class Club extends MX_Controller
     {
         if($_POST)
         {
-            $id_league = $this->input->post('id_league');
-            $id_competition = $this->input->post('id_competition');
             $name = $this->input->post('name');
-            $nickname = $this->input->post('nickname');
             $description = $this->input->post('description');
-            $establish_date = $this->input->post('establish_date');
-            $address = $this->input->post('address');
-            $phone = $this->input->post('phone');
-            $fax = $this->input->post('fax');
-            $email = $this->input->post('email');
-            $website = $this->input->post('website');
-            $owner = $this->input->post('owner');
-            $coach = $this->input->post('coach');
-            $manager = $this->input->post('manager');
-            $alumnus_name = $this->input->post('alumnus_name');
-            $supporter_name = $this->input->post('supporter_name');
-            $training_schedule = $this->input->post('training_schedule');
-            $stadium = $this->input->post('stadium');
-            $stadium_address = $this->input->post('stadium_address');
-            $stadium_capacity = $this->input->post('stadium_capacity');
-            $legalitas_pt = $this->input->post('legalitas_pt');
-            $legalitas_kemenham = $this->input->post('legalitas_kemenham');
-            $legalitas_npwp = $this->input->post('legalitas_npwp');
-            $legalitas_dirut = $this->input->post('legalitas_dirut');
-            $id_provinsi = $this->input->post('id_provinsi');
-            $id_kabupaten = $this->input->post('id_kabupaten');
 
             $new_link = $this->library->seo_title($name);
-            $upload = $this->club_model->__upload($new_link);
+            $logo = $this->club_model->__upload('logo_pic', 'uploadfile', $new_link);
+            $legalpt = $this->club_model->__upload('legalpt_pic', 'legal_pt', $new_link);
+            $legalkemenham = $this->club_model->__upload('legalkemenham_pic', 'legal_kemenham', $new_link);
+            $legalnpwp = $this->club_model->__upload('legalnpwp_pic', 'legal_npwp', $new_link);
+            $legaldirut = $this->club_model->__upload('legaldirut_pic', 'legal_dirut', $new_link);
 
             // News
             $dt1 = array(// General
-                'description' => addslashes($description),
-                'address' => addslashes($address),
+                'id_league' => $this->input->post('id_league'),
                 'id_competition' => $this->input->post('id_competition'),
-                'id_league' => $this->input->post('meta_desc'),
-                'name' => $this->input->post('name'),
+                'name' => addslashes($name),
                 'nickname' => $this->input->post('nickname'),
+                'description' => addslashes($description),
                 'establish_date' => $this->input->post('establish_date'),
+                'address' => addslashes($this->input->post('address')),
                 'phone' => $this->input->post('phone'),
                 'fax' => $this->input->post('fax'),
                 'email' => $this->input->post('email'),
                 'website' => $this->input->post('website'),
+                'logo' => $logo['data'],
                 'owner' => $this->input->post('owner'),
                 'coach' => $this->input->post('coach'),
                 'manager' => $this->input->post('manager'),
@@ -81,32 +62,41 @@ class Club extends MX_Controller
                 'stadium' => $this->input->post('stadium'),
                 'stadium_address' => $this->input->post('stadium_address'),
                 'stadium_capacity' => $this->input->post('stadium_capacity'),
-                'legalitas_pt' => $this->input->post('legalitas_pt'),
-                'legalitas_kemenham' => $this->input->post('legalitas_kemenham'),
-                'legalitas_npwp' => $this->input->post('legalitas_npwp'),
-                'legalitas_dirut' => $this->input->post('legalitas_dirut'),
+                'legalitas_pt' => $legalpt['data'],
+                'legalitas_kemenham' => $legalkemenham['data'],
+                'legalitas_npwp' => $legalnpwp['data'],
+                'legalitas_dirut' => $legaldirut['data'],
                 'id_provinsi' => $this->input->post('id_provinsi'),
                 'id_kabupaten' => $this->input->post('id_kabupaten'),
-                'logo' => $upload['data'],
                 // Data
+                'is_verify' => $this->input->post('is_verify'),
+                'is_active' => $this->input->post('is_active'),
+                'is_national' => $this->input->post('is_national'),
                 'date_create' => date('Y-m-d h:i:s'),
                 'id_admin' => $this->input->post('ses_user_id')
             );
 
             $option = $this->action->insert(array('table' => $this->dtable, 'insert' => $dt1));
             if ($option['state'] == 0) {
-                $this->club_model->__unlink($upload['data']);
+                $this->club_model->__unlink($logo['data']);
+                $this->club_model->__unlink('legal_pt', $legalpt['data']);
+                $this->club_model->__unlink('legal_kemenham', $legalkemenham['data']);
+                $this->club_model->__unlink('legal_npwp', $legalnpwp['data']);
+                $this->club_model->__unlink('legal_dirut', $legaldirut['data']);
 
                 $this->validation->error_message($option);
                 return false;
             }
 
             $id = $this->db->insert_id();
-            $key = substr(md5($id), 0, 7);
-            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('slug' => $new_link.'-'.$key),
+            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('slug' => $id.'-'.$new_link),
                                                   'where' => array('id_club' => $id)));
             if ($option['state'] == 0) {
-                $this->club_model->__unlink($upload['data']);
+                $this->club_model->__unlink($logo['data']);
+                $this->club_model->__unlink('legal_pt', $legalpt['data']);
+                $this->club_model->__unlink('legal_kemenham', $legalkemenham['data']);
+                $this->club_model->__unlink('legal_npwp', $legalnpwp['data']);
+                $this->club_model->__unlink('legal_dirut', $legaldirut['data']);
 
                 $this->validation->error_message($option);
                 return false;
@@ -125,49 +115,30 @@ class Club extends MX_Controller
     {
         if($_POST)
         {
-            $id_league = $this->input->post('id_league');
-            $id_competition = $this->input->post('id_competition');
             $name = $this->input->post('name');
-            $nickname = $this->input->post('nickname');
             $description = $this->input->post('description');
-            $establish_date = $this->input->post('establish_date');
-            $address = $this->input->post('address');
-            $phone = $this->input->post('phone');
-            $fax = $this->input->post('fax');
-            $email = $this->input->post('email');
-            $website = $this->input->post('website');
-            $owner = $this->input->post('owner');
-            $coach = $this->input->post('coach');
-            $manager = $this->input->post('manager');
-            $alumnus_name = $this->input->post('alumnus_name');
-            $supporter_name = $this->input->post('supporter_name');
-            $training_schedule = $this->input->post('training_schedule');
-            $stadium = $this->input->post('stadium');
-            $stadium_address = $this->input->post('stadium_address');
-            $stadium_capacity = $this->input->post('stadium_capacity');
-            $legalitas_pt = $this->input->post('legalitas_pt');
-            $legalitas_kemenham = $this->input->post('legalitas_kemenham');
-            $legalitas_npwp = $this->input->post('legalitas_npwp');
-            $legalitas_dirut = $this->input->post('legalitas_dirut');
-            $id_provinsi = $this->input->post('id_provinsi');
-            $id_kabupaten = $this->input->post('id_kabupaten');
 
             $new_link = $this->library->seo_title($name);
-            $upload = $this->club_model->__upload($new_link);
+            $logo = $this->club_model->__upload('logo_pic', 'uploadfile', $new_link);
+            $legalpt = $this->club_model->__upload('legalpt_pic', 'legal_pt', $new_link);
+            $legalkemenham = $this->club_model->__upload('legalkemenham_pic', 'legal_kemenham', $new_link);
+            $legalnpwp = $this->club_model->__upload('legalnpwp_pic', 'legal_npwp', $new_link);
+            $legaldirut = $this->club_model->__upload('legaldirut_pic', 'legal_dirut', $new_link);
 
             // News
             $dt1 = array(// General
-                'description' => addslashes($description),
-                'address' => addslashes($address),
+                'id_league' => $this->input->post('id_league'),
                 'id_competition' => $this->input->post('id_competition'),
-                'id_league' => $this->input->post('meta_desc'),
-                'name' => $this->input->post('name'),
+                'name' => addslashes($name),
                 'nickname' => $this->input->post('nickname'),
-                'establish_date' => $this->input->post('establish_date'),
+                'description' => addslashes($description),
+                'establish_date' => date('Y-m-d', strtotime($this->input->post('establish_date'))),
+                'address' => addslashes($this->input->post('address')),
                 'phone' => $this->input->post('phone'),
                 'fax' => $this->input->post('fax'),
                 'email' => $this->input->post('email'),
                 'website' => $this->input->post('website'),
+                'logo' => $logo['data'],
                 'owner' => $this->input->post('owner'),
                 'coach' => $this->input->post('coach'),
                 'manager' => $this->input->post('manager'),
@@ -177,31 +148,39 @@ class Club extends MX_Controller
                 'stadium' => $this->input->post('stadium'),
                 'stadium_address' => $this->input->post('stadium_address'),
                 'stadium_capacity' => $this->input->post('stadium_capacity'),
-                'legalitas_pt' => $this->input->post('legalitas_pt'),
-                'legalitas_kemenham' => $this->input->post('legalitas_kemenham'),
-                'legalitas_npwp' => $this->input->post('legalitas_npwp'),
-                'legalitas_dirut' => $this->input->post('legalitas_dirut'),
+                'legalitas_pt' => $legalpt['data'],
+                'legalitas_kemenham' => $legalkemenham['data'],
+                'legalitas_npwp' => $legalnpwp['data'],
+                'legalitas_dirut' => $legaldirut['data'],
                 'id_provinsi' => $this->input->post('id_provinsi'),
                 'id_kabupaten' => $this->input->post('id_kabupaten'),
-                'logo' => $upload['data'],
                 // Data
-                'date_create' => date('Y-m-d h:i:s'),
-                'id_admin' => $this->input->post('ses_user_id')
+                'is_verify' => $this->input->post('is_verify'),
+                'is_active' => $this->input->post('is_active'),
+                'is_national' => $this->input->post('is_national')
+                //'id_admin' => $this->input->post('ses_user_id')
             );
 
             $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,
                                                   'where' => array('id_club' => $this->input->post('idx'))));
             if ($option['state'] == 0) {
-                $this->club_model->__unlink($upload['data']);
+                $this->club_model->__unlink($logo['data']);
+                $this->club_model->__unlink('legal_pt', $legalpt['data']);
+                $this->club_model->__unlink('legal_kemenham', $legalkemenham['data']);
+                $this->club_model->__unlink('legal_npwp', $legalnpwp['data']);
+                $this->club_model->__unlink('legal_dirut', $legaldirut['data']);
 
                 $this->validation->error_message($option);
                 return false;
             }
 
             // Remove Old Pic If There is Upload Files
-            if ($this->input->post('news_pic') != '') {
-                $this->club_model->__unlink($this->input->post('news_pic'));
-            }
+            if ($this->input->post('logo_pic') != '') $this->club_model->__unlink($this->input->post('logo_pic'));
+            if ($this->input->post('legalpt_pic') != '') $this->club_model->__unlink('legal_pt', $this->input->post('legalpt_pic'));
+            if ($this->input->post('legalkemenham_pic') != '') $this->club_model->__unlink('legal_kemenham', $this->input->post('legalkemenham_pic'));
+            if ($this->input->post('legalnpwp_pic') != '') $this->club_model->__unlink('legal_npwp', $this->input->post('legalnpwp_pic'));
+            if ($this->input->post('legaldirut_pic') != '') $this->club_model->__unlink('legal_dirut', $this->input->post('legaldirut_pic'));
+
 
             $this->tools->__flashMessage($option);
         } else {

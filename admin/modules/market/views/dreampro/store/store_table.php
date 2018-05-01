@@ -25,7 +25,7 @@
         $i= $offset;
         foreach($dt as $r)
         {
-            $pic = $this->library->picUrl($r->pic, $r->url_pic, 'eyemarket', 'thumb');
+            $pic = $this->library->picUrl($r->pic, $r->url_pic, FDEYEMARKET, 'thumb');
 
             echo "<tr>";
             echo "<td class='center'><input type='checkbox' name='selected[]' value='" . $r->id . "' class='ctab'></td>";

@@ -17,7 +17,7 @@ class Club extends MX_Controller
             redirect('login');
         }
 
-        $raccess = $this->library->role_access('club');
+        $raccess = $this->library->role_access('football/club');
         if (isset($raccess)) {
             $this->roles = $raccess;
         }
@@ -272,7 +272,6 @@ class Club extends MX_Controller
             $data['competition'] = $this->excurl->reqCurl('competition');
             $data['league'] = $this->excurl->reqCurl('league');
             $data['provinsi'] = $this->excurl->reqCurl('provinsi');
-            $data['kabupaten'] = $this->excurl->reqCurl('kabupaten');
 
             if ($this->input->post('val') == true) {
                 $this->load->view($this->config->item('base_theme') . '/club/add_club', $data);
@@ -291,8 +290,8 @@ class Club extends MX_Controller
     function save()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $option = $this->excurl->reqAction('football/club/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
-			// print_r($option);exit();
+            $upload = array('uploadfile', 'legal_pt', 'legal_kemenham', 'legal_npwp', 'legal_dirut');
+            $option = $this->excurl->reqAction('football/club/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), $upload);
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('club');
@@ -319,10 +318,11 @@ class Club extends MX_Controller
                 }
 
                 $data['dt1'] = $this->excurl->reqCurl('profile-club', $query)->data[0];
-				// print_r($data['dt1']);exit();
+                $data['competition'] = $this->excurl->reqCurl('competition');
+                $data['league'] = $this->excurl->reqCurl('league');
 				$data['provinsi'] = $this->excurl->reqCurl('provinsi');
-				$data['kabupaten'] = $this->excurl->reqCurl('kabupaten');
-				// print_r($data);exit();
+				$data['kabupaten'] = $this->excurl->reqCurl('kabupaten', ['provinsi' => $data['dt1']->id_provinsi]);
+
                 if ($this->input->post('val') == true) {
                     $this->load->view($this->config->item('base_theme') . '/club/edit_club', $data);
                 } else {
@@ -341,7 +341,8 @@ class Club extends MX_Controller
     function update()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-            $option = $this->excurl->reqAction('football/club/update', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
+            $upload = array('uploadfile', 'legal_pt', 'legal_kemenham', 'legal_npwp', 'legal_dirut');
+            $option = $this->excurl->reqAction('football/club/update', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), $upload);
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('club');
@@ -414,22 +415,6 @@ class Club extends MX_Controller
         }
     }
 
-    function subcompetition()
-    {
-        $search = explode(';', $this->input->post('val'));
-        $category = $this->excurl->reqCurl('league', ['id_competition' => $search[0]]);
-
-        if ($category) {
-            if ($category->data) {
-                foreach ($category->data as $cat) {
-                    echo "<option value='$cat->sub_club_id;$cat->sub_category_name'>$cat->sub_category_name</option>";
-                }
-            } else {
-                echo "<option value=''>- Select -</option>";
-            }
-        }
-    }
-
     function autoclub($idx = '')
     {
         $search = $this->input->post('val');
@@ -452,11 +437,27 @@ class Club extends MX_Controller
             echo "<div class='showauto'><span>No Result</span></div>";
         }
     }
-	
-	function subkabupaten()
+
+    function subcompetition()
     {
-        $search = explode(',', $this->input->post('val'));
-        $kabupaten = $this->excurl->reqCurl('kabupaten', ['provinsi' => md5($search[23])]);
+        $search = $this->input->post('val');
+        $league = $this->excurl->reqCurl('league', ['id_competition' => $search]);
+
+        if ($league) {
+            if ($league->data) {
+                foreach ($league->data as $dt) {
+                    echo "<option value='$dt->id_league'>$dt->league</option>";
+                }
+            } else {
+                echo "<option value=''>- Select -</option>";
+            }
+        }
+    }
+
+	function subprovinsi()
+    {
+        $search = $this->input->post('val');
+        $kabupaten = $this->excurl->reqCurl('kabupaten', ['provinsi' => $search]);
 
         if ($kabupaten) {
             if ($kabupaten->data) {

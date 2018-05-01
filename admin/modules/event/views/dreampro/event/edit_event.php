@@ -73,7 +73,7 @@
                             <?php
                                 if($dt1->pic)
                                 {
-                                    $pic = $this->library->picUrl($dt1->pic, $dt1->url_pic, 'eyevent', 'medium');
+                                    $pic = $this->library->picUrl($dt1->pic, $dt1->url_pic, FDEYEVENT, 'medium');
 
                                     ?>
                                             <img src='<?php echo $pic; ?>' class='max-wd event_pic'>

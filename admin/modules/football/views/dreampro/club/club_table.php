@@ -8,7 +8,7 @@
             <a href="javascript:void(0)" class='csort' id="id_club" val="desc" onclick="actsort(this.id)">Image</a>
         </th>
         <th>
-            <a href="javascript:void(0)" class='csort' id="name" val="desc" onclick="actsort(this.id)">Club Name</a>
+            <a href="javascript:void(0)" class='csort' id="name" val="desc" onclick="actsort(this.id)">Club Detail</a>
         </th>
 		<th class='hd-mobile' style='width: 15%;'>
             <a href="javascript:void(0)" class='csort' id="id_competition" val="desc" onclick="actsort(this.id)">Competition</a>
@@ -26,7 +26,7 @@
         $i= $offset;
         foreach($dt as $r)
         {
-            $pic = $this->library->picUrl($r->url_logo, $r->url_logo, 'club', '');
+            $pic = $this->library->picUrl($r->logo, $r->url_logo, FDCLUB, 'small');
 
             echo "<tr>";
             echo "<td class='center'><input type='checkbox' name='selected[]' value='" . $r->id_club . "' class='ctab'></td>";

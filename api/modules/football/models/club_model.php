@@ -6,6 +6,10 @@ class Club_model extends CI_Model
     var $query_string = '';
     var $command = '';
     var $dtable = 'eyeprofile_club';
+    var $xtable = 'eyeprofile_club_career';
+    var $ytable = 'eyeprofile_club_official';
+    var $ztable = 'eyeprofile_club_register';
+    var $mtable = 'tbl_gallery';
 
     function __construct()
     {
@@ -21,9 +25,57 @@ class Club_model extends CI_Model
             return false;
         }
 
-        if ($dt->url_logo) {
+        if ($dt->logo) {
             $path = $this->__path();
-            $this->uploader->__unlink($path, $dt->url_logo);
+            $this->uploader->__unlink($path, $dt->logo);
+        }
+
+        if ($dt->legalitas_pt) {
+            $path = $this->__path();
+            $this->uploader->__unlink($path, $dt->legalitas_pt);
+        }
+
+        if ($dt->legalitas_kemenham) {
+            $path = $this->__path();
+            $this->uploader->__unlink($path, $dt->legalitas_kemenham);
+        }
+
+        if ($dt->legalitas_npwp) {
+            $path = $this->__path();
+            $this->uploader->__unlink($path, $dt->legalitas_npwp);
+        }
+
+        if ($dt->legalitas_dirut) {
+            $path = $this->__path();
+            $this->uploader->__unlink($path, $dt->legalitas_dirut);
+        }
+
+        /* Career */
+        $option = $this->action->delete(array('table' => $this->xtable, 'where' => array('id_club' => $id)));
+        if ($option['state'] == 0) {
+            $this->validation->error_message($option);
+            return false;
+        }
+
+        /* Official */
+        $option = $this->action->delete(array('table' => $this->ytable, 'where' => array('id_club' => $id)));
+        if ($option['state'] == 0) {
+            $this->validation->error_message($option);
+            return false;
+        }
+
+        /* Register */
+        $option = $this->action->delete(array('table' => $this->ztable, 'where' => array('id_club' => $id)));
+        if ($option['state'] == 0) {
+            $this->validation->error_message($option);
+            return false;
+        }
+
+        /* Gallery */
+        $option = $this->action->delete(array('table' => $this->mtable, 'where' => array('id_club' => $id)));
+        if ($option['state'] == 0) {
+            $this->validation->error_message($option);
+            return false;
         }
 
         return $option;
@@ -60,29 +112,29 @@ class Club_model extends CI_Model
         return array('path' => $path, 'resize' => true, 'config' => $config);
     }
 
-    function __upload($newname = '')
+    function __upload($input = 'logo_pic', $upload = 'uploadfile', $newname = '')
     {
         $path = $this->__path();
 
         $pic = '';
-        if ($this->input->post('logo') != '') {
-            $pic = $this->input->post('logo');
+        if ($this->input->post($input) != '') {
+            $pic = $this->input->post($input);
         } else {
-            if ($this->input->post('temp_logo') != '') {
-                $files = $this->input->post('temp_logo');
+            if ($this->input->post('temp_' . $input) != '') {
+                $files = $this->input->post('temp_' . $input);
                 $this->uploader->__unlink($path, $files);
             }
         }
 
-        $upload = $this->uploader->single_upload($path['config'], 'uploadfile', $path['path'], $pic, $newname);
+        $upload = $this->uploader->single_upload($path['config'], $upload, $path['path'], $pic, $newname);
 
         return $upload;
     }
 
-    function __unlink($post_pic = '')
+    function __unlink($upload = 'uploadfile', $post_pic = '')
     {
         $path = $this->__path();
-        $this->uploader->single_unlink($path['config'], 'uploadfile', $path['path'], $post_pic);
+        $this->uploader->single_unlink($path['config'], $upload, $path['path'], $post_pic);
     }
 
 }

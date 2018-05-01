@@ -33,8 +33,8 @@
         $i= $offset;
         foreach($dt as $r)
         {
-            $pic_a = $this->library->picUrl($r->url_logo_a, $r->url_logo_a, 'eyevent', 'small');
-            $pic_b = $this->library->picUrl($r->url_logo_b, $r->url_logo_b, 'eyevent', 'small');
+            $pic_a = $this->library->picUrl($r->url_logo_a, $r->url_logo_a, FDEYEVENT, 'small');
+            $pic_b = $this->library->picUrl($r->url_logo_b, $r->url_logo_b, FDEYEVENT, 'small');
 
             echo "<tr>";
             echo "<td class='center'><input type='checkbox' name='selected[]' value='" . $r->id_event . "' class='ctab'></td>";

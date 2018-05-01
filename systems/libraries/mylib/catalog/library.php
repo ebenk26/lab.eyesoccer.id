@@ -720,6 +720,7 @@ class Library
         $pathurl = $this->ci->config->item('base_static');
         if ($_SERVER['SERVER_NAME'] == 'localhost') {
             if (is_file(UPLOAD . "$path/ori_$pic")) {
+                $path = str_replace('eyesoccer', '', $path);
                 return $pathurl . "/$path/$pic/$resize";
             } else {
                 return str_replace(' ', '%20', $url . "/$resize");

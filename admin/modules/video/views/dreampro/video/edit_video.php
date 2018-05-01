@@ -73,7 +73,7 @@
                             <?php
                                 if($dt1->thumb)
                                 {
-                                    $pic = $this->library->picUrl($dt1->thumb, $dt1->url_thumb, 'eyetube', 'medium');
+                                    $pic = $this->library->picUrl($dt1->thumb, $dt1->url_thumb, FDEYETUBE, 'medium');
 
                                     ?>
                                             <img src='<?php echo $pic; ?>' class='max-wd video_pic'>
@@ -97,8 +97,8 @@
                             <?php
                             if($dt1->video)
                             {
-                                $pic = ($dt1->thumb) ? $this->library->picUrl($dt1->thumb, $dt1->url_thumb, 'eyetube', 'medium') : '';
-                                $video = $this->library->picUrl($dt1->video, $dt1->url_video, 'eyetube');
+                                $pic = ($dt1->thumb) ? $this->library->picUrl($dt1->thumb, $dt1->url_thumb, FDEYETUBE, 'medium') : '';
+                                $video = $this->library->picUrl($dt1->video, $dt1->url_video, FDEYETUBE);
 
                                 ?>
                                     <video controlslist="nodownload" controls="controls" width="100%" class="wd-100 mg-t10 video_vid" poster="<?php echo $pic; ?>" style="max-width: none;">

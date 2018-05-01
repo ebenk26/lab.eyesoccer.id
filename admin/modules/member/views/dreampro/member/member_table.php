@@ -28,7 +28,7 @@
         #p($dt);
         foreach($dt as $r)
         {
-            $pic = $this->library->picUrl($r->pic, $r->url_pic, 'eyeme', 'thumb');
+            $pic = $this->library->picUrl($r->pic, $r->url_pic, FDEYEME, 'thumb');
 
             echo "<tr>";
             echo "<td class='center'><input type='checkbox' name='selected[]' value='" . $r->id_member . "' class='ctab'></td>";

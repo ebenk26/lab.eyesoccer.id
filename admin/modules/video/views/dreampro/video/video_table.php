@@ -23,7 +23,7 @@
         $i= $offset;
         foreach($dt as $r)
         {
-            $pic = $this->library->picUrl($r->thumb, $r->url_thumb, 'eyetube', 'thumb');
+            $pic = $this->library->picUrl($r->thumb, $r->url_thumb, FDEYETUBE, 'thumb');
 
             echo "<tr>";
             echo "<td class='center'><input type='checkbox' name='selected[]' value='" . $r->eyetube_id . "' class='ctab'></td>";

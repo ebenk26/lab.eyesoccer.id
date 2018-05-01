@@ -109,7 +109,7 @@
                             <?php
                                 if($dt1->pic)
                                 {
-                                    $pic = $this->library->picUrl($dt1->pic, $dt1->url_pic, 'eyenews', 'medium');
+                                    $pic = $this->library->picUrl($dt1->pic, $dt1->url_pic, FDEYENEWS, 'medium');
 
                                     ?>
                                             <img src='<?php echo $pic; ?>' class='max-wd news_pic'>

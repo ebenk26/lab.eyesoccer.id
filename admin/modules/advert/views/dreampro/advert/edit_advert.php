@@ -68,7 +68,7 @@
                             <?php
                                 if($dt1->url_pic)
                                 {
-                                    $url_pic = $this->library->picUrl($dt1->url_pic, $dt1->url_pic, 'eyeads', 'medium');
+                                    $url_pic = $this->library->picUrl($dt1->url_pic, $dt1->url_pic, FDEYEADS, 'medium');
 
                                     ?>
                                             <img src='<?php echo $url_pic; ?>' class='max-wd advert_pic'>

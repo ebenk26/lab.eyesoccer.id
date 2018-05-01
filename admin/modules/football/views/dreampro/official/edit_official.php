@@ -111,7 +111,7 @@
                             <?php
                                 if($dt1->pic)
                                 {
-                                    $pic = $this->library->picUrl($dt1->pic, $dt1->url_pic, 'eyeprofile', 'medium');
+                                    $pic = $this->library->picUrl($dt1->pic, $dt1->url_pic, FDOFFICIAL, 'medium');
 
                                     ?>
                                             <img src='<?php echo $pic; ?>' class='max-wd offc_pic'>
