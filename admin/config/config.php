@@ -9,7 +9,7 @@
 if($_SERVER['SERVER_NAME'] == 'localhost') {
     $xurl = 'http://api.eyesoccer.id:3000/v1/';
 } else {
-    $xurl = 'http://api.eyesoccer.id:3000/v1/';
+    $xurl = 'http://api.eyesoccer.id:8080/v1/';
 }
 
 $config['xurl'] = $xurl;
@@ -35,10 +35,10 @@ $path = ($_SERVER['SERVER_NAME'] == 'localhost') ? '/project/aplikasi/eyesoccer/
 $www = ($link[0] != 'www') ? '' : 'www.';
 
 $lines = $path.'/domain/cdn/v1/lines';
-$cache = $path.'/domain/static/v1/cache';
+$cache = ($_SERVER['SERVER_NAME'] == 'localhost') ? $path.'/domain/static/v1/cache' : 'static.eyesoccer.id/v1/cache';
 
 $config['base_cdn'] = $http.'://'.$www.$linkhost.$lines;
-$config['base_static'] = $http.'://'.$www.$linkhost.$cache;
+$config['base_static'] = ($_SERVER['SERVER_NAME'] == 'localhost') ? $http.'://'.$www.$linkhost.$cache : $http.'://'.$cache;
 $config['base_action'] = ($_SERVER['SERVER_NAME'] == 'localhost') ? $http.'://localhost:8081'.$path : $http.'://'.$www.$linkhost.$path;
 
 $config['aes_encrypt'] = 'eyesocrypt0001**';
