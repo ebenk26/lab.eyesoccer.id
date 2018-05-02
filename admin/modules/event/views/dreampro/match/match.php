@@ -41,11 +41,11 @@
             ?>
         </select>
     </div>
-    <a href="javascript:void(0)" id='button' onclick="actcheck('match/checked')">Action</a>
+    <a href="javascript:void(0)" id='button' onclick="actcheck('event/match/checked')">Action</a>
     
     <div class='limit'>
         <label>Limit</label>
-        <select name='climit' class='climit inselect' onchange="actlimit('match/view')">
+        <select name='climit' class='climit inselect' onchange="actlimit('event/match/view')">
             <?php
                 $l1 = array('10','25','50','100','150','200');
                 foreach($l1 as $v3)
@@ -77,7 +77,7 @@
         if($showpage > 1)
         {
             echo "<div id='pageself'>
-                    <div id='showurl' value='match/pagetable'></div>
+                    <div id='showurl' value='event/match/pagetable'></div>
                     <div id='showpage' value='$showpage'></div>
                     <div id='showoff' value='4'></div>
                     <div id='showrun' value='2'></div>

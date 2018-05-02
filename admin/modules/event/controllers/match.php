@@ -30,14 +30,8 @@ class Match extends MX_Controller
         $data['roles'] = $this->roles;
         $data['content'] = $this->config->item('base_theme') . '/match/match';
 
-        $session = array('xfield_' . $this->dtable => '',
-                            'xsearch_' . $this->dtable => '',
-                            'sortBy_' . $this->dtable => 'id_jadwal_event',
-                            'sortDir_' . $this->dtable => 'desc',
-                            'multi_search_' . $this->dtable => '',
-                            'multi_data_' . $this->dtable => '',
-                            'voffset_' . $this->dtable => '',
-                            'xoffset_' . $this->dtable => '');
+        $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => 'id_jadwal_event', 'sortDir_' . $this->dtable => 'desc',
+                         'multi_search_' . $this->dtable => '', 'multi_data_' . $this->dtable => '', 'voffset_' . $this->dtable => '', 'xoffset_' . $this->dtable => '');
         $this->session->set_userdata($session);
 
         if ($this->session->userdata('limit_' . $this->dtable) > 0) {
@@ -63,7 +57,7 @@ class Match extends MX_Controller
             );
         }
 
-        $ulevel = $this->library->user_check();
+        $ulevel = $this->library->user_check('admin_id');
         if($ulevel->ff > 0)
         {
             $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
@@ -147,7 +141,7 @@ class Match extends MX_Controller
                 $count = array_merge($count, $this->session->userdata('multi_data_' . $this->dtable));
             }
 
-            $ulevel = $this->library->user_check();
+            $ulevel = $this->library->user_check('admin_id');
             if($ulevel->ff > 0)
             {
                 $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
@@ -162,7 +156,7 @@ class Match extends MX_Controller
             $data['showpage'] = ceil($data['count']->cc / $limit);
 
             if ($this->input->post('val') > 0 OR isset($option['is_check'])) {
-                $html = $this->load->view($this->config->item('base_theme') . '/match/Match_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/match/match_jquery', $data, true);
             } else {
                 $html = $this->load->view($this->config->item('base_theme') . '/match/match', $data, true);
             }
@@ -176,7 +170,7 @@ class Match extends MX_Controller
                 echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable), 'query' => $query));
             }
         } else {
-            redirect('match');
+            redirect('event/match');
         }
     }
 
@@ -210,7 +204,7 @@ class Match extends MX_Controller
                 $this->session->set_userdata($session);
             }
 
-            $ulevel = $this->library->user_check();
+            $ulevel = $this->library->user_check('admin_id');
             if($ulevel->ff > 0)
             {
                 $query['query'] = array_merge($query['query'], array($ulevel->fu => $this->session->userdata('user_id')));
@@ -233,7 +227,7 @@ class Match extends MX_Controller
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('match');
+            redirect('event/match');
         }
     }
 
@@ -248,15 +242,15 @@ class Match extends MX_Controller
                 $query['count'] = array_merge($query['count'], $this->session->userdata('multi_data_' . $this->dtable));
             }
 
-            $ulevel = $this->library->user_check();
+            $ulevel = $this->library->user_check('admin_id');
             if($ulevel->ff > 0)
             {
                 $query['query'] = array_merge($query['query'], array($ulevel->fu => $this->session->userdata('user_id')));
                 $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
-            $data['dt'] = $this->excurl->reqCurl('match', $query['query'])->data;
-            $data['count'] = $this->excurl->reqCurl('match', $query['count'])->data[0];
+            $data['dt'] = $this->excurl->reqCurl('event-match', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('event-match', $query['count'])->data[0];
             $data['offset'] = $query['offset']+1;
 
             $html = $this->load->view($this->config->item('base_theme') . '/match/match_table', $data, true);
@@ -264,20 +258,19 @@ class Match extends MX_Controller
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('match');
+            redirect('event/match');
         }
     }
 
     function add()
     {
         if ($this->roles == 'admin' OR $this->roles->menu_created == 1) {
-
             $data['title'] = 'Match';
             $data['parent'] = $this->mparent;
-            $data['content'] = $this->config->item('base_theme') . '/Match/add_match';
+            $data['content'] = $this->config->item('base_theme') . '/match/add_match';
 
             if ($this->input->post('val') == true) {
-                $this->load->view($this->config->item('base_theme') . '/Match/add_match', $data);
+                $this->load->view($this->config->item('base_theme') . '/match/add_match', $data);
             } else {
                 $this->load->view($this->config->item('base_theme') . '/template', $data);
             }
@@ -285,7 +278,7 @@ class Match extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('match');
+                redirect('event/match');
             }
         }
     }
@@ -294,12 +287,10 @@ class Match extends MX_Controller
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1)
         {
-            $option = $this->excurl->reqAction('event/match/save',
-                        array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
-
+            $option = $this->excurl->reqAction('event/match/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('match');
+            redirect('event/match');
         }
     }
 
@@ -307,24 +298,23 @@ class Match extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
             if ($id == '') {
-                redirect('match');
+                redirect('event/match');
             } else {
                 $data['title'] = 'Match';
                 $data['parent'] = $this->mparent;
                 $data['content'] = $this->config->item('base_theme') . '/match/edit_match';
 
                 $query = array('id_jadwal_event' => $id, 'detail' => true);
-                $ulevel = $this->library->user_check();
+                $ulevel = $this->library->user_check('admin_id');
                 if($ulevel->ff > 0)
                 {
                     $query = array_merge($query, array('admin_id' => $this->session->userdata('user_id')));
                 }
 
                 $data['dt1'] = $this->excurl->reqCurl('event-match', $query)->data[0];
-                $idmatch = $data['dt1']->id_jadwal_event;
 
-                $query2 = array('id' => $idmatch);
-                $data['dt2'] = $this->excurl->reqCurl('event-link', $query2)->data[0];
+                $query = array('id' => $data['dt1']->id_jadwal_event);
+                $data['dt2'] = $this->excurl->reqCurl('event-link', $query)->data[0];
 
                 if ($this->input->post('val') == true) {
                     $this->load->view($this->config->item('base_theme') . '/match/edit_match', $data);
@@ -336,7 +326,7 @@ class Match extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('match');
+                redirect('event/match');
             }
         }
     }
@@ -347,7 +337,7 @@ class Match extends MX_Controller
             $option = $this->excurl->reqAction('event/match/update', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('match');
+            redirect('event/match');
         }
     }
 
@@ -355,20 +345,20 @@ class Match extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
             if ($id == '') {
-                redirect('match');
+                redirect('event/match');
             } else {
                 if ($this->input->post('val') == true) {
                     $option = $this->match_model->__delete($id);
                     $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
-                    redirect('match');
+                    redirect('event/match');
                 }
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('match');
+                redirect('event/match');
             }
         }
     }
@@ -413,7 +403,7 @@ class Match extends MX_Controller
 
             $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('match');
+            redirect('event/match');
         }
     }
 
@@ -433,13 +423,11 @@ class Match extends MX_Controller
                 $bold_search = "<b>$search</b>";
                 $team_name = str_ireplace($search, $bold_search, $t->name);
 
-                echo "<div class='showauto' val='$t->club_id' idx='$idx' tag='$tag' style='text-transform: capitalize;'>
-                        <span class='$t->club_id' val='$t->name'>$team_name</span>
+                echo "<div class='showauto' val='$t->id_club' idx='$idx' tag='$tag' style='text-transform: capitalize;'>
+                        <span class='$t->id_club' val='$t->name'>$team_name</span>
                     </div>";
             }
-        }
-        else
-        {
+        } else {
             echo "<div class='showauto'><span>No Result</span></div>";
         }
     }
@@ -462,9 +450,7 @@ class Match extends MX_Controller
                         <span class='$t->id_event' val='$t->title'>$title</span>
                     </div>";
             }
-        }
-        else
-        {
+        } else {
             echo "<div class='showauto'><span>No Result</span></div>";
         }
     }

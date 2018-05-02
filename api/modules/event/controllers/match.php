@@ -23,7 +23,7 @@ class Match extends MX_Controller
         }
 
         $this->restapi->__auth();
-        $this->load->model('event_model');
+        $this->load->model('match_model');
     }
 
     function save()
@@ -35,32 +35,29 @@ class Match extends MX_Controller
                 'jadwal_pertandingan' => date('Y-m-d h:i:s', strtotime($this->input->post('jadwal_pertandingan'))),
                 'lokasi_pertandingan' => $this->input->post('lokasi_pertandingan'),
                 'live_pertandingan' => $this->input->post('live_pertandingan'),
-                'tim_a' => $this->input->post('team_a'),
+                'tim_a' => $this->input->post('team_a_id'),
                 'score_a' => $this->input->post('score_a'),
                 'score_b' => $this->input->post('score_b'),
-                'tim_b' => $this->input->post('team_b'),
+                'tim_b' => $this->input->post('team_b_id'),
                 'admin_id' => $this->input->post('ses_user_id')
             );
 
             $option = $this->action->insert(array('table' => $this->dtable, 'insert' => $dt1));
+            if ($option['state'] == 0) {
+                $this->validation->error_message($option);
+                return false;
+            }
+
             $id_match = $this->db->insert_id();
+            $id_event = $this->input->post('event_id');
 
-            $event_id = $this->input->post('event_id');
-            
-
-            for ($i = 0; $i < count($event_id); $i++)
+            for ($i = 0; $i < count($id_event); $i++)
             {
                 $dt_[$i] = array(
                     'id_match' => $id_match,
-                    'id_event' => $event_id[$i],
+                    'id_event' => $id_event[$i],
                 );
-                $option99 = $this->action->insert(array('table' => $this->xtable, 'insert' => $dt_[$i]));
-            }
-
-            if ($option['state'] == 0) {
-
-                $this->validation->error_message($option);
-                return false;
+                $this->action->insert(array('table' => $this->xtable, 'insert' => $dt_[$i]));
             }
 
             $this->tools->__flashMessage($option);
@@ -82,20 +79,23 @@ class Match extends MX_Controller
                     'jadwal_pertandingan' => date('Y-m-d h:i:s', strtotime($this->input->post('jadwal_pertandingan'))),
                     'lokasi_pertandingan' => $this->input->post('lokasi_pertandingan'),
                     'live_pertandingan' => $this->input->post('live_pertandingan'),
-                    'tim_a' => $this->input->post('team_a'),
+                    'tim_a' => $this->input->post('team_a_id'),
                     'score_a' => $this->input->post('score_a'),
                     'score_b' => $this->input->post('score_b'),
-                    'tim_b' => $this->input->post('team_b'),
+                    'tim_b' => $this->input->post('team_b_id'),
                     'admin_id' => $this->input->post('ses_user_id')
             );
 
             $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,
                                                   'where' => array('id_jadwal_event' => $this->input->post('idx'))));
-
+            if ($option['state'] == 0) {
+                $this->validation->error_message($option);
+                return false;
+            }
+            
             $id_match = $this->input->post('idx');
             $id_event = $this->input->post('event_id');
-
-            $hapus = $this->action->delete(array('table' => $this->xtable, 'where' => array('id_match' => $id_match)));
+            $this->action->delete(array('table' => $this->xtable, 'where' => array('id_match' => $id_match)));
 
             for ($i = 0; $i < count($id_event); $i++)
             {
@@ -103,14 +103,8 @@ class Match extends MX_Controller
                     'id_match' => $id_match,
                     'id_event' => $id_event[$i],
                 );
-                $option99 = $this->action->insert(array('table' => $this->xtable, 'insert' => $dt_[$i]));
-            }
-
-            if ($option['state'] == 0) {
-
-                $this->validation->error_message($option);
-                return false;
-            }
+                $this->action->insert(array('table' => $this->xtable, 'insert' => $dt_[$i]));
+            }            
 
             $this->tools->__flashMessage($option);
         } else {
@@ -125,7 +119,7 @@ class Match extends MX_Controller
     {
         if($_POST)
         {
-            $option = $this->event_model->__delete($this->input->post('idx'));
+            $option = $this->match_model->__delete($this->input->post('idx'));
             $this->tools->__flashMessage($option);
         } else {
             $data = $this->__rest()->__getstatus('Data must be type post', 400);
@@ -139,7 +133,7 @@ class Match extends MX_Controller
     {
         if($_POST)
         {
-            $option = $this->event_model->__disable($this->input->post('idx'));
+            $option = $this->match_model->__disable($this->input->post('idx'));
             $this->tools->__flashMessage($option);
         } else {
             $data = $this->__rest()->__getstatus('Data must be type post', 400);
@@ -153,7 +147,7 @@ class Match extends MX_Controller
     {
         if($_POST)
         {
-            $option = $this->event_model->__enable($this->input->post('idx'));
+            $option = $this->match_model->__enable($this->input->post('idx'));
             $this->tools->__flashMessage($option);
         } else {
             $data = $this->__rest()->__getstatus('Data must be type post', 400);

@@ -170,6 +170,10 @@ class Library
                     $fu = $field;
                     break;
                 case 'admin':
+                case 'eyenews-admin':
+                case 'eyetube-admin':
+                case 'eyeprofile-admin':
+                case 'eyeevent-admin':
                     $ff = 0;
                     $fu = '';
                     break;
