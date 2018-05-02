@@ -3,7 +3,7 @@
 class Match extends MX_Controller
 {
     var $roles = 'admin';
-    var $mparent = 'Match';
+    var $mparent = 'Event';
     var $offset = 1;
     var $limit = 10;
     var $dtable = 'tbl_jadwal_event';
@@ -17,7 +17,7 @@ class Match extends MX_Controller
             redirect('login');
         }
 
-        $raccess = $this->library->role_access('match');
+        $raccess = $this->library->role_access('event/match');
         if (isset($raccess)) {
             $this->roles = $raccess;
         }

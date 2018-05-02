@@ -172,7 +172,7 @@ class Player extends MX_Controller
     {
         if($_POST)
         {
-            $option = $this->player_model->__delete($this->input->post('idx'));
+            $option = $this->player_model->__disable($this->input->post('idx'));
             $this->tools->__flashMessage($option);
         } else {
             $data = $this->__rest()->__getstatus('Data must be type post', 400);

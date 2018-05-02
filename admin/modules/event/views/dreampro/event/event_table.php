@@ -30,7 +30,7 @@
             echo "<td class='center'><input type='checkbox' name='selected[]' value='" . $r->id_event . "' class='ctab'></td>";
             echo "<td class='center'><div class='picproduct'><span style='background-image: url(" . $pic . ");'></span></div></td>";
             echo "<td>" . $r->title . "<br>Author : " . $r->user_fname . "<br></td>";
-            echo "<td class='center capital hd-mobile'>" . $r->publish_on . "</td>";
+            echo "<td class='center capital hd-mobile'>" . date('d-m-Y h:i:s', strtotime($r->publish_on)) . "</td>";
             echo "<td class='center'>
                     <a class='btn_action' href='javascript:void(0)' onclick=\"openform('event/edit/". $r->id_event ."')\" title='Edit'><i class='fa fa-edit fa-fw'></i></a>
                     <a class='btn_action' href='javascript:void(0)' onclick=\"deleteid('event/delete/". $r->id_event ."')\" title='Remove'><i class='fa fa-minus-square fa-fw'></i></a>

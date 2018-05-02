@@ -1,19 +1,19 @@
-<div class='boxtitle'> 
-    <?php echo $title; ?>
-</div>
+<div class='boxtitle'><?php echo $title; ?> <?php echo (isset($sub) AND isset($_GET['id'])) ? '&rsaquo; '.$sub->name : ''; ?></div>
 <div id='boxmessage'></div>
 
+<?php
+    $sv = $this->library->sub_view();
+    $this->load->view($this->config->item('base_theme').'/club/club_header', ['tab' => 'official']);
+?>
+
 <div id='boxbutton'>
-    <?php
-        $sv = $this->library->sub_view();
-    ?>
     <a href="javascript:void(0)" id='button' onclick="openform('football/official/add<?php echo $sv->idstay; ?>')">Add New</a>
     
     <div class='search'>
         <label>Search By</label>
         <select name='cselect' class='cinput inselect'>
             <?php
-                $field = array('search' => 'Name');
+                $field = array('search' => 'Official Detail', 'club' => 'Club');
 
                 foreach($field as $n1 => $v1)
                 {

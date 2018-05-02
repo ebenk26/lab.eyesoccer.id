@@ -37,9 +37,6 @@ class Event extends MX_Controller
             $upload = $this->event_model->__upload($new_link);
             $key = substr(md5($this->library->app_key()), 0, 7);
 
-            // $cat = $this->excurl->reqCurl('Event-category', ['Event_type_id' => $this->input->post('category')])->data[0];
-            // $catsub = $this->excurl->reqCurl('Event-category-sub', ['sub_Event_id' => $this->input->post('subcategory')])->data[0];
-
             // Event
             $dt1 = array(// General
                 'title' => addslashes($text_title),

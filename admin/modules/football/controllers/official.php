@@ -11,13 +11,13 @@ class Official extends MX_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Official_model');
+        $this->load->model('official_model');
 
         if ($this->session->userdata('login') != TRUE AND $this->session->userdata('user_uid') == '') {
             redirect('login');
         }
 
-        $raccess = $this->library->role_access('official');
+        $raccess = $this->library->role_access('football/official');
         if (isset($raccess)) {
             $this->roles = $raccess;
         }
@@ -30,8 +30,7 @@ class Official extends MX_Controller
         $data['roles'] = $this->roles;
         $data['content'] = $this->config->item('base_theme') . '/official/official';
 
-        $id = 'id_official';
-        $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => $id, 'sortDir_' . $this->dtable => 'desc',
+        $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => 'id_official', 'sortDir_' . $this->dtable => 'desc',
                          'multi_search_' . $this->dtable => '', 'multi_data_' . $this->dtable => '', 'voffset_' . $this->dtable => '', 'xoffset_' . $this->dtable => '');
         $this->session->set_userdata($session);
 
@@ -58,9 +57,19 @@ class Official extends MX_Controller
             );
         }
 
+        if (isset($_GET['id'])) {
+            $query = array_merge($query, array('id_club' => $_GET['id']));
+            $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
+        }
+
+        $ulevel = $this->library->user_check();
+        if($ulevel->ff > 0)
+        {
+            $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
+        }
+
         $data['dt'] = $this->excurl->reqCurl('profile-official', $query)->data;
         $data['count'] = $this->excurl->reqCurl('profile-official', array_merge($query, array('count' => true)))->data[0];
-
         $data['limit'] = $limit;
         $data['offset'] = $this->offset;
         $data['prefix'] = $this->dtable;
@@ -137,6 +146,12 @@ class Official extends MX_Controller
             $count = array_merge($count, $this->session->userdata('multi_data_' . $this->dtable));
         }
 
+        if (isset($_GET['id'])) {
+            $query = array_merge($query, array('id_club' => $_GET['id']));
+            $count = array_merge($count, array('id_club' => $_GET['id']));
+            $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
+        }
+
         $ulevel = $this->library->user_check();
         if($ulevel->ff > 0)
         {
@@ -206,9 +221,21 @@ class Official extends MX_Controller
                 $this->session->set_userdata($session);
             }
 
+            if (isset($_GET['id'])) {
+                $query['query'] = array_merge($query['query'], array('id_club' => $_GET['id']));
+                $query['count'] = array_merge($query['count'], array('id_club' => $_GET['id']));
+                $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
+            }
+
+            $ulevel = $this->library->user_check();
+            if($ulevel->ff > 0)
+            {
+                $query['query'] = array_merge($query['query'], array($ulevel->fu => $this->session->userdata('user_id')));
+                $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
+            }
+            
             $data['dt'] = $this->excurl->reqCurl('profile-official', $query['query'])->data;
             $data['count'] = $this->excurl->reqCurl('profile-official', $query['count'])->data[0];
-
             $data['limit'] = $limit;
             $data['offset'] = $this->offset;
             $data['prefix'] = $this->dtable;
@@ -239,17 +266,20 @@ class Official extends MX_Controller
             }
 
             if (isset($_GET['id'])) {
-                $query['query'] = array_merge($query['query'], array('id_official' => $_GET['id']));
-                $query['count'] = array_merge($query['count'], array('id_official' => $_GET['id']));
-                $data['sub'] = $this->excurl->reqCurl('official', ['id_official' => $_GET['id']])->data[0];
-
-                $data['dt'] = $this->excurl->reqCurl('official-sub', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('official-sub', $query['count'])->data[0];
-            } else {
-                $data['dt'] = $this->excurl->reqCurl('official', $query['query'])->data;
-                $data['count'] = $this->excurl->reqCurl('official', $query['count'])->data[0];
+                $query['query'] = array_merge($query['query'], array('id_club' => $_GET['id']));
+                $query['count'] = array_merge($query['count'], array('id_club' => $_GET['id']));
+                $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
             }
 
+            $ulevel = $this->library->user_check();
+            if($ulevel->ff > 0)
+            {
+                $query['query'] = array_merge($query['query'], array($ulevel->fu => $this->session->userdata('user_id')));
+                $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
+            }
+
+            $data['dt'] = $this->excurl->reqCurl('official', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('official', $query['count'])->data[0];
             $data['offset'] = $query['offset']+1;
 
             $html = $this->load->view($this->config->item('base_theme') . '/official/official_table', $data, true);
@@ -269,7 +299,7 @@ class Official extends MX_Controller
             $data['content'] = $this->config->item('base_theme') . '/official/add_official';
 
             if (isset($_GET['id'])) {
-                $data['sub'] = $this->excurl->reqCurl('official', ['id_official' => $_GET['id']])->data[0];
+                $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
             }
 
             if ($this->input->post('val') == true) {
@@ -290,7 +320,6 @@ class Official extends MX_Controller
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
             $option = $this->excurl->reqAction('football/official/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
-        
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('football/official');
@@ -307,8 +336,20 @@ class Official extends MX_Controller
                 $data['parent'] = $this->mparent;
                 $data['content'] = $this->config->item('base_theme') . '/official/edit_official';
 
-                $data['dt1'] = $this->excurl->reqCurl('profile-official', ['id_official' => $id, 'detail' => true])->data[0];
-                // var_dump($data['dt1']);exit();
+                $query = array('id_official' => $id, 'detail' => true);
+                if (isset($_GET['id'])) {
+                    $query = array_merge($query, array('id_club' => $_GET['id']));
+                    $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
+                }
+
+                $ulevel = $this->library->user_check();
+                if($ulevel->ff > 0)
+                {
+                    $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
+                }
+
+                $data['dt1'] = $this->excurl->reqCurl('profile-official', $query)->data[0];
+                
                 if ($this->input->post('val') == true) {
                     $this->load->view($this->config->item('base_theme') . '/official/edit_official', $data);
                 } else {
@@ -341,7 +382,7 @@ class Official extends MX_Controller
                 redirect('football/official');
             } else {
                 if ($this->input->post('val') == true) {
-                    $option = $this->Official_model->__delete($id);
+                    $option = $this->official_model->__delete($id);
                     $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
                     redirect('football/official');
@@ -366,7 +407,7 @@ class Official extends MX_Controller
                 case 1:
                     if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->Official_model->__delete($split[$i]);
+                            $option = $this->official_model->__delete($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -376,7 +417,7 @@ class Official extends MX_Controller
                 case 2:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->Official_model->__enable($split[$i]);
+                            $option = $this->official_model->__enable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -386,7 +427,7 @@ class Official extends MX_Controller
                 case 3:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->Official_model->__disable($split[$i]);
+                            $option = $this->official_model->__disable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -407,8 +448,6 @@ class Official extends MX_Controller
         $query = array('page' => 1, 'limit' => '100', 'search' => $search);
         $clubs = $this->excurl->reqCurl('profile-club', $query)->data;
 
-        $tag = 'team_a';
-
         if($clubs)
         {
             foreach($clubs as $t)
@@ -416,13 +455,11 @@ class Official extends MX_Controller
                 $bold_search = "<b>$search</b>";
                 $team_name = str_ireplace($search, $bold_search, $t->name);
 
-                echo "<div class='showauto' val='$t->id_club' idx='$idx' tag='$tag' style='text-transform: capitalize;'>
+                echo "<div class='showauto' val='$t->id_club' idx='$idx' tag='team_a' style='text-transform: capitalize;'>
                         <span class='$t->id_club' val='$t->name'>$team_name</span>
                     </div>";
             }
-        }
-        else
-        {
+        } else {
             echo "<div class='showauto'><span>No Result</span></div>";
         }
     }

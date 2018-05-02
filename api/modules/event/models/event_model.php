@@ -31,7 +31,7 @@ class Event_model extends CI_Model
 
     function __disable($id = '')
     {
-        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('eyenews_id' => $id));
+        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('id_event' => $id));
         $option = $this->action->update($dt);
 
         return $option;
@@ -39,7 +39,7 @@ class Event_model extends CI_Model
 
     function __enable($id = '')
     {
-        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('eyenews_id' => $id));
+        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('id_event' => $id));
         $option = $this->action->update($dt);
 
         return $option;
@@ -65,11 +65,11 @@ class Event_model extends CI_Model
         $path = $this->__path();
 
         $pic = '';
-        if ($this->input->post('news_pic') != '') {
-            $pic = $this->input->post('news_pic');
+        if ($this->input->post('event_pic') != '') {
+            $pic = $this->input->post('event_pic');
         } else {
-            if ($this->input->post('temp_news_pic') != '') {
-                $files = $this->input->post('temp_news_pic');
+            if ($this->input->post('temp_event_pic') != '') {
+                $files = $this->input->post('temp_event_pic');
                 $this->uploader->__unlink($path, $files);
             }
         }

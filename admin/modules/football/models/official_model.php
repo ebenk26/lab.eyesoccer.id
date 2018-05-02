@@ -14,32 +14,31 @@ class Official_model extends CI_Model
 
     function __delete($id = '')
     {
-        $option = $this->excurl->reqAction('football/official/delete', array('idx' => $id));
+        if (isset($_GET['id'])) {
+            $option = $this->excurl->reqAction('football/official/delete/?id=' . $_GET['id'], array('idx' => $id));
+        } else {
+            $option = $this->excurl->reqAction('football/official/delete', array('idx' => $id));
+        }
         return $option;
     }
 
     function __disable($id = '')
     {
         if ($id != NULL) {
-            $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('id_event_Competition' => $id));
-            $option = $this->action->update($dt);
-
+            $option = $this->excurl->reqAction('football/official/disable', array('idx' => $id));
             return $option;
         } else {
-            redirect('event/Competition');
+            redirect('football/official');
         }
     }
 
     function __enable($id = '')
     {
         if ($id != NULL) {
-            $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('id_event_Competition' => $id));
-
-            $option = $this->action->update($dt);
-
+            $option = $this->excurl->reqAction('football/official/enable', array('idx' => $id));
             return $option;
         } else {
-            redirect('event/Competition');
+            redirect('football/official');
         }
     }
 

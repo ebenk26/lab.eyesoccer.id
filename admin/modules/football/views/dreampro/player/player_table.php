@@ -8,7 +8,7 @@
             <a href="javascript:void(0)" class='csort' id="id_player" val="desc" onclick="actsort(this.id)">Images</a>
         </th>
         <th>
-            <a href="javascript:void(0)" class='csort' id="name" val="desc" onclick="actsort(this.id)">Name</a>
+            <a href="javascript:void(0)" class='csort' id="name" val="desc" onclick="actsort(this.id)">Player Detail</a>
         </th>
         <th class='hd-mobile' style='width: 20%;'>
             <a href="javascript:void(0)" class='csort' id="club" val="desc" onclick="actsort(this.id)">Club</a>

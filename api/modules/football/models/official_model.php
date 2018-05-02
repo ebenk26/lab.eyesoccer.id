@@ -5,7 +5,7 @@ class Official_model extends CI_Model
 
     var $query_string = '';
     var $command = '';
-    var $xtable = 'eyeprofile_club_official';
+    var $dtable = 'eyeprofile_club_official';
 
     function __construct()
     {
@@ -14,11 +14,16 @@ class Official_model extends CI_Model
 
     function __delete($id = '')
     {
-        $option = $this->action->delete(array('table' => $this->xtable, 'where' => array('id_official' => $id)));
-
+        $dt = $this->excurl->reqCurl('profile-official', ['id_official' => $id])->data[0];
+        $option = $this->action->delete(array('table' => $this->dtable, 'where' => array('id_official' => $id)));
         if ($option['state'] == 0) {
             $this->validation->error_message($option);
             return false;
+        }
+
+        if ($dt->pic) {
+            $path = $this->__path();
+            $this->uploader->__unlink($path, $dt->pic);
         }
 
         return $option;
@@ -26,7 +31,7 @@ class Official_model extends CI_Model
 
     function __disable($id = '')
     {
-        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('id_competition' => $id));
+        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('id_official' => $id));
         $option = $this->action->update($dt);
 
         return $option;
@@ -34,7 +39,7 @@ class Official_model extends CI_Model
 
     function __enable($id = '')
     {
-        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('id_competition' => $id));
+        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('id_official' => $id));
         $option = $this->action->update($dt);
 
         return $option;
@@ -43,7 +48,7 @@ class Official_model extends CI_Model
     function __path()
     {
         // Upload Path
-        $path = UPLOAD . FDE;
+        $path = UPLOAD . FDOFFICIAL;
 
         // Upload Config
         $config = array(
@@ -60,11 +65,11 @@ class Official_model extends CI_Model
         $path = $this->__path();
 
         $pic = '';
-        if ($this->input->post('news_pic') != '') {
-            $pic = $this->input->post('news_pic');
+        if ($this->input->post('photo_pic') != '') {
+            $pic = $this->input->post('photo_pic');
         } else {
-            if ($this->input->post('temp_news_pic') != '') {
-                $files = $this->input->post('temp_news_pic');
+            if ($this->input->post('temp_photo_pic') != '') {
+                $files = $this->input->post('temp_photo_pic');
                 $this->uploader->__unlink($path, $files);
             }
         }

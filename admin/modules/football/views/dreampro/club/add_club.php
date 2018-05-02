@@ -139,19 +139,19 @@
                     <h1>Stadium</h1>
                     <div class='pad-lr20 pad-b10'>
                         <div class='mg-b10'>
-                            <label>Stadion</label>
+                            <label>Stadium Name</label>
                             <input type='text' name='stadium' id='stadium' class='cinput input_multi'>
                         </div>
                         <div class='mg-b10'>
-                            <label>Alamat Stadion</label>
+                            <label>Stadium Address</label>
                             <input type='text' name='stadium_address' id='stadium_address' class='cinput input_multi'>
                         </div>
                         <div class='mg-b10'>
-                            <label>Kapasitas Stadion</label>
+                            <label>Stadium Capacity</label>
                             <input type='text' name='stadium_capacity' id='stadium_capacity' class='cinput input_multi'>
                         </div>
                         <div class='mg-b10'>
-                            <label>Jadwal Latihan</label>
+                            <label>Training Schedule</label>
                             <input type='text' name='training_schedule' id='training_schedule' class='cinput input_multi' placeholder="Example: Jumat 13:00-14:30 WIB">
                         </div>
                     </div>

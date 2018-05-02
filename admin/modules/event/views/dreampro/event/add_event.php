@@ -57,22 +57,12 @@
                                 ?>
                             </select>
                         </div>
-                        <!-- <div class='pad-b20'>
-                            <label>Sub Category</label>
-                            <select name="subcategory" id="subcategory" class="cinput select_multi tx-cp subcategory">
-                                <option value="">- Select -</option>
-                            </select>
-                        </div> -->
                     </div>
                 </div>
                 
                 <div class='boxtab pad-all mg-b20'>
                     <h1>Picture</h1>
                     <div class='pad-lr20'>
-                        <!-- <div class='mg-b10'>
-                            <label>Credit</label>
-                            <input type='text' name='credit' id='credit' class='cinput input_multi'>
-                        </div> -->
                         <div class='pad-b20'>
                             <input type='file' name='uploadfile' id='uploadfile' class='cinput input_multi'>
                         </div>

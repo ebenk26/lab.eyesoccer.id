@@ -11,7 +11,7 @@ class Event extends MX_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Event_model');
+        $this->load->model('event_model');
 
         if ($this->session->userdata('login') != TRUE AND $this->session->userdata('user_uid') == '') {
             redirect('login');
@@ -63,8 +63,8 @@ class Event extends MX_Controller
             $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
         }
 
-        $data['dt'] = $this->excurl->reqCurl('Event', $query)->data;
-        $data['count'] = $this->excurl->reqCurl('Event', array_merge($query, array('count' => true)))->data[0];
+        $data['dt'] = $this->excurl->reqCurl('event', $query)->data;
+        $data['count'] = $this->excurl->reqCurl('event', array_merge($query, array('count' => true)))->data[0];
         $data['limit'] = $limit;
         $data['offset'] = $this->offset;
         $data['prefix'] = $this->dtable;
@@ -90,7 +90,7 @@ class Event extends MX_Controller
                                      'sortBy_' . $this->dtable => $this->session->userdata('sortBy_' . $this->dtable), 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
                 } else {
                     $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                     'sortBy_' . $this->dtable => 'Event_id', 'sortDir_' . $this->dtable => 'desc');
+                                     'sortBy_' . $this->dtable => 'id_event', 'sortDir_' . $this->dtable => 'desc');
                 }
             }
             $this->session->set_userdata($session);
@@ -148,17 +148,17 @@ class Event extends MX_Controller
                 $count = array_merge($count, array($ulevel->fu => $this->session->userdata('user_id')));
             }
             
-            $data['dt'] = $this->excurl->reqCurl('Event', $query)->data;
-            $data['count'] = $this->excurl->reqCurl('Event', $count)->data[0];
+            $data['dt'] = $this->excurl->reqCurl('event', $query)->data;
+            $data['count'] = $this->excurl->reqCurl('event', $count)->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $offset;
             $data['prefix'] = $this->dtable;
             $data['showpage'] = ceil($data['count']->cc / $limit);
 
             if ($this->input->post('val') > 0 OR isset($option['is_check'])) {
-                $html = $this->load->view($this->config->item('base_theme') . '/Event/Event_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/event/event_jquery', $data, true);
             } else {
-                $html = $this->load->view($this->config->item('base_theme') . '/Event/Event', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/event/event', $data, true);
             }
 
             header('Content-Type: application/json');
@@ -211,17 +211,17 @@ class Event extends MX_Controller
                 $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
-            $data['dt'] = $this->excurl->reqCurl('Event', $query['query'])->data;
-            $data['count'] = $this->excurl->reqCurl('Event', $query['count'])->data[0];
+            $data['dt'] = $this->excurl->reqCurl('event', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('event', $query['count'])->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $this->offset;
             $data['prefix'] = $this->dtable;
             $data['showpage'] = ceil($data['count']->cc / $query['query']['limit']);
 
             if (count($split) > 1) {
-                $html = $this->load->view($this->config->item('base_theme') . '/Event/Event_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/event/event_jquery', $data, true);
             } else {
-                $html = $this->load->view($this->config->item('base_theme') . '/Event/Event', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/event/event', $data, true);
             }
 
             header('Content-Type: application/json');
@@ -249,11 +249,11 @@ class Event extends MX_Controller
                 $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
-            $data['dt'] = $this->excurl->reqCurl('Event', $query['query'])->data;
-            $data['count'] = $this->excurl->reqCurl('Event', $query['count'])->data[0];
+            $data['dt'] = $this->excurl->reqCurl('event', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('event', $query['count'])->data[0];
             $data['offset'] = $query['offset']+1;
 
-            $html = $this->load->view($this->config->item('base_theme') . '/Event/Event_table', $data, true);
+            $html = $this->load->view($this->config->item('base_theme') . '/event/event_table', $data, true);
 
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
@@ -267,12 +267,12 @@ class Event extends MX_Controller
         if ($this->roles == 'admin' OR $this->roles->menu_created == 1) {
             $data['title'] = 'Event';
             $data['parent'] = $this->mparent;
-            $data['content'] = $this->config->item('base_theme') . '/Event/add_event';
+            $data['content'] = $this->config->item('base_theme') . '/event/add_event';
 
-            $data['category'] = $this->excurl->reqCurl('Event-category');
+            $data['category'] = $this->excurl->reqCurl('event-category');
 
             if ($this->input->post('val') == true) {
-                $this->load->view($this->config->item('base_theme') . '/Event/add_event', $data);
+                $this->load->view($this->config->item('base_theme') . '/event/add_event', $data);
             } else {
                 $this->load->view($this->config->item('base_theme') . '/template', $data);
             }
@@ -290,7 +290,6 @@ class Event extends MX_Controller
 
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
             $option = $this->excurl->reqAction('event/save', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), ['uploadfile']);
-         
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('event');
@@ -305,7 +304,7 @@ class Event extends MX_Controller
             } else {
                 $data['title'] = 'Event';
                 $data['parent'] = $this->mparent;
-                $data['content'] = $this->config->item('base_theme') . '/Event/edit_event';
+                $data['content'] = $this->config->item('base_theme') . '/event/edit_event';
 
                 $query = array('id_event' => $id, 'detail' => true);
                 $ulevel = $this->library->user_check();
@@ -314,11 +313,11 @@ class Event extends MX_Controller
                     $query = array_merge($query, array('admin_id' => $this->session->userdata('user_id')));
                 }
 
-                $data['dt1'] = $this->excurl->reqCurl('Event', $query)->data[0];
-                // $data['category'] = $this->excurl->reqCurl('Event-category');
+                $data['dt1'] = $this->excurl->reqCurl('event', $query)->data[0];
+                $data['category'] = $this->excurl->reqCurl('event-category');
 
                 if ($this->input->post('val') == true) {
-                    $this->load->view($this->config->item('base_theme') . '/Event/edit_event', $data);
+                    $this->load->view($this->config->item('base_theme') . '/event/edit_event', $data);
                 } else {
                     $this->load->view($this->config->item('base_theme') . '/template', $data);
                 }
@@ -349,7 +348,7 @@ class Event extends MX_Controller
                 redirect('event');
             } else {
                 if ($this->input->post('val') == true) {
-                    $option = $this->Event_model->__delete($id);
+                    $option = $this->event_model->__delete($id);
                     $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
                     redirect('event');
@@ -374,7 +373,7 @@ class Event extends MX_Controller
                 case 1:
                     if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->Event_model->__delete($split[$i]);
+                            $option = $this->event_model->__delete($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -384,7 +383,7 @@ class Event extends MX_Controller
                 case 2:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->Event_model->__enable($split[$i]);
+                            $option = $this->event_model->__enable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -394,7 +393,7 @@ class Event extends MX_Controller
                 case 3:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->Event_model->__disable($split[$i]);
+                            $option = $this->event_model->__disable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();

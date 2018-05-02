@@ -29,33 +29,39 @@ class Official extends MX_Controller
     {
         if($_POST)
         {
-            $text_title = $this->input->post('name');
-            $new_link = $this->library->seo_title($text_title);
-            $key = substr(md5($this->library->app_key()), 0, 7);
+            $name = $this->input->post('name');
+            $new_link = $this->library->seo_title($name);
             $upload = $this->official_model->__upload($new_link);
 
             $dt1 =  array(
-                        'name' => addslashes($text_title),
-                        'id_club' => $this->input->post('team_a_id'),
-                        'pic' => $upload['data'],
+                        'name' => addslashes($name),
                         'position' => $this->input->post('position'),
                         'license' => $this->input->post('license'),
                         'no_identity' => $this->input->post('no_identity'),
                         'nationality' => $this->input->post('nationality'),
                         'email' => $this->input->post('email'),
                         'phone' => $this->input->post('phone'),
-                        'address' => $this->input->post('address'),
+                        'address' => addslashes($this->input->post('address')),
                         'birth_place' => $this->input->post('birth_place'),
                         'birth_date' => date('Y-m-d', strtotime($this->input->post('birth_date'))),
-                        'slug' => $new_link.'-'.$key,
-                        'date_create' => date('Y-m-d h:i:s'),
+                        'id_club' => $this->input->post('team_a_id'),
+                        'pic' => $upload['data'],
+                        'date_create' => date('Y-m-d h:i:s')
                     );
 
-            $table = $this->dtable;
-            $option = $this->action->insert(array('table' => $table, 'insert' => $dt1));
-            
+            $option = $this->action->insert(array('table' => $this->dtable, 'insert' => $dt1));
             if ($option['state'] == 0) {
-                $this->event_model->__unlink($upload['data']);
+                $this->official_model->__unlink($upload['data']);
+
+                $this->validation->error_message($option);
+                return false;
+            }
+
+            $id = $this->db->insert_id();
+            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('slug' => $id.'-'.$new_link),
+                                                  'where' => array('id_official' => $id)));
+            if ($option['state'] == 0) {
+                $this->official_model->__unlink($upload['data']);
 
                 $this->validation->error_message($option);
                 return false;
@@ -74,30 +80,28 @@ class Official extends MX_Controller
     {
         if($_POST)
         {
-            $text_title = $this->input->post('name');
-            $new_link = $this->library->seo_title($text_title);
-            $key = substr(md5($this->library->app_key()), 0, 7);
+            $name = $this->input->post('name');
+            $new_link = $this->library->seo_title($name);
             $upload = $this->official_model->__upload($new_link);
 
             $dt1 =  array(
-                        'name' => addslashes($text_title),
-                        'id_club' => $this->input->post('team_a_id'),
-                        'pic' => $upload['data'],
-                        'position' => $this->input->post('position'),
-                        'license' => $this->input->post('license'),
-                        'no_identity' => $this->input->post('no_identity'),
-                        'nationality' => $this->input->post('nationality'),
-                        'email' => $this->input->post('email'),
-                        'phone' => $this->input->post('phone'),
-                        'address' => $this->input->post('address'),
-                        'birth_place' => $this->input->post('birth_place'),
-                        'birth_date' => date('Y-m-d', strtotime($this->input->post('birth_date'))),
-                    );
+                'name' => addslashes($name),
+                'position' => $this->input->post('position'),
+                'license' => $this->input->post('license'),
+                'no_identity' => $this->input->post('no_identity'),
+                'nationality' => $this->input->post('nationality'),
+                'email' => $this->input->post('email'),
+                'phone' => $this->input->post('phone'),
+                'address' => addslashes($this->input->post('address')),
+                'birth_place' => $this->input->post('birth_place'),
+                'birth_date' => date('Y-m-d', strtotime($this->input->post('birth_date'))),
+                'id_club' => $this->input->post('team_a_id'),
+                'pic' => $upload['data'],
+                'date_create' => date('Y-m-d h:i:s')
+            );
 
-            $table = $this->dtable;
-            $where = array('id_official' => $this->input->post('idx'));
-            $option = $this->action->update(array('table' => $table, 'update' => $dt1, 'where' => $where));
-
+            $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,
+                                                  'where' => array('id_official' => $this->input->post('idx'))));
             if ($option['state'] == 0) {
                 $this->official_model->__unlink($upload['data']);
 
@@ -106,9 +110,10 @@ class Official extends MX_Controller
             }
 
             // Remove Old Pic If There is Upload Files
-            if ($this->input->post('pic') != '') {
-                $this->event_model->__unlink($this->input->post('pic'));
+            if ($this->input->post('photo_pic') != '') {
+                $this->official_model->__unlink($this->input->post('photo_pic'));
             }
+
             $this->tools->__flashMessage($option);
         } else {
             $data = $this->__rest()->__getstatus('Data must be type post', 400);
@@ -137,7 +142,7 @@ class Official extends MX_Controller
     {
         if($_POST)
         {
-            $option = $this->official_model->__delete($this->input->post('idx'));
+            $option = $this->official_model->__disable($this->input->post('idx'));
             $this->tools->__flashMessage($option);
         } else {
             $data = $this->__rest()->__getstatus('Data must be type post', 400);
