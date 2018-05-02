@@ -11,13 +11,13 @@ class Clubcareer extends MX_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->model('club_career_model');
+        $this->load->model('clubcareer_model');
 
         if ($this->session->userdata('login') != TRUE AND $this->session->userdata('user_uid') == '') {
             redirect('login');
         }
 
-        $raccess = $this->library->role_access('clubcareer');
+        $raccess = $this->library->role_access('football/clubcareer');
         if (isset($raccess)) {
             $this->roles = $raccess;
         }
@@ -25,13 +25,12 @@ class Clubcareer extends MX_Controller
 
     public function index()
     {
-		$data['id'] = $_GET['id'];
         $data['title'] = 'Club Career';
         $data['parent'] = $this->mparent;
         $data['roles'] = $this->roles;
         $data['content'] = $this->config->item('base_theme') . '/clubcareer/clubcareer';
 
-        $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => 'id_club', 'sortDir_' . $this->dtable => 'desc',
+        $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => 'id_career', 'sortDir_' . $this->dtable => 'desc',
                          'multi_search_' . $this->dtable => '', 'multi_data_' . $this->dtable => '', 'voffset_' . $this->dtable => '', 'xoffset_' . $this->dtable => '');
         $this->session->set_userdata($session);
 
@@ -49,19 +48,20 @@ class Clubcareer extends MX_Controller
                 'sortby' => $this->session->userdata('sortBy_' . $this->dtable),
                 'sortdir' => $this->session->userdata('sortDir_' . $this->dtable),
                 'page' => $this->offset,
-                'limit' => $limit,
-				'id_club' => $data['id']
+                'limit' => $limit
             );
         } else {
             $query = array(
                 'page' => $this->offset,
-                'limit' => $limit,
-				'id_club' => $data['id']
+                'limit' => $limit
             );
         }
-		$queryclub = array(
-			'id_club' => $data['id']
-		);
+
+        if (isset($_GET['id'])) {
+            $query = array_merge($query, array('id_club' => $_GET['id']));
+            $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
+        }
+
         $ulevel = $this->library->user_check();
         if($ulevel->ff > 0)
         {
@@ -69,7 +69,6 @@ class Clubcareer extends MX_Controller
         }
 
         $data['dt'] = $this->excurl->reqCurl('club-career', $query)->data;
-		$data['club'] = $this->excurl->reqCurl('profile-club', $queryclub)->data[0];
         $data['count'] = $this->excurl->reqCurl('club-career', array_merge($query, array('count' => true)))->data[0];
         $data['limit'] = $limit;
         $data['offset'] = $this->offset;
@@ -81,7 +80,6 @@ class Clubcareer extends MX_Controller
 
     function view($option = array())
     {
-		$data['id'] = $_GET['id'];
         if ($this->input->post('val') == true) {
             $data['title'] = 'Club Career';
             $data['roles'] = $this->roles;
@@ -97,7 +95,7 @@ class Clubcareer extends MX_Controller
                                      'sortBy_' . $this->dtable => $this->session->userdata('sortBy_' . $this->dtable), 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
                 } else {
                     $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                     'sortBy_' . $this->dtable => 'id_club', 'sortDir_' . $this->dtable => 'desc');
+                                     'sortBy_' . $this->dtable => 'id_career', 'sortDir_' . $this->dtable => 'desc');
                 }
             }
             $this->session->set_userdata($session);
@@ -132,15 +130,13 @@ class Clubcareer extends MX_Controller
                     'sortby' => $this->session->userdata('sortBy_' . $this->dtable),
                     'sortdir' => $this->session->userdata('sortDir_' . $this->dtable),
                     'page' => $offset,
-                    'limit' => $limit,
-					'id_club' => $data['id']
+                    'limit' => $limit
                 );
             } else {
                 $query = array(
                     $xfield => $xsearch,
                     'page' => $offset,
-                    'limit' => $limit,
-					'id_club' => $data['id']
+                    'limit' => $limit
                 );
             }
 
@@ -150,18 +146,21 @@ class Clubcareer extends MX_Controller
                 $count = array_merge($count, $this->session->userdata('multi_data_' . $this->dtable));
             }
 
+            if (isset($_GET['id'])) {
+                $query = array_merge($query, array('id_club' => $_GET['id']));
+                $count = array_merge($count, array('id_club' => $_GET['id']));
+                $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
+            }
+
             $ulevel = $this->library->user_check();
             if($ulevel->ff > 0)
             {
                 $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
                 $count = array_merge($count, array($ulevel->fu => $this->session->userdata('user_id')));
             }
-			$queryclub = array(
-				'id_club' => $data['id']
-			);
+
             $data['dt'] = $this->excurl->reqCurl('club-career', $query)->data;
-			$data['club'] = $this->excurl->reqCurl('profile-club', $queryclub)->data[0];
-			$data['count'] = $this->excurl->reqCurl('club-career', array_merge($query, array('count' => true)))->data[0];
+			$data['count'] = $this->excurl->reqCurl('club-career', $count)->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $offset;
             $data['prefix'] = $this->dtable;
@@ -217,6 +216,12 @@ class Clubcareer extends MX_Controller
                 $this->session->set_userdata($session);
             }
 
+            if (isset($_GET['id'])) {
+                $query['query'] = array_merge($query['query'], array('id_club' => $_GET['id']));
+                $query['count'] = array_merge($query['count'], array('id_club' => $_GET['id']));
+                $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
+            }
+
             $ulevel = $this->library->user_check();
             if($ulevel->ff > 0)
             {
@@ -224,12 +229,7 @@ class Clubcareer extends MX_Controller
                 $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
             }
 			
-			$queryclub = array(
-				'id_club' => $data['id']
-			);
-			
-            $data['dt'] = $this->excurl->reqCurl('club-career', $query)->data;
-			$data['club'] = $this->excurl->reqCurl('profile-club', $queryclub)->data[0];
+            $data['dt'] = $this->excurl->reqCurl('club-career', $query['query'])->data;
             $data['count'] = $this->excurl->reqCurl('club-career', $query['count'])->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $this->offset;
@@ -260,6 +260,12 @@ class Clubcareer extends MX_Controller
                 $query['count'] = array_merge($query['count'], $this->session->userdata('multi_data_' . $this->dtable));
             }
 
+            if (isset($_GET['id'])) {
+                $query['query'] = array_merge($query['query'], array('id_club' => $_GET['id']));
+                $query['count'] = array_merge($query['count'], array('id_club' => $_GET['id']));
+                $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
+            }
+
             $ulevel = $this->library->user_check();
             if($ulevel->ff > 0)
             {
@@ -276,7 +282,7 @@ class Clubcareer extends MX_Controller
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('clubcareer');
+            redirect('football/clubcareer');
         }
     }
 
@@ -285,15 +291,14 @@ class Clubcareer extends MX_Controller
         if ($this->roles == 'admin' OR $this->roles->menu_created == 1) {
             $data['title'] = 'Club Career';
             $data['parent'] = $this->mparent;
-            $data['content'] = $this->config->item('base_theme') . '/clubcareer/add_club_career';
+            $data['content'] = $this->config->item('base_theme') . '/clubcareer/add_clubcareer';
 
-            $queryclub = array(
-				'id_club' => $_GET['id']
-			);
-			$data['club'] = $this->excurl->reqCurl('profile-club', $queryclub)->data[0];
+            if (isset($_GET['id'])) {
+                $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
+            }
 
             if ($this->input->post('val') == true) {
-                $this->load->view($this->config->item('base_theme') . '/clubcareer/add_club_career', $data);
+                $this->load->view($this->config->item('base_theme') . '/clubcareer/add_clubcareer', $data);
             } else {
                 $this->load->view($this->config->item('base_theme') . '/template', $data);
             }
@@ -301,24 +306,18 @@ class Clubcareer extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('clubcareer/view?id='.$_GET['id'].'');
+                redirect('football/clubcareer');
             }
         }
     }
 
     function save()
     {
-		if(isset($_GET['id'])){
-			$id = '?id='.$_GET['id'];
-		}else{
-			$id = '';
-		}
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $option = $this->excurl->reqAction('football/clubcareer/save'.$id.'', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), '');
-			// print_r($option);exit();
+            $option = $this->excurl->reqAction('football/clubcareer/save/?id=' . $_GET['id'], array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('clubcareer/view?id='.$_GET['id'].'');
+            redirect('football/clubcareer');
         }
     }
 
@@ -328,22 +327,24 @@ class Clubcareer extends MX_Controller
             if ($id == '') {
                 redirect('club');
             } else {
-                $data['title'] = 'Club';
+                $data['title'] = 'Club Career';
                 $data['parent'] = $this->mparent;
                 $data['content'] = $this->config->item('base_theme') . '/clubcareer/edit_clubcareer';
-				// $queryclub = array(
-					// 'id_club' => $id
-				// );
-				// $data['club'] = $this->excurl->reqCurl('profile-club', $queryclub)->data[0];
 
                 $query = array('id_career' => $id, 'detail' => true);
+                if (isset($_GET['id'])) {
+                    $query = array_merge($query, array('id_club' => $_GET['id']));
+                    $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
+                }
+
                 $ulevel = $this->library->user_check();
                 if($ulevel->ff > 0)
                 {
-                    $query = array_merge($query, array('admin_id' => $this->session->userdata('user_id')));
+                    $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
                 }
 
                 $data['dt1'] = $this->excurl->reqCurl('club-career', $query)->data[0];
+
                 if ($this->input->post('val') == true) {
                     $this->load->view($this->config->item('base_theme') . '/clubcareer/edit_clubcareer', $data);
                 } else {
@@ -362,10 +363,10 @@ class Clubcareer extends MX_Controller
     function update()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-            $option = $this->excurl->reqAction('football/clubcareer/update', array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))), '');
+            $option = $this->excurl->reqAction('football/clubcareer/update/?id=' . $_GET['id'], array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('clubcareer/view?id='.$_GET['id'].'');
+            redirect('football/clubcareer');
         }
     }
 
@@ -376,7 +377,7 @@ class Clubcareer extends MX_Controller
                 redirect('clubcareer');
             } else {
                 if ($this->input->post('val') == true) {
-                    $option = $this->club_career_model->__delete($id);
+                    $option = $this->clubcareer_model->__delete($id);
                     $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
                     redirect('clubcareer');
@@ -401,7 +402,7 @@ class Clubcareer extends MX_Controller
                 case 1:
                     if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->club_career_model->__delete($split[$i]);
+                            $option = $this->clubcareer_model->__delete($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -411,7 +412,7 @@ class Clubcareer extends MX_Controller
                 case 2:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->club_career_model->__enable($split[$i]);
+                            $option = $this->clubcareer_model->__enable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -421,7 +422,7 @@ class Clubcareer extends MX_Controller
                 case 3:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->club_career_model->__disable($split[$i]);
+                            $option = $this->clubcareer_model->__disable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -432,61 +433,6 @@ class Clubcareer extends MX_Controller
             $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
             redirect('club');
-        }
-    }
-
-    function subcompetition()
-    {
-        $search = explode(';', $this->input->post('val'));
-        $category = $this->excurl->reqCurl('league', ['id_competition' => $search[0]]);
-
-        if ($category) {
-            if ($category->data) {
-                foreach ($category->data as $cat) {
-                    echo "<option value='$cat->sub_club_id;$cat->sub_category_name'>$cat->sub_category_name</option>";
-                }
-            } else {
-                echo "<option value=''>- Select -</option>";
-            }
-        }
-    }
-
-    function autoclub($idx = '')
-    {
-        $search = $this->input->post('val');
-
-        $query = array('page' => 1, 'limit' => '100', 'search' => $search);
-        $clubs = $this->excurl->reqCurl('club', $query)->data;
-
-        if($clubs)
-        {
-            foreach($clubs as $t)
-            {
-                $bold_search = "<b>$search</b>";
-                $title = str_ireplace($search, $bold_search, $t->title);
-
-                echo "<div class='showauto' val='$t->id_club' idx='$idx' tag='club' show='showclub' style='text-transform: capitalize;'>
-                        <span class='$t->id_club' val='$t->title'>$title</span>
-                    </div>";
-            }
-        } else {
-            echo "<div class='showauto'><span>No Result</span></div>";
-        }
-    }
-	
-	function subkabupaten()
-    {
-        $search = explode(',', $this->input->post('val'));
-        $kabupaten = $this->excurl->reqCurl('kabupaten', ['provinsi' => md5($search[23])]);
-
-        if ($kabupaten) {
-            if ($kabupaten->data) {
-                foreach ($kabupaten->data as $kab) {
-                    echo "<option value='$kab->IDKabupaten'>$kab->nama</option>";
-                }
-            } else {
-                echo "<option value=''>- Select -</option>";
-            }
         }
     }
 

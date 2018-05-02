@@ -7,19 +7,19 @@
         <th>
             <a href="javascript:void(0)" class='csort' id="name" val="desc" onclick="actsort(this.id)">Detail</a>
         </th>
-		<th style='width: 15%;'>
-            <a href="javascript:void(0)" class='csort' id="legal_pt" val="desc" onclick="actsort(this.id)">Legal PT</a>
+		<th style='width: 18%;'>
+            <a href="javascript:void(0)" class='csort' id="id_register" val="desc" onclick="actsort(this.id)">Legal PT</a>
         </th>
-        <th class='hd-mobile' style='width: 15%;'>
-            <a href="javascript:void(0)" class='csort' id="legal_pt" val="desc" onclick="actsort(this.id)">Legal Kemenham</a>
+        <th class='hd-mobile' style='width: 18%;'>
+            <a href="javascript:void(0)" class='csort' id="id_register" val="desc" onclick="actsort(this.id)">Legal Kemenham</a>
         </th>
-        <th class='hd-mobile' style='width: 15%;'>
-            <a href="javascript:void(0)" class='csort' id="legal_pt" val="desc" onclick="actsort(this.id)">NPWP</a>
+        <th class='hd-mobile' style='width: 18%;'>
+            <a href="javascript:void(0)" class='csort' id="id_register" val="desc" onclick="actsort(this.id)">NPWP</a>
         </th>
-        <th class='hd-mobile' style='width: 15%;'>
-            <a href="javascript:void(0)" class='csort' id="legal_pt" val="desc" onclick="actsort(this.id)">Legal Dirut</a>
+        <th class='hd-mobile' style='width: 18%;'>
+            <a href="javascript:void(0)" class='csort' id="id_register" val="desc" onclick="actsort(this.id)">Legal Dirut</a>
         </th>
-        <th style='width: 10%;'>
+        <th style='width: 15%;'>
             <a href="javascript:void(0)" class='csort' id="created_date" val="desc" onclick="actsort(this.id)">Regist Date</a>
         </th>
         <th style='width: 10%;'>Action</th>
@@ -34,9 +34,9 @@
                         <td class='center'>
                             <input type='checkbox' name='selected[]' value='<?= $r->id_club ?>;<?= $r->id_member; ?>' class='ctab'>
                         </td>
-                        <td class='center'>
+                        <td>
                             <b><?= $r->name; ?></b>
-                            <br>
+                            <br>Phone :
                             <?= $r->phone; ?>
                             <br>
                             <?= $r->address; ?>
@@ -48,21 +48,21 @@
                                 </a>
                             </div>
                         </td>
-                        <td class='center'>
+                        <td class='hd-mobile center'>
                             <div class='picproduct'>
                                 <a href="<?= $r->url_kemenham; ?>" target="_blank">
                                     <span style='background-image: url("<?= $r->url_kemenham; ?>");'></span>
                                 </a>
                             </div>
                         </td>
-                        <td class='center'>
+                        <td class='hd-mobile center'>
                             <div class='picproduct'>
                                 <a href="<?= $r->url_npwp; ?>" target="_blank">
                                     <span style='background-image: url("<?= $r->url_npwp; ?>");'></span>
                                 </a>
                             </div>
                         </td>
-                        <td class='center'>
+                        <td class='hd-mobile center'>
                             <div class='picproduct'>
                                 <a href="<?= $r->url_dirut; ?>" target="_blank">
                                     <span style='background-image: url("<?= $r->url_dirut; ?>");'></span>
@@ -70,7 +70,7 @@
                             </div>
                         </td>
                         <td class='center'>
-                            <?= $r->date_create; ?>
+                            <?= date('d-m-Y h:i:s', strtotime($r->date_create)); ?>
                         </td>
                         <td class="center">
                             <a class='btn_action' href='javascript:void(0)'

@@ -7,7 +7,7 @@
     });
 </script>
 
-<div class='boxtitle'><?php echo $title; ?></div>
+<div class='boxtitle'><?php echo $title; ?> <?php echo (isset($sub) AND isset($_GET['id'])) ? '&rsaquo; '.$sub->name : ''; ?></div>
 <div id='boxmessage'></div>
 
 <div id='boxjq'>

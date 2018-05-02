@@ -1,17 +1,20 @@
-<div class='boxtitle'><?php echo $title; ?><?php echo ' &rsaquo; '.$club->name; ?> </div>
+<div class='boxtitle'><?php echo $title; ?> <?php echo (isset($sub) AND isset($_GET['id'])) ? '&rsaquo; '.$sub->name : ''; ?></div>
 <div id='boxmessage'></div>
+
+<?php
+    $sv = $this->library->sub_view();
+    $this->load->view($this->config->item('base_theme').'/club/club_header', ['tab' => 'achievement']);
+?>
+
 <div id='boxbutton'> 
-    <a href="javascript:void(0)" id='button' onclick="actmenu('football/clubcareer/?id="<?php echo $_GET['id']?>">Club Career</a>
-	<div style='clear: both;'></div>
-</div>
-<div id='boxbutton'> 
-    <a href="javascript:void(0)" id='button' onclick="openform('football/clubcareer/add?id=<?php echo $_GET['id']?>')">Add New</a>
+    <a href="javascript:void(0)" id='button' onclick="openform('football/clubcareer/add<?php echo $sv->idstay; ?>')">Add New</a>
     
     <div class='search'>
         <label>Search By</label>
         <select name='cselect' class='cinput inselect'>
             <?php
-                $field = array('search' => 'Turnamen');
+                $field = array('search' => 'Career Detail');
+
                 foreach($field as $n1 => $v1)
                 {
                     if($this->session->userdata('xfield_'.$prefix) == $n1)
@@ -25,7 +28,7 @@
         </select>
         
         <?php $csearch = ($this->session->userdata('xsearch_'.$prefix) != '') ? $this->session->userdata('xsearch_'.$prefix) : ''; ?>
-        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('football/clubcareer/search/?id=<?php echo $_GET['id']; ?>')">
+        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('football/clubcareer/search<?php echo $sv->idstay; ?>')">
     </div>
     
     <div style='clear: both;'></div>
@@ -44,11 +47,11 @@
             ?>
         </select>
     </div>
-    <a href="javascript:void(0)" id='button' onclick="actcheck('clubcareer/checked')">Action</a>
+    <a href="javascript:void(0)" id='button' onclick="actcheck('football/clubcareer/checked')">Action</a>
     
     <div class='limit'>
         <label>Limit</label>
-        <select name='climit' class='climit inselect' onchange="actlimit('clubcareer/view')">
+        <select name='climit' class='climit inselect' onchange="actlimit('football/clubcareer/view')">
             <?php
                 $l1 = array('10','25','50','100','150','200');
                 foreach($l1 as $v3)
@@ -80,7 +83,7 @@
         if($showpage > 1)
         {
             echo "<div id='pageself'>
-                    <div id='showurl' value='football/clubcareer/pagetable'></div>
+                    <div id='showurl' value='football/clubcareer/pagetable".$sv->idstay."'></div>
                     <div id='showpage' value='$showpage'></div>
                     <div id='showoff' value='4'></div>
                     <div id='showrun' value='2'></div>

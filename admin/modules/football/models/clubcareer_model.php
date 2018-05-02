@@ -1,6 +1,6 @@
 <?php
 
-class Club_career_model extends CI_Model
+class Clubcareer_model extends CI_Model
 {
 
     var $query_string = '';
@@ -14,7 +14,11 @@ class Club_career_model extends CI_Model
 
     function __delete($id = '')
     {
-        $option = $this->excurl->reqAction('football/clubcareer/delete', array('idx' => $id));
+        if (isset($_GET['id'])) {
+            $option = $this->excurl->reqAction('football/clubcareer/delete/?id=' . $_GET['id'], array('idx' => $id));
+        } else {
+            $option = $this->excurl->reqAction('football/clubcareer/delete', array('idx' => $id));
+        }
         return $option;
     }
 
