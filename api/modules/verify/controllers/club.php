@@ -44,6 +44,16 @@ class Club extends MX_Controller
             $where = array('id_member' => $idx[1]);
             $option = $this->action->update(array('table' => $this->xtable, 'update' => $dt2, 'where' => $where));
 
+            // Send Email to Club
+            $res = $this->excurl->reqCurl('me', ['id_club' => $idx[0], 'detail' => true]);
+            if ($res) {
+                $v = $res->data[0];
+                $subject = 'Registrasi Klub';
+                $message = "Hi $v->name <br><br>Klub anda sudah terverifikasi. <br>Silahkan lakukan login dan isi informasi klub anda. <br><br>
+                            Untuk informasi lebih lanjut silahkan hubungi kami di email info@eyesoccer.id <br><br> Salam Eyesoccer";
+                $this->excurl->reqCurl('mailer', ['to' => $v->email, 'subject' => $subject, 'message' => $message]);
+            }
+
             $this->tools->__flashMessage($option);
         } else {
             $data = $this->__rest()->__getstatus('Data must be type post', 400);
