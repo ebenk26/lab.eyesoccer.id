@@ -17,7 +17,7 @@ class Club extends MX_Controller
             redirect('login');
         }
 
-        $raccess = $this->library->role_access('Verify');
+        $raccess = $this->library->role_access('verify/club');
         if (isset($raccess)) {
             $this->roles = $raccess;
         }
