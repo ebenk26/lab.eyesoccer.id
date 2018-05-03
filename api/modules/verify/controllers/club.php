@@ -49,8 +49,11 @@ class Club extends MX_Controller
             if ($res) {
                 $v = $res->data[0];
                 $subject = 'Registrasi Klub';
-                $message = "Hi $v->name <br><br>Klub anda sudah terverifikasi. <br>Silahkan lakukan login dan isi informasi klub anda. <br><br>
-                            Untuk informasi lebih lanjut silahkan hubungi kami di email info@eyesoccer.id <br><br> Salam Eyesoccer";
+                $message = "Hi $v->name <br><br>Terima kasih untuk bergabung di EyeProfile. Klub / SSB anda sudah terverifikasi,
+                            untuk mengisi data silahkan klik link berikut: <br><br><a href='https://www.eyesoccer.id/member' target='_blank'>https://www.eyesoccer.id/member</a>
+                            <br><span style='color: red; font-size: 10px;'>*apabila link tidak bekerja, copy dan paste ke browser anda.</span><br><br>
+                            Kemudian anda dapat melakukan pengisian data seperti info klub, pemain, ofisial, prestasi dan galeri.<br>
+                            Untuk informasi lebih lanjut silahkan hubungi kami di email info@eyesoccer.id.<br><br>Terima Kasih<br><br>EyeProfile Team";
                 $this->excurl->reqCurl('mailer', ['to' => $v->email, 'subject' => $subject, 'message' => $message]);
             }
 
