@@ -243,7 +243,7 @@
                             <label>Competition</label>
                             <!--<select name="competition" id="competition" class="cinput select_multi tx-cp" onchange="actchain('football/club/subcompetition', 'competition', 'league')">-->
                             <select name="id_competition" id="id_competition" class="cinput select_multi tx-cp competition" required>
-                                <option value="">- Select -</option>
+                                <option value="0">- Select -</option>
                                 <?php
                                 if($competition)
                                 {
@@ -261,7 +261,7 @@
                         <div class='pad-b20'>
                             <label>League</label>
                             <select name="id_league" id="id_league" class="cinput select_multi tx-cp league">
-                                <option value="">- Select -</option>
+                                <option value="0">- Select -</option>
                                 <?php
                                 if($league)
                                 {
