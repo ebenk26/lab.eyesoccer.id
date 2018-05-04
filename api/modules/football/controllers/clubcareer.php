@@ -37,7 +37,7 @@ class Clubcareer extends MX_Controller
                 'coach' => $this->input->post('coach'),
                 'rank' => $this->input->post('rank'),
                 // Data
-                'date_create' => date('Y-m-d h:i:s'),
+                'date_create' => date('Y-m-d H:i:s'),
                 // 'id_admin' => $this->input->post('ses_user_id')
             );
 

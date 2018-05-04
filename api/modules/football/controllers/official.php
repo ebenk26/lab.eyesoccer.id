@@ -46,7 +46,7 @@ class Official extends MX_Controller
                         'birth_date' => date('Y-m-d', strtotime($this->input->post('birth_date'))),
                         'id_club' => $this->input->post('team_a_id'),
                         'pic' => $upload['data'],
-                        'date_create' => date('Y-m-d h:i:s')
+                        'date_create' => date('Y-m-d H:i:s')
                     );
 
             $option = $this->action->insert(array('table' => $this->dtable, 'insert' => $dt1));
@@ -97,7 +97,7 @@ class Official extends MX_Controller
                 'birth_date' => date('Y-m-d', strtotime($this->input->post('birth_date'))),
                 'id_club' => $this->input->post('team_a_id'),
                 'pic' => $upload['data'],
-                'date_create' => date('Y-m-d h:i:s')
+                'date_create' => date('Y-m-d H:i:s')
             );
 
             $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,

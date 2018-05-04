@@ -52,8 +52,8 @@ class News extends MX_Controller
                 'newstype_sub_id' => isset($catsub[0]) ? $catsub[0] : 0,
                 'news_type' => isset($cat[1]) ? $cat[1] : '',
                 'sub_category_name' => isset($catsub[1]) ? $catsub[1] : '',
-                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
-                'createon' => date('Y-m-d h:i:s'),
+                'publish_on' => date('Y-m-d H:i:s', strtotime($this->input->post('publish_date'))),
+                'createon' => date('Y-m-d H:i:s'),
                 'admin_id' => $this->input->post('ses_user_id')
             );
 
@@ -112,8 +112,8 @@ class News extends MX_Controller
                 'newstype_sub_id' => isset($catsub[0]) ? $catsub[0] : 0,
                 'news_type' => isset($cat[1]) ? $cat[1] : '',
                 'sub_category_name' => isset($catsub[1]) ? $catsub[1] : '',
-                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
-                'updateon' => date('Y-m-d h:i:s')
+                'publish_on' => date('Y-m-d H:i:s', strtotime($this->input->post('publish_date'))),
+                'updateon' => date('Y-m-d H:i:s')
             );
 
             $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,

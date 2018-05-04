@@ -112,7 +112,7 @@
                         <div class='mg-b10 pos-rel wd-100'>    
                             <label>Pilih Team A</label>
                             <input type="text" class="input_multi" id="team_a_0" name="team_a" value="<?= $dt1->team_a; ?>" autocomplete="off" onkeyup="autocommulti('event/match/autoteam/team_a/0')" placeholder="Search team in here..." required="">
-                            <input type="hidden" name="team_a_id" id="team_a_id_0" va>
+                            <input type="hidden" name="team_a_id" id="team_a_id_0" value="<?= $dt1->id_club_a; ?>">
                             <div id="boxresult" class="showhide_0" style="display: none;"><div class="result_0"></div></div>
                         </div>
                         <div class='pad-b20'>
@@ -131,7 +131,7 @@
                         <div class='mg-b10 pos-rel wd-100'>
                             <label>Pilih Team B</label>
                             <input type="text" class="input_multi" id="team_b_1" name="team_b" value="<?= $dt1->team_b; ?>" autocomplete="off" onkeyup="autocommulti('event/match/autoteam/team_b/1')" placeholder="Search team in here..." required="">
-                            <input type="hidden" name="team_b_id" id="team_b_id_1">
+                            <input type="hidden" name="team_b_id" id="team_b_id_1" value="<?= $dt1->id_club_b; ?>">
                             <div id="boxresult" class="showhide_1" style="display: none;"><div class="result_1"></div></div>
                         </div>
                         <div class='pad-b20'>

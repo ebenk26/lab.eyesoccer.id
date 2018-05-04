@@ -50,8 +50,8 @@ class Event extends MX_Controller
                 'is_event' => $this->input->post('is_event'),
                 'is_match' => $this->input->post('is_match'),
                 // Data
-                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
-                'upload_date' => date('Y-m-d h:i:s'),
+                'publish_on' => date('Y-m-d H:i:s', strtotime($this->input->post('publish_date'))),
+                'upload_date' => date('Y-m-d H:i:s'),
                 'admin_id' => $this->input->post('ses_user_id')
             );
 
@@ -95,8 +95,8 @@ class Event extends MX_Controller
                 'is_event' => $this->input->post('is_event'),
                 'is_match' => $this->input->post('is_match'),
                 // Data
-                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
-                'updateon' => date('Y-m-d h:i:s')
+                'publish_on' => date('Y-m-d H:i:s', strtotime($this->input->post('publish_date'))),
+                'updateon' => date('Y-m-d H:i:s')
             );
 
             $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,

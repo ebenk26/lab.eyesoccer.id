@@ -37,7 +37,7 @@ class Store extends MX_Controller
 
             // Event
             $dt1 = array(// General
-                'jadwal_pertandingan' => date('Y-m-d h:i:s', strtotime($this->input->post('jadwal_pertandingan'))),
+                'jadwal_pertandingan' => date('Y-m-d H:i:s', strtotime($this->input->post('jadwal_pertandingan'))),
                 'lokasi_pertandingan' => $this->input->post('lokasi_pertandingan'),
                 'live_pertandingan' => $this->input->post('live_pertandingan'),
                 'tim_a' => $this->input->post('team_a'),
@@ -84,7 +84,7 @@ class Store extends MX_Controller
         {
             // Match
             $dt1 = array(// General
-                    'jadwal_pertandingan' => date('Y-m-d h:i:s', strtotime($this->input->post('jadwal_pertandingan'))),
+                    'jadwal_pertandingan' => date('Y-m-d H:i:s', strtotime($this->input->post('jadwal_pertandingan'))),
                     'lokasi_pertandingan' => $this->input->post('lokasi_pertandingan'),
                     'live_pertandingan' => $this->input->post('live_pertandingan'),
                     'tim_a' => $this->input->post('team_a'),

@@ -48,8 +48,8 @@ class Video extends MX_Controller
                 // Data
                 'id_category_eyetube' => $cat[0],
                 'category_name' => $cat[1],
-                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
-                'createon' => date('Y-m-d h:i:s'),
+                'publish_on' => date('Y-m-d H:i:s', strtotime($this->input->post('publish_date'))),
+                'createon' => date('Y-m-d H:i:s'),
                 'admin_id' => $this->input->post('ses_user_id')
             );
 
@@ -106,8 +106,8 @@ class Video extends MX_Controller
                 // Data
                 'id_category_eyetube' => $cat[0],
                 'category_name' => $cat[1],
-                'publish_on' => date('Y-m-d h:i:s', strtotime($this->input->post('publish_date'))),
-                'updateon' => date('Y-m-d h:i:s')
+                'publish_on' => date('Y-m-d H:i:s', strtotime($this->input->post('publish_date'))),
+                'updateon' => date('Y-m-d H:i:s')
             );
 
             $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,

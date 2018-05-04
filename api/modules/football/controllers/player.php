@@ -62,7 +62,7 @@ class Player extends MX_Controller
                         'pic' => $upload['data'],
                         'is_verify' => $this->input->post('is_verify'),
                         'is_active' => $this->input->post('is_active'),
-                        'date_create' => date('Y-m-d h:i:s'),
+                        'date_create' => date('Y-m-d H:i:s'),
                         'id_admin' => $this->input->post('ses_user_id'),
                     );
             

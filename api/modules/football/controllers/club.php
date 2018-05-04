@@ -72,7 +72,7 @@ class Club extends MX_Controller
                 'is_verify' => $this->input->post('is_verify'),
                 'is_active' => $this->input->post('is_active'),
                 'is_national' => $this->input->post('is_national'),
-                'date_create' => date('Y-m-d h:i:s'),
+                'date_create' => date('Y-m-d H:i:s'),
                 'id_admin' => $this->input->post('ses_user_id')
             );
 
