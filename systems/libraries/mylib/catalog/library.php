@@ -174,7 +174,7 @@ class Library
                 case 'eyetube-admin':
                 case 'eyeprofile-admin':
                 case 'eyeevent-admin':
-                case 'eyeeventprofile-admin':
+                case 'eyeevent-profile-admin':
                     $ff = 0;
                     $fu = '';
                     break;
