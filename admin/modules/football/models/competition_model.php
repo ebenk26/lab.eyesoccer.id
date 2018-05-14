@@ -26,25 +26,22 @@ class Competition_model extends CI_Model
     function __disable($id = '')
     {
         if ($id != NULL) {
-            $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('id_event_Competition' => $id));
-            $option = $this->action->update($dt);
-
+            $get = (isset($_GET['id'])) ? '/?id=' . $_GET['id'] : '';
+            $option = $this->excurl->reqAction('football/competition/disable' . $get, array('idx' => $id));
             return $option;
         } else {
-            redirect('event/Competition');
+            redirect('football/competition');
         }
     }
 
     function __enable($id = '')
     {
         if ($id != NULL) {
-            $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('id_event_Competition' => $id));
-
-            $option = $this->action->update($dt);
-
+            $get = (isset($_GET['id'])) ? '/?id=' . $_GET['id'] : '';
+            $option = $this->excurl->reqAction('football/competition/enable' . $get, array('idx' => $id));
             return $option;
         } else {
-            redirect('event/Competition');
+            redirect('football/competition');
         }
     }
 

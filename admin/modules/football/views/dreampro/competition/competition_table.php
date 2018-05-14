@@ -1,6 +1,7 @@
+<?php $sv = $this->library->sub_view(); ?>
 <table id='routertable'>
     <tr>
-        <div id='showsort' value='football/competition/search'></div>
+        <div id='showsort' value='football/competition/search<?php echo $sv->idstay; ?>'></div>
         <th style='width: 5%;'>
             <input type='checkbox' name='checkall' id='checkall' onclick='actcheckall(this.id);'>
         </th>
@@ -19,8 +20,6 @@
     
     if($count->cc > 0)
     {
-        $sv = $this->library->sub_view();
-
         $i= $offset;
         foreach($dt as $r)
         {

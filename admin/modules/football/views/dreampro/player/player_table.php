@@ -48,7 +48,7 @@
                 </td>
                 <td class="center">
                     <a class='btn_action mg-r5' href='javascript:void(0)'
-                       onclick="openform('football/playercareer/view/?id=<?= $r->id_player . $sv->idsub; ?>')" title='View'>
+                       onclick="actmenu('football/playercareer/view/?id=<?= $r->id_player . $sv->idsub; ?>')" title='View'>
                         <i class='fa fa-search fa-fw'></i>
                     </a>
                     <a class='btn_action' href='javascript:void(0)'

@@ -1,6 +1,6 @@
 <?php
 
-class Clubcareer_model extends CI_Model
+class Playercareer_model extends CI_Model
 {
 
     var $query_string = '';
@@ -15,9 +15,9 @@ class Clubcareer_model extends CI_Model
     function __delete($id = '')
     {
         if (isset($_GET['id'])) {
-            $option = $this->excurl->reqAction('football/clubcareer/delete/?id=' . $_GET['id'], array('idx' => $id));
+            $option = $this->excurl->reqAction('football/playercareer/delete/?id=' . $_GET['id'], array('idx' => $id));
         } else {
-            $option = $this->excurl->reqAction('football/clubcareer/delete', array('idx' => $id));
+            $option = $this->excurl->reqAction('football/playercareer/delete', array('idx' => $id));
         }
         return $option;
     }
@@ -25,20 +25,20 @@ class Clubcareer_model extends CI_Model
     function __disable($id = '')
     {
         if ($id != NULL) {
-            $option = $this->excurl->reqAction('football/clubcareer/disable', array('idx' => $id));
+            $option = $this->excurl->reqAction('football/playercareer/disable', array('idx' => $id));
             return $option;
         } else {
-            redirect('football/clubcareer');
+            redirect('football/playercareer');
         }
     }
 
     function __enable($id = '')
     {
         if ($id != NULL) {
-            $option = $this->excurl->reqAction('football/clubcareer/enable', array('idx' => $id));
+            $option = $this->excurl->reqAction('football/playercareer/enable', array('idx' => $id));
             return $option;
         } else {
-            redirect('football/clubcareer');
+            redirect('football/playercareer');
         }
     }
 

@@ -32,7 +32,8 @@ class Competition_model extends CI_Model
 
     function __disable($id = '')
     {
-        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array('id_competition' => $id));
+        $where = (isset($_GET['id'])) ? 'id_league' : 'id_competition';
+        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 0), 'where' => array($where => $id));
         $option = $this->action->update($dt);
 
         return $option;
@@ -40,7 +41,8 @@ class Competition_model extends CI_Model
 
     function __enable($id = '')
     {
-        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array('id_competition' => $id));
+        $where = (isset($_GET['id'])) ? 'id_league' : 'id_competition';
+        $dt = array('table' => $this->dtable, 'update' => array('is_active' => 1), 'where' => array($where => $id));
         $option = $this->action->update($dt);
 
         return $option;

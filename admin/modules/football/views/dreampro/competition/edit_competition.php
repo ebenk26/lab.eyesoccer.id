@@ -47,7 +47,7 @@
                         <div class='pad-b18'>
                             <div class='layout-row'>
                                 <span class='flex'></span>
-                                <input type='submit' value='Update' id='btn_submit' onclick="saveaddmulti('competition/update')">
+                                <input type='submit' value='Update' id='btn_submit' onclick="saveaddmulti('football/competition/update<?= $sv->idstay; ?>')">
                             </div>
                         </div>
                     </div>

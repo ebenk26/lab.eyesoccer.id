@@ -33,7 +33,6 @@ class Competition extends MX_Controller
             $text_title = $this->input->post('competition');
             $new_link = $this->library->seo_title($text_title);
 
-
             if (isset($_GET['id'])) {
                 $dt1 = array('id_competition' => $_GET['id'], 'league' => addslashes($text_title));
             } else {
@@ -78,15 +77,14 @@ class Competition extends MX_Controller
             $text_title = $this->input->post('title');
             $new_link = $this->library->seo_title($text_title);
 
-            // Category
             if (isset($_GET['id'])) {
-                $dt1 = array('news_type_id' => $_GET['id'], 'sub_category_name' => addslashes($text_title));
+                $dt1 = array('id_competition' => $_GET['id'], 'league' => addslashes($text_title));
             } else {
-                $dt1 = array('news_type' => addslashes($text_title));
+                $dt1 = array('competition' => addslashes($text_title));
             }
 
             $table = (isset($_GET['id'])) ? $this->xtable : $this->dtable;
-            $where = (isset($_GET['id'])) ? ['sub_news_id' => $this->input->post('idx')] : ['news_type_id' => $this->input->post('idx')];
+            $where = (isset($_GET['id'])) ? ['id_league' => $this->input->post('idx')] : ['id_competition' => $this->input->post('idx')];
             $option = $this->action->update(array('table' => $table, 'update' => $dt1, 'where' => $where));
             if ($option['state'] == 0) {
                 $this->validation->error_message($option);
@@ -97,9 +95,9 @@ class Competition extends MX_Controller
             $key = substr(md5($id), 0, 7);
             $query = array('table' => $table, 'update' => array('slug' => $new_link.'-'.$key));
             if (isset($_GET['id'])) {
-                $query = array_merge($query, array('where' => array('sub_news_id' => $id)));
+                $query = array_merge($query, array('where' => array('id_league' => $id)));
             } else {
-                $query = array_merge($query, array('where' => array('news_type_id' => $id)));
+                $query = array_merge($query, array('where' => array('id_competition' => $id)));
             }
 
             $option = $this->action->update($query);
@@ -135,7 +133,7 @@ class Competition extends MX_Controller
     {
         if($_POST)
         {
-            $option = $this->competition_model->__delete($this->input->post('idx'));
+            $option = $this->competition_model->__disable($this->input->post('idx'));
             $this->tools->__flashMessage($option);
         } else {
             $data = $this->__rest()->__getstatus('Data must be type post', 400);

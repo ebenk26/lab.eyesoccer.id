@@ -1,23 +1,19 @@
-<div class='boxtitle'> 
-    <?php echo $title; ?> <?php echo (isset($sub) AND isset($_GET['id'])) ? '&rsaquo; '.$sub->competition : ''; ?> 
-</div>
+<div class='boxtitle'><?php echo $title; ?> <?php echo (isset($sub) AND isset($_GET['id'])) ? '&rsaquo; '.$sub->name : ''; ?></div>
 <div id='boxmessage'></div>
 
-<div id='boxbutton'>
-    <?php
-        $sv = $this->library->sub_view();
-        if(isset($_GET['id']))
-        {
-            ?> <a href="javascript:void(0)" id='button' onclick="actmenu('football/competition/view<?php echo $sv->idback; ?>')">Back</a> <?php
-        }
-    ?>
-    <a href="javascript:void(0)" id='button' onclick="openform('football/competition/add<?php echo $sv->idstay; ?>')">Add New</a>
+<?php
+    $sv = $this->library->sub_view();
+    $this->load->view($this->config->item('base_theme').'/player/player_header', ['tab' => 'career']);
+?>
+
+<div id='boxbutton'> 
+    <a href="javascript:void(0)" id='button' onclick="openform('football/playercareer/add<?php echo $sv->idstay; ?>')">Add New</a>
     
     <div class='search'>
         <label>Search By</label>
         <select name='cselect' class='cinput inselect'>
             <?php
-                $field = array('competition' => 'Name');
+                $field = array('search' => 'Career Detail');
 
                 foreach($field as $n1 => $v1)
                 {
@@ -32,7 +28,7 @@
         </select>
         
         <?php $csearch = ($this->session->userdata('xsearch_'.$prefix) != '') ? $this->session->userdata('xsearch_'.$prefix) : ''; ?>
-        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('football/competition/search<?php echo $sv->idstay; ?>')">
+        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('football/playercareer/search<?php echo $sv->idstay; ?>')">
     </div>
     
     <div style='clear: both;'></div>
@@ -51,11 +47,11 @@
             ?>
         </select>
     </div>
-    <a href="javascript:void(0)" id='button' onclick="actcheck('football/competition/checked<?php echo $sv->idstay; ?>')">Action</a>
+    <a href="javascript:void(0)" id='button' onclick="actcheck('football/playercareer/checked')">Action</a>
     
     <div class='limit'>
         <label>Limit</label>
-        <select name='climit' class='climit inselect' onchange="actlimit('football/competition/view<?php echo $sv->idstay; ?>')">
+        <select name='climit' class='climit inselect' onchange="actlimit('football/playercareer/view')">
             <?php
                 $l1 = array('10','25','50','100','150','200');
                 foreach($l1 as $v3)
@@ -80,14 +76,14 @@
 
 <div id='boxjq'>
     <div id='boxtable'>
-        <?php $this->load->view($this->config->item('base_theme').'/competition/competition_table'); ?>
+        <?php $this->load->view($this->config->item('base_theme').'/playercareer/playercareer_table'); ?>
     </div>
     
     <?php
         if($showpage > 1)
         {
             echo "<div id='pageself'>
-                    <div id='showurl' value='football/competition/pagetable".$sv->idstay."'></div>
+                    <div id='showurl' value='football/playercareer/pagetable".$sv->idstay."'></div>
                     <div id='showpage' value='$showpage'></div>
                     <div id='showoff' value='4'></div>
                     <div id='showrun' value='2'></div>

@@ -181,7 +181,7 @@ class Clubcareer extends MX_Controller
                 echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable), 'query' => $query));
             }
         } else {
-            redirect('clubcareer');
+            redirect('football/clubcareer');
         }
     }
 
@@ -245,7 +245,7 @@ class Clubcareer extends MX_Controller
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('clubcareer');
+            redirect('football/clubcareer');
         }
     }
 
@@ -325,7 +325,7 @@ class Clubcareer extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
             if ($id == '') {
-                redirect('club');
+                redirect('football/clubcareer');
             } else {
                 $data['title'] = 'Club Career';
                 $data['parent'] = $this->mparent;
@@ -355,7 +355,7 @@ class Clubcareer extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('clubcareer');
+                redirect('football/clubcareer');
             }
         }
     }
@@ -374,20 +374,20 @@ class Clubcareer extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
             if ($id == '') {
-                redirect('clubcareer');
+                redirect('football/clubcareer');
             } else {
                 if ($this->input->post('val') == true) {
                     $option = $this->clubcareer_model->__delete($id);
                     $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
-                    redirect('clubcareer');
+                    redirect('football/clubcareer');
                 }
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('clubcareer');
+                redirect('football/clubcareer');
             }
         }
     }
@@ -432,7 +432,7 @@ class Clubcareer extends MX_Controller
 
             $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('club');
+            redirect('football/clubcareer');
         }
     }
 
