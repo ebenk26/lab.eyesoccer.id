@@ -273,8 +273,8 @@ class Playercareer extends MX_Controller
                 $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
-            $data['dt'] = $this->excurl->reqCurl('profile', $query['query'])->data;
-            $data['count'] = $this->excurl->reqCurl('profile', $query['count'])->data[0];
+            $data['dt'] = $this->excurl->reqCurl('player-career', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('player-career', $query['count'])->data[0];
             $data['offset'] = $query['offset']+1;
 
             $html = $this->load->view($this->config->item('base_theme') . '/playercareer/playercareer_table', $data, true);

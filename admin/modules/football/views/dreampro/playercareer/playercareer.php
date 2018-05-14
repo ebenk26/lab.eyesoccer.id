@@ -47,11 +47,11 @@
             ?>
         </select>
     </div>
-    <a href="javascript:void(0)" id='button' onclick="actcheck('football/playercareer/checked')">Action</a>
+    <a href="javascript:void(0)" id='button' onclick="actcheck('football/playercareer/checked', '<?php echo $sv->idstay; ?>')">Action</a>
     
     <div class='limit'>
         <label>Limit</label>
-        <select name='climit' class='climit inselect' onchange="actlimit('football/playercareer/view')">
+        <select name='climit' class='climit inselect' onchange="actlimit('football/playercareer/view<?php echo $sv->idstay; ?>')">
             <?php
                 $l1 = array('10','25','50','100','150','200');
                 foreach($l1 as $v3)

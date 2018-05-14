@@ -846,7 +846,7 @@ function tabflag(id) {
     $('div#' + id).fadeIn('fast');
 }
 
-function readPic(input, val, def) {
+/*function readPic(input, val, def) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
 
@@ -961,7 +961,7 @@ function rmPic(val, def) {
             $('.ff-pic-' + val).remove();
         }
     }
-}
+}*/
 
 function isMobile() {
     var a = navigator.userAgent || navigator.vendor || window.opera;

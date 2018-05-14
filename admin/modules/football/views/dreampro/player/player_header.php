@@ -19,7 +19,7 @@
 
             <div class='search' style='margin-top: 0;'>
                 <a href="javascript:void(0)" id='button' class='<?php echo ($tab == 'career') ? 'btn-active' : ''; ?>' onclick="actmenu('football/playercareer/view<?php echo $sv->idstay; ?>')">Career (<?= $cccareer ?>)</a>
-                <a href="javascript:void(0)" id='button' class='<?php echo ($tab == 'achievement') ? 'btn-active' : ''; ?>' onclick="actmenu('football/playerachive/view<?php echo $sv->idstay; ?>')">Achievement (<?= $ccachive ?>)</a>
+                <a href="javascript:void(0)" id='button' class='<?php echo ($tab == 'achievement') ? 'btn-active' : ''; ?>' onclick="actmenu('football/playerachieve/view<?php echo $sv->idstay; ?>')">Achievement (<?= $ccachive ?>)</a>
                 <a href="javascript:void(0)" id='button' class='<?php echo ($tab == 'gallery') ? 'btn-active' : ''; ?>' onclick="actmenu('football/playergallery/view<?php echo $sv->idstay; ?>')">Gallery (<?= $ccgallery ?>)</a>
             </div>
             <div style='clear: both;'></div>

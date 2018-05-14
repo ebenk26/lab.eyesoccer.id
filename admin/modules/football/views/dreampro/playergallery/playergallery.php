@@ -3,33 +3,11 @@
 
 <?php
     $sv = $this->library->sub_view();
-    $this->load->view($this->config->item('base_theme').'/club/club_header', ['tab' => 'official']);
+    $this->load->view($this->config->item('base_theme').'/player/player_header', ['tab' => 'gallery']);
 ?>
 
-<div id='boxbutton'>
-    <a href="javascript:void(0)" id='button' onclick="openform('football/official/add<?php echo $sv->idstay; ?>')">Add New</a>
-    
-    <div class='search'>
-        <label>Search By</label>
-        <select name='cselect' class='cinput inselect'>
-            <?php
-                $field = array('search' => 'Official Detail', 'club' => 'Club');
-
-                foreach($field as $n1 => $v1)
-                {
-                    if($this->session->userdata('xfield_'.$prefix) == $n1)
-                    {
-                        echo "<option value='$n1' selected>$v1</option>";
-                    } else {
-                        echo "<option value='$n1'>$v1</option>";
-                    }
-                }
-            ?>
-        </select>
-        
-        <?php $csearch = ($this->session->userdata('xsearch_'.$prefix) != '') ? $this->session->userdata('xsearch_'.$prefix) : ''; ?>
-        <input type='text' name='csearch' class='cinput insearch' value='<?php echo $csearch; ?>' placeholder='Search...' onkeyup="actsearch('football/official/search<?php echo $sv->idstay; ?>')">
-    </div>
+<div id='boxbutton'> 
+    <a href="javascript:void(0)" id='button' onclick="openform('football/playergallery/add<?php echo $sv->idstay; ?>')">Add New</a>
     
     <div style='clear: both;'></div>
 </div>
@@ -47,11 +25,11 @@
             ?>
         </select>
     </div>
-    <a href="javascript:void(0)" id='button' onclick="actcheck('football/official/checked', '<?php echo $sv->idstay; ?>')">Action</a>
+    <a href="javascript:void(0)" id='button' onclick="actcheck('football/playergallery/checked', '<?php echo $sv->idstay; ?>')">Action</a>
     
     <div class='limit'>
         <label>Limit</label>
-        <select name='climit' class='climit inselect' onchange="actlimit('football/official/view<?php echo $sv->idstay; ?>')">
+        <select name='climit' class='climit inselect' onchange="actlimit('football/playergallery/view<?php echo $sv->idstay; ?>')">
             <?php
                 $l1 = array('10','25','50','100','150','200');
                 foreach($l1 as $v3)
@@ -76,14 +54,14 @@
 
 <div id='boxjq'>
     <div id='boxtable'>
-        <?php $this->load->view($this->config->item('base_theme').'/official/official_table'); ?>
+        <?php $this->load->view($this->config->item('base_theme').'/playergallery/playergallery_table'); ?>
     </div>
     
     <?php
         if($showpage > 1)
         {
             echo "<div id='pageself'>
-                    <div id='showurl' value='football/official/pagetable".$sv->idstay."'></div>
+                    <div id='showurl' value='football/playergallery/pagetable".$sv->idstay."'></div>
                     <div id='showpage' value='$showpage'></div>
                     <div id='showoff' value='4'></div>
                     <div id='showrun' value='2'></div>

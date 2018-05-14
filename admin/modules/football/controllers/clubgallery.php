@@ -1,23 +1,23 @@
 <?php
 
-class Clubcareer extends MX_Controller
+class Clubgallery extends MX_Controller
 {
     var $roles = 'admin';
     var $mparent = 'Football';
     var $offset = 1;
     var $limit = 10;
-    var $dtable = 'eyeprofile_club_career';
+    var $dtable = 'tbl_gallery';
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('clubcareer_model');
+        $this->load->model('clubgallery_model');
 
         if ($this->session->userdata('login') != TRUE AND $this->session->userdata('user_uid') == '') {
             redirect('login');
         }
 
-        $raccess = $this->library->role_access('football/clubcareer');
+        $raccess = $this->library->role_access('football/clubgallery');
         if (isset($raccess)) {
             $this->roles = $raccess;
         }
@@ -25,12 +25,12 @@ class Clubcareer extends MX_Controller
 
     public function index()
     {
-        $data['title'] = 'Club Career';
+        $data['title'] = 'Club Gallery';
         $data['parent'] = $this->mparent;
         $data['roles'] = $this->roles;
-        $data['content'] = $this->config->item('base_theme') . '/clubcareer/clubcareer';
+        $data['content'] = $this->config->item('base_theme') . '/clubgallery/clubgallery';
 
-        $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => 'id_career', 'sortDir_' . $this->dtable => 'desc',
+        $session = array('xfield_' . $this->dtable => '', 'xsearch_' . $this->dtable => '', 'sortBy_' . $this->dtable => 'id_gallery', 'sortDir_' . $this->dtable => 'desc',
                          'multi_search_' . $this->dtable => '', 'multi_data_' . $this->dtable => '', 'voffset_' . $this->dtable => '', 'xoffset_' . $this->dtable => '');
         $this->session->set_userdata($session);
 
@@ -68,8 +68,8 @@ class Clubcareer extends MX_Controller
             $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
         }
 
-        $data['dt'] = $this->excurl->reqCurl('club-career', $query)->data;
-        $data['count'] = $this->excurl->reqCurl('club-career', array_merge($query, array('count' => true)))->data[0];
+        $data['dt'] = $this->excurl->reqCurl('list-pic', $query)->data;
+        $data['count'] = $this->excurl->reqCurl('list-pic', array_merge($query, array('count' => true)))->data[0];
         $data['limit'] = $limit;
         $data['offset'] = $this->offset;
         $data['prefix'] = $this->dtable;
@@ -81,7 +81,7 @@ class Clubcareer extends MX_Controller
     function view($option = array())
     {
         if ($this->input->post('val') == true) {
-            $data['title'] = 'Club Career';
+            $data['title'] = 'Club Gallery';
             $data['roles'] = $this->roles;
 
             // Limit Session
@@ -95,7 +95,7 @@ class Clubcareer extends MX_Controller
                                      'sortBy_' . $this->dtable => $this->session->userdata('sortBy_' . $this->dtable), 'sortDir_' . $this->dtable => $this->session->userdata('sortDir_' . $this->dtable));
                 } else {
                     $session = array('xfield_' . $this->dtable => $this->session->userdata('xfield_' . $this->dtable), 'xsearch_' . $this->dtable => $this->session->userdata('xsearch_' . $this->dtable),
-                                     'sortBy_' . $this->dtable => 'id_career', 'sortDir_' . $this->dtable => 'desc');
+                                     'sortBy_' . $this->dtable => 'id_gallery', 'sortDir_' . $this->dtable => 'desc');
                 }
             }
             $this->session->set_userdata($session);
@@ -159,17 +159,17 @@ class Clubcareer extends MX_Controller
                 $count = array_merge($count, array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
-            $data['dt'] = $this->excurl->reqCurl('club-career', $query)->data;
-			$data['count'] = $this->excurl->reqCurl('club-career', $count)->data[0];
+            $data['dt'] = $this->excurl->reqCurl('list-pic', $query)->data;
+			$data['count'] = $this->excurl->reqCurl('list-pic', $count)->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $offset;
             $data['prefix'] = $this->dtable;
             $data['showpage'] = ceil($data['count']->cc / $limit);
 
             if ($this->input->post('val') > 0 OR isset($option['is_check'])) {
-                $html = $this->load->view($this->config->item('base_theme') . '/clubcareer/clubcareer_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/clubgallery/clubgallery_jquery', $data, true);
             } else {
-                $html = $this->load->view($this->config->item('base_theme') . '/clubcareer/clubcareer', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/clubgallery/clubgallery', $data, true);
             }
 
             header('Content-Type: application/json');
@@ -181,7 +181,7 @@ class Clubcareer extends MX_Controller
                 echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable), 'query' => $query));
             }
         } else {
-            redirect('football/clubcareer');
+            redirect('football/clubgallery');
         }
     }
 
@@ -189,7 +189,7 @@ class Clubcareer extends MX_Controller
     {
 		$data['id'] = $_GET['id'];
         if ($this->input->post('val') == true) {
-            $data['title'] = 'Club Career';
+            $data['title'] = 'Club Gallery';
 
             $split = explode(",", $this->input->post('val'));
 
@@ -229,23 +229,23 @@ class Clubcareer extends MX_Controller
                 $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
             }
 			
-            $data['dt'] = $this->excurl->reqCurl('club-career', $query['query'])->data;
-            $data['count'] = $this->excurl->reqCurl('club-career', $query['count'])->data[0];
+            $data['dt'] = $this->excurl->reqCurl('list-pic', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('list-pic', $query['count'])->data[0];
             $data['limit'] = $limit;
             $data['offset'] = $this->offset;
             $data['prefix'] = $this->dtable;
             $data['showpage'] = ceil($data['count']->cc / $query['query']['limit']);
 
             if (count($split) > 1) {
-                $html = $this->load->view($this->config->item('base_theme') . '/clubcareer/clubcareer_jquery', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/clubgallery/clubgallery_jquery', $data, true);
             } else {
-                $html = $this->load->view($this->config->item('base_theme') . '/clubcareer/clubcareer', $data, true);
+                $html = $this->load->view($this->config->item('base_theme') . '/clubgallery/clubgallery', $data, true);
             }
 
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('football/clubcareer');
+            redirect('football/clubgallery');
         }
     }
 
@@ -273,32 +273,32 @@ class Clubcareer extends MX_Controller
                 $query['count'] = array_merge($query['count'], array($ulevel->fu => $this->session->userdata('user_id')));
             }
 
-            $data['dt'] = $this->excurl->reqCurl('club-career', $query['query'])->data;
-            $data['count'] = $this->excurl->reqCurl('club-career', $query['count'])->data[0];
+            $data['dt'] = $this->excurl->reqCurl('list-pic', $query['query'])->data;
+            $data['count'] = $this->excurl->reqCurl('list-pic', $query['count'])->data[0];
             $data['offset'] = $query['offset']+1;
 
-            $html = $this->load->view($this->config->item('base_theme') . '/clubcareer/clubcareer_table', $data, true);
+            $html = $this->load->view($this->config->item('base_theme') . '/clubgallery/clubgallery_table', $data, true);
 
             header('Content-Type: application/json');
             echo json_encode(array('vHtml' => $html, 'sortDir' => $this->session->userdata('sortDir_' . $this->dtable)));
         } else {
-            redirect('football/clubcareer');
+            redirect('football/clubgallery');
         }
     }
 
     function add()
     {
         if ($this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $data['title'] = 'Club Career';
+            $data['title'] = 'Club Gallery';
             $data['parent'] = $this->mparent;
-            $data['content'] = $this->config->item('base_theme') . '/clubcareer/add_clubcareer';
+            $data['content'] = $this->config->item('base_theme') . '/clubgallery/add_clubgallery';
 
             if (isset($_GET['id'])) {
                 $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
             }
 
             if ($this->input->post('val') == true) {
-                $this->load->view($this->config->item('base_theme') . '/clubcareer/add_clubcareer', $data);
+                $this->load->view($this->config->item('base_theme') . '/clubgallery/add_clubgallery', $data);
             } else {
                 $this->load->view($this->config->item('base_theme') . '/template', $data);
             }
@@ -306,7 +306,7 @@ class Clubcareer extends MX_Controller
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('football/clubcareer');
+                redirect('football/clubgallery');
             }
         }
     }
@@ -314,59 +314,10 @@ class Clubcareer extends MX_Controller
     function save()
     {
         if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_created == 1) {
-            $option = $this->excurl->reqAction('football/clubcareer/save/?id=' . $_GET['id'], array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
+            $option = $this->excurl->reqAction('football/clubgallery/save/?id=' . $_GET['id'], array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
             $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('football/clubcareer');
-        }
-    }
-
-    function edit($id = '')
-    {
-        if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-            if ($id == '') {
-                redirect('football/clubcareer');
-            } else {
-                $data['title'] = 'Club Career';
-                $data['parent'] = $this->mparent;
-                $data['content'] = $this->config->item('base_theme') . '/clubcareer/edit_clubcareer';
-
-                $query = array('id_career' => $id, 'detail' => true);
-                if (isset($_GET['id'])) {
-                    $query = array_merge($query, array('id_club' => $_GET['id']));
-                    $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
-                }
-
-                $ulevel = $this->library->user_check();
-                if($ulevel->ff > 0)
-                {
-                    $query = array_merge($query, array($ulevel->fu => $this->session->userdata('user_id')));
-                }
-
-                $data['dt1'] = $this->excurl->reqCurl('club-career', $query)->data[0];
-
-                if ($this->input->post('val') == true) {
-                    $this->load->view($this->config->item('base_theme') . '/clubcareer/edit_clubcareer', $data);
-                } else {
-                    $this->load->view($this->config->item('base_theme') . '/template', $data);
-                }
-            }
-        } else {
-            if ($this->input->post('val') == true) {
-                $this->library->role_failed();
-            } else {
-                redirect('football/clubcareer');
-            }
-        }
-    }
-
-    function update()
-    {
-        if ($this->input->post('val') == true AND $this->roles == 'admin' OR $this->roles->menu_updated == 1) {
-            $option = $this->excurl->reqAction('football/clubcareer/update/?id=' . $_GET['id'], array_merge($_POST, array('ses_user_id' => $this->session->userdata('user_id'))));
-            $this->view(array('xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
-        } else {
-            redirect('football/clubcareer');
+            redirect('football/clubgallery');
         }
     }
 
@@ -374,20 +325,20 @@ class Clubcareer extends MX_Controller
     {
         if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
             if ($id == '') {
-                redirect('football/clubcareer');
+                redirect('football/clubgallery');
             } else {
                 if ($this->input->post('val') == true) {
-                    $option = $this->clubcareer_model->__delete($id);
+                    $option = $this->clubgallery_model->__delete($id);
                     $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
                 } else {
-                    redirect('football/clubcareer');
+                    redirect('football/clubgallery');
                 }
             }
         } else {
             if ($this->input->post('val') == true) {
                 $this->library->role_failed();
             } else {
-                redirect('football/clubcareer');
+                redirect('football/clubgallery');
             }
         }
     }
@@ -402,7 +353,7 @@ class Clubcareer extends MX_Controller
                 case 1:
                     if ($this->roles == 'admin' OR $this->roles->menu_deleted == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->clubcareer_model->__delete($split[$i]);
+                            $option = $this->clubgallery_model->__delete($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -412,7 +363,7 @@ class Clubcareer extends MX_Controller
                 case 2:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->clubcareer_model->__enable($split[$i]);
+                            $option = $this->clubgallery_model->__enable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -422,7 +373,7 @@ class Clubcareer extends MX_Controller
                 case 3:
                     if ($this->roles == 'admin' OR $this->roles->menu_updated == 1) {
                         for ($i = 0; $i < $count; $i++) {
-                            $option = $this->clubcareer_model->__disable($split[$i]);
+                            $option = $this->clubgallery_model->__disable($split[$i]);
                         }
                     } else {
                         $this->library->role_failed();
@@ -432,7 +383,7 @@ class Clubcareer extends MX_Controller
 
             $this->view(array('is_check' => true, 'xcss' => $option->add_message->xcss, 'xmsg' => $option->message));
         } else {
-            redirect('football/clubcareer');
+            redirect('football/clubgallery');
         }
     }
 
