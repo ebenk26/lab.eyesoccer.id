@@ -33,15 +33,12 @@ class Event extends MX_Controller
             $text_desc = $this->input->post('description');
 
             $new_link = $this->library->seo_title($text_title);
-
             $upload = $this->event_model->__upload($new_link);
-            $key = substr(md5($this->library->app_key()), 0, 7);
 
             // Event
             $dt1 = array(// General
                 'title' => addslashes($text_title),
                 'description' => addslashes($text_desc),
-                'url' => $new_link.'-'.$key,
                 'pic' => $upload['data'],
                 'category' => $this->input->post('category'),
                 'is_event' => $this->input->post('is_event'),
@@ -53,6 +50,17 @@ class Event extends MX_Controller
             );
 
             $option = $this->action->insert(array('table' => $this->dtable, 'insert' => $dt1));
+            if ($option['state'] == 0) {
+                $this->event_model->__unlink($upload['data']);
+
+                $this->validation->error_message($option);
+                return false;
+            }
+
+            $id = $this->db->insert_id();
+            $key = substr(md5($id), 0, 7);
+            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('url' => $new_link.'-'.$key),
+                                                  'where' => array('id_event' => $id)));
             if ($option['state'] == 0) {
                 $this->event_model->__unlink($upload['data']);
 
@@ -78,15 +86,12 @@ class Event extends MX_Controller
             $text_desc = $this->input->post('description');
 
             $new_link = $this->library->seo_title($text_title);
-
             $upload = $this->event_model->__upload($new_link);
-            $key = substr(md5($this->library->app_key()), 0, 7);
 
             // News
             $dt1 = array(// General
                 'title' => addslashes($text_title),
                 'description' => addslashes($text_desc),
-                'url' => $new_link.'-'.$key,
                 'pic' => $upload['data'],
                 'category' => $this->input->post('category'),
                 'is_event' => $this->input->post('is_event'),
@@ -98,6 +103,17 @@ class Event extends MX_Controller
 
             $option = $this->action->update(array('table' => $this->dtable, 'update' => $dt1,
                                                   'where' => array('id_event' => $this->input->post('idx'))));
+            if ($option['state'] == 0) {
+                $this->event_model->__unlink($upload['data']);
+
+                $this->validation->error_message($option);
+                return false;
+            }
+
+            $id = $this->input->post('idx');
+            $key = substr(md5($id), 0, 7);
+            $option = $this->action->update(array('table' => $this->dtable, 'update' => array('url' => $new_link.'-'.$key),
+                                                  'where' => array('id_event' => $id)));
             if ($option['state'] == 0) {
                 $this->event_model->__unlink($upload['data']);
 
