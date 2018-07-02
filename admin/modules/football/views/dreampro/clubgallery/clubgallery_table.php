@@ -26,7 +26,7 @@
             echo "<tr>";
             echo "<td class='center'><input type='checkbox' name='selected[]' value='" . $r->id_gallery . "' class='ctab'></td>";
             echo "<td class='center'><div class='picproduct'><span style='background-image: url(" . $pic . ");'></span></div></td>";
-            echo "<td class='center capital'>" . date('d-m-Y H:i:s', strtotime($r->upload_date)) . "</td>";
+            echo "<td class='center capital'>" . date('d-m-Y H:i:s', strtotime($r->date_create)) . "</td>";
             echo "<td class='center'>
                     <a class='btn_action' href='javascript:void(0)' onclick=\"deleteid('football/clubgallery/delete/". $r->id_gallery  . $sv->idstay ."')\" title='Remove'><i class='fa fa-minus-square fa-fw'></i></a>
                  </td>";
