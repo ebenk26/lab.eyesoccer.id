@@ -9,7 +9,7 @@ class Club_model extends CI_Model
     var $xtable = 'eyeprofile_club_career';
     var $ytable = 'eyeprofile_club_official';
     var $ztable = 'eyeprofile_club_register';
-    var $mtable = 'tbl_gallery';
+    var $mtable = 'es_gallery';
 
     function __construct()
     {

@@ -2,7 +2,7 @@
 
 class Clubgallery extends MX_Controller
 {
-    var $dtable = 'tbl_gallery';
+    var $dtable = 'es_gallery';
 
     function __construct()
     {
@@ -46,7 +46,7 @@ class Clubgallery extends MX_Controller
                         'tags' => 'Klub',
                         'pic' => $f['name'],
                         // Data
-                        'upload_date' => date('Y-m-d H:i:s'),
+                        'date_create' => date('Y-m-d H:i:s'),
                         'publish_by' => 'admin',
                         'publish_type' => 'public'
                         // 'id_admin' => $this->input->post('ses_user_id')

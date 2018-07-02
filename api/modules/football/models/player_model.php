@@ -9,7 +9,7 @@ class Player_model extends CI_Model
     var $xtable = 'eyeprofile_player_career';
     var $ytable = 'eyeprofile_player_achievement';
     var $ztable = 'eyeprofile_player_register';
-    var $mtable = 'tbl_gallery';
+    var $mtable = 'es_gallery';
 
     function __construct()
     {

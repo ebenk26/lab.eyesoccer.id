@@ -6,7 +6,7 @@ class Playergallery extends MX_Controller
     var $mparent = 'Football';
     var $offset = 1;
     var $limit = 10;
-    var $dtable = 'tbl_gallery';
+    var $dtable = 'es_gallery';
 
     function __construct()
     {

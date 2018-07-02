@@ -5,7 +5,7 @@ class Clubgallery_model extends CI_Model
 
     var $query_string = '';
     var $command = '';
-    var $dtable = 'tbl_gallery';
+    var $dtable = 'es_gallery';
 
     function __construct()
     {
