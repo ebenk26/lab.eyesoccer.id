@@ -334,7 +334,7 @@ class Player extends MX_Controller
                 $data['parent'] = $this->mparent;
                 $data['content'] = $this->config->item('base_theme') . '/player/edit_player';
 
-                $query = array('a.id_player' => $id, 'detail' => true);
+                $query = array('id_player' => $id, 'detail' => true);
                 if (isset($_GET['id'])) {
                     $query = array_merge($query, array('id_club' => $_GET['id']));
                     $data['sub'] = $this->excurl->reqCurl('profile-club', ['id_club' => $_GET['id']])->data[0];
